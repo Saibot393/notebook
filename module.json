@@ -1,0 +1,41 @@
+{
+  "id": "notebook",
+  "title": "Notebook",
+  "description": "A module that allows user to create small notes, reminders, counters and other planning tools and share them with other users",
+  "authors": [
+    {
+    "name": "saibot"
+    }
+  ],
+  "version": "0.0.0",
+  "compatibility": {
+    "minimum": "10",
+    "verified": "11"
+  },
+  "socket": "true",
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json",
+      "flags": {}
+    },
+    {
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "lang/de.json",
+      "flags": {}
+    }
+  ],
+  "esmodules": [
+	"scripts/helpers/SocketHandler.js",
+	"scripts/MainData.js"
+  ],
+  "url": "https://github.com/Saibot393/skribble",
+  "download": "https://github.com/Saibot393/skribble/archive/refs/tags/v1.1.1.zip",
+  "manifest": "https://github.com/Saibot393/skribble/releases/latest/download/module.json",
+  "readme": "https://github.com/Saibot393/skribble/blob/main/README.md",
+  "changelog": "https://github.com/Saibot393/skribble/blob/main/CHANGELOG.md",
+  "bugs": "https://github.com/Saibot393/skribble/issues",
+  "allowBugReporter": true
+}

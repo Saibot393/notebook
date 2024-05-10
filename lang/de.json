@@ -1,0 +1,27 @@
+{
+	"phantomtokens" : {
+		"Titles" : {
+			"togglePhantomVision"			: "Phantom Sicht umschalten",
+			
+			"modes" : {
+				"normal.descrp"				: "Eine normale Figur",
+				"anchor.descrp"				: "Eine unbewegliche Figur",
+				"unclickable.descrp"		: "Eine nicht anklickbare Figur",
+				"phantom.descrp"			: "Eine unsichtbare Figur"
+			}
+		},
+		
+		"Keys" : {
+			"TogglePhantomRealm.name"		: "Phantom Sicht umschalten",
+			"IncreaseModeSelected.name"		: "Phantom modus ausgewählter Figuren erhöhen",
+			"DecreaseModeSelected.name"		: "Phantom modus ausgewählter Figuren verringern"
+		},
+		
+		"Settings" : {
+			"anchorpreventteleport" : {
+				"name"						: "Verhindere Teleport von verankerten",
+				"descrp"					: "Hält verankerte Figuren davon ab Teleportiert zu werden (etwa durch stairways)"
+			}
+		}
+	}
+}
