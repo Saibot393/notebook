@@ -27,9 +27,13 @@ class NoteManager {
 	
 	static ownsNote(pNote) {} //returns if this user owns note (either ID or Note)
 	
-	static canEdit(pNote, pExplicit = false) {} //returns if this user can edit pNote (either ID or Note)
+	static canEdit(pNote, pUserID, pExplicit = false) {} //returns if user with pUserID can edit pNote (either ID or Note)
 	
-	static canSee(pNote, pExplicit = false) {} //returns if this user can see pNote (either ID or Note)
+	static canEditSelf(pNote, pExplicit = false) {} //returns if this user can edit pNote (either ID or Note)
+	
+	static canSee(pNote, pUserID, pExplicit = false) {} //returns if user with pUserID can see pNote (either ID or Note)
+	
+	static canSeeSelf(pNote, pExplicit = false) {} //returns if this user can see pNote (either ID or Note)
 	
 	//IMPLEMENTATIONS
 	static async createNewNote(pData) {
@@ -61,15 +65,34 @@ class NoteManager {
 	}
 	
 	static requestNoteUpdate(pID, pUpdate) {
-		
+		game.socket.emit("module."+cModuleName, {pFunction : "noteUpdateRequest", pData : {pNoteID : pID, pUpdate : pUpdate, pSender : game.user.id}});
 	}
 	
 	static async noteUpdateRequest(pData) {
+		let vIsUpdater = NoteManager.ownsNote(pData.pNoteID);
 		
+		if (vIsUpdater || game.user.isGM) {
+			let vRequesterhasPermission = NoteManager.canEdit(pData.pNoteID, pData.pSender);
+			
+			if (vRequesterhasPermission) {
+				if (vIsUpdater) {
+					await this.user.setFlag(cModuleName, cNotesFlag + `.${pID}`, pUpdate);
+				}
+				else {
+					if (game.user.isGM) {
+						let vOwner = NoteManager.owner(pData.pNoteID);
+						
+						if (!vOwner?.active) {
+							await vOwner.setFlag(cModuleName, cNotesFlag + `.${pID}`, pUpdate);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	static getNote(pID, pTestPermission = false) {
-		if (!pTestPermission || NoteManager.canSee(pID)) {
+		if (!pTestPermission || NoteManager.canSeeSelf(pID)) {
 			let vUsers = Array.from(game.users);
 			
 			let vNote;
@@ -110,8 +133,8 @@ class NoteManager {
 		}
 	}
 	
-	static canEdit(pNote, pExplicit = false) {
-		if (!pExplicit && game.user.isGM) {
+	static canEdit(pNote, pUserID, pExplicit = false) {
+		if (!pExplicit && game.users.get(pUserID)?.isGM) {
 			return true;
 		}
 		
@@ -126,12 +149,16 @@ class NoteManager {
 		}
 		
 		if (pNote) {
-			return pNote.permissions[game.user.id] == "edit";
+			return pNote.permissions[pUserID] == "edit";
 		}
 	}
 	
-	static canSee(pNote, pExplicit = false) {
-		if (!pExplicit && game.user.isGM) {
+	static canEditSelf(pNote, pExplicit = false) {
+		return NoteManager.canEdit(pNote, game.user.id, pExplicit);
+	}
+	
+	static canSee(pNote, pUserID, pExplicit = false) {
+		if (!pExplicit && game.users.get(pUserID)?.isGM) {
 			return true;
 		}
 		
@@ -146,8 +173,12 @@ class NoteManager {
 		}
 		
 		if (pNote) {
-			return pNote.permissions[game.user.id] == "see";
+			return pNote.permissions[pUserID] == "see";
 		}
+	}
+	
+	static canSeeSelf(pNote, pExplicit = false) {
+		return NoteManager.canSee(pNote, game.user.id, pExplicit);
 	}
 }
 
