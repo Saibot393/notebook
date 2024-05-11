@@ -186,10 +186,10 @@ Hooks.on("updateActor", (pActor, pChanges, pContext) => {
 	if (pChanges.flags[cModuleName] && Changes.flags[cModuleName][cNotesFlag]) {
 		let vNoteUpdates = Changes.flags[cModuleName][cNotesFlag];
 		
-		for (let vKey of vNoteUpdates)) {
+		for (let vKey of vNoteUpdates) {
 			Hooks.call(cModuleName + ".updateNote", {...pActor.flags[cModuleName][cNotesFlag][vKey], id : vKey}, {...vNoteUpdates[vKey]}, pContext);
 		}
 	}
-}
+});
 
 export {NoteManager};
