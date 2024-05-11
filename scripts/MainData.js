@@ -11,9 +11,13 @@ const cDefaultNote = {
 	backColor : "white"
 }
 
+const cTypes = ["text", "counter", "slider", "battlemap", "timer", "roundcounter"];
+
 class NoteManager {
 	//DECLARATIONS
 	static async createNewNote(pData) {} //creates a new note, all settings not included in pData are defaulted to cDefaultNote and returns the new notes id
+	
+	static viewableNotes() {} //returns an object with all viewable notes
 	
 	static async updateNote(pID, pUpdate) {} //updates pData with pUpdate of note identified iva pID (if access is granted)
 	
@@ -44,6 +48,24 @@ class NoteManager {
 		await game.user.setFlag(cModuleName, cNotesFlag + `.${vID}`, vData);
 		
 		return vID;
+	}
+	
+	static viewableNotes() {
+		let vNotes = {};
+		
+		for (let vUser of Array.from(game.users)) {
+			let vUserNotes = vUser.getFlag(cModuleName, cNotesFlag);
+			
+			if (vUserNotes) {
+				for (let vKey of Object.keys(vUserNotes)) {
+					if (NoteManager.canSeeSelf(vUserNotes[vKey])) {
+						vNotes[vKey] = vUserNotes[vKey];
+					}
+				}
+			}
+		};
+		
+		return vNotes;
 	}
 	
 	static async updateNote(pID, pUpdate) {
@@ -149,7 +171,7 @@ class NoteManager {
 		}
 		
 		if (pNote) {
-			return pNote.permissions[pUserID] == "edit";
+			return pNote.permissions[pUserID] == "edit" || NoteManager.ownsNote(pNote);
 		}
 	}
 	
@@ -173,7 +195,7 @@ class NoteManager {
 		}
 		
 		if (pNote) {
-			return pNote.permissions[pUserID] == "see";
+			return pNote.permissions[pUserID] == "see" || NoteManager.ownsNote(pNote);
 		}
 	}
 	
@@ -187,7 +209,9 @@ Hooks.on("updateActor", (pActor, pChanges, pContext) => {
 		let vNoteUpdates = Changes.flags[cModuleName][cNotesFlag];
 		
 		for (let vKey of vNoteUpdates) {
-			Hooks.call(cModuleName + ".updateNote", {...pActor.flags[cModuleName][cNotesFlag][vKey], id : vKey}, {...vNoteUpdates[vKey]}, pContext);
+			let vPermission = pActor.flags[cModuleName][cNotesFlag][vKey].permissions[game.user.id];
+			
+			Hooks.call(cModuleName + ".updateNote", {...pActor.flags[cModuleName][cNotesFlag][vKey], id : vKey}, {...vNoteUpdates[vKey]}, {...pContext, permission : vPermission});
 		}
 	}
 });

@@ -1,3 +1,5 @@
+import {cModuleName} from "./utils/utils.js";
+
 const cNoteIcon = "fa-note-sticky";
 
 Hooks.once("ready", () => {
@@ -26,8 +28,16 @@ Hooks.once("ready", () => {
 	vSidebar.appendChild(vNoteTab);
 });
 
-class Notes extends SidebarTab {
+class Notes /*extends SidebarTab*/ {
 	constructor(options) {
+		super(options);
+		
+		this.tab = options.tab;
+		
+		this.notes = [];
+	}
+	
+	createEntrie() {
 		
 	}
 }
