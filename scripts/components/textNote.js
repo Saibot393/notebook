@@ -24,6 +24,7 @@ export class textNote extends basicNote {
 		vText.style.marginTop = "3px";
 		vText.style.marginBottom = "3px";
 		vText.style.background = "transparent";
+		vText.style.fontFamily = "Arial";
 		vText.value = this.text;
 		vText.oninput = () => {
 			this.updateTextHeight();

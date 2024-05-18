@@ -11,7 +11,7 @@ const cDefaultNote = {
 	backColor : "white"
 }
 
-const cTypes = ["text", "counter", "slider", "battlemap", "timer", "roundcounter"];
+const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roundcounter"];
 
 class NoteManager {
 	//DECLARATIONS
@@ -167,7 +167,7 @@ class NoteManager {
 		}
 		
 		if (typeof pNote == "object") {
-			return this.user.id == pNote.owner;
+			return game.user.id == pNote.owner;
 		}
 	}
 	
@@ -249,7 +249,7 @@ Hooks.on("updateUser", (pUser, pChanges, pContext) => {
 		let vNoteUpdates = pChanges.flags[cModuleName][cNotesFlag];
 		
 		for (let vKey of Object.keys(vNoteUpdates)) {
-			let vPermission = pUser.flags[cModuleName][cNotesFlag][vKey].permissions ? pUser.flags[cModuleName][cNotesFlag][vKey].permissions[game.user.id] : undefined;
+			let vPermission = pUser.flags[cModuleName][cNotesFlag][vKey]?.permissions ? pUser.flags[cModuleName][cNotesFlag][vKey].permissions[game.user.id] : undefined;
 			let vDeletion = pChanges.flags[cModuleName][cNotesFlag][vKey] == null;
 			
 			Hooks.call(cModuleName + ".updateNote", {...pUser.flags[cModuleName][cNotesFlag][vKey], id : vKey}, {...vNoteUpdates[vKey]}, {...pContext, permission : vPermission, deletion : vDeletion});

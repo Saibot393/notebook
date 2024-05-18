@@ -69,7 +69,7 @@ class Notes /*extends SidebarTab*/ {
 		
 		let vNewNoteButton = document.createElement("button");
 		vNewNoteButton.classList.add("create-document", "create-entry");
-		vNewNoteButton.onclick = () => {this.addEntry("text")};
+		vNewNoteButton.onclick = () => {this.createEntry("text")};
 		
 		let vNewNoteIcon = document.createElement("i");
 		vNewNoteIcon.classList.add("fa-solid", cNoteIcon);
@@ -84,6 +84,7 @@ class Notes /*extends SidebarTab*/ {
 		
 		this.entries = document.createElement("ol");
 		this.entries.style.padding = "1px";
+		this.entries.style.overflowY = "auto"
 		
 		this.tab.appendChild(this.entries);
 		
@@ -99,17 +100,16 @@ class Notes /*extends SidebarTab*/ {
 		}
 	}
 	
-	addEntry(pType) {
+	async createEntry(pType) {
 		let vClass = CONFIG[cModuleName].noteTypes[pType];
 		
 		if (vClass) {
-			let vID = NoteManager.createNewNote({type : pType});
+			let vID = await NoteManager.createNewNote({type : pType});
 			
 			let vNote = NoteManager.getNote(vID);
 		
 			this.notes[vID] = new vClass(vID, vNote);
 			this.entries.appendChild(this.notes[vID].element);
-			this.notes[vID].onElementAdded();
 		}
 	}
 	
@@ -117,7 +117,14 @@ class Notes /*extends SidebarTab*/ {
 		let vNote = this.notes[pNewNoteData.id];
 		
 		if (vNote) {
-			vNote.updateRender(pNewNoteData, pNoteDataUpdate);
+			if (pContext.deletion) {
+				delete this.notes[pNewNoteData.id];
+				
+				vNote.element.remove();
+			}
+			else {
+				vNote.updateRender(pNewNoteData, pNoteDataUpdate);
+			}
 		}
 	}
 	

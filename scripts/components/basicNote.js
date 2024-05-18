@@ -16,7 +16,7 @@ export class basicNote {
 		this.contentElements = {};
 		
 		this._isMouseHover = false;
-		
+
 		this.render();
 	}
 	
@@ -85,6 +85,7 @@ export class basicNote {
 		this.captionElement.style.flexDirection = "row";
 		this.captionElement.style.height = "auto";
 		this.captionElement.style.display = "flex";
+		this.captionElement.onclick = () => {this.toggleContent()};
 		
 		this.mainElement = document.createElement("div");
 		this.mainElement.style.height = "auto";
@@ -105,6 +106,8 @@ export class basicNote {
 	}
 	
 	renderCaption() {
+		let vElements = [];
+		
 		let vTitle = document.createElement("input");
 		vTitle.id = "title";
 		vTitle.style.borderRadius = "0";
@@ -115,6 +118,7 @@ export class basicNote {
 		vTitle.oninput = () => {this.updateData({title : vTitle.value})};
 		vTitle.disabled = !this.canEdit;
 		vTitle.style.width = "50%";
+		vElements.push(vTitle);
 		
 		const cColorSize = 10;
 		let vColorChoices = document.createElement("div");
@@ -122,36 +126,75 @@ export class basicNote {
 		vColorChoices.style.display = "grid";
 		vColorChoices.style.margin = "1px";
 		vColorChoices.style.marginLeft = "3px";
+		vColorChoices.onclick	 = (pEvent) => {this.captionElement.onclick(pEvent)};
 		for (let vColor of cColors) {
 			let vColorDiv = document.createElement("div");
 			vColorDiv.style.width = `${cColorSize}px`;
 			vColorDiv.style.height = `${cColorSize}px`;
 			vColorDiv.style.borderRadius = "50%";
 			vColorDiv.style.backgroundColor = vColor;
-			vColorDiv.onclick = () => {this.color = vColor};
+			vColorDiv.onclick = (pEvent) => {pEvent.stopPropagation(); this.color = vColor};
 			
 			vColorChoices.appendChild(vColorDiv);
 		}
+		vElements.push(vColorChoices);
 		
-		let vPermissionButton = document.createElement("i");
-		vPermissionButton.classList.add("fa-solid", cPermissionIcon);
-		vPermissionButton.style.margin = "5px";
+		let vSpacer = document.createElement("div");
+		vSpacer.style.flexGrow = "1";
+		vSpacer.onclick	= (pEvent) => {this.captionElement.onclick(pEvent)};
+		vElements.push(vSpacer);
 		
-		let vDeleteIcon = document.createElement("i");
-		vDeleteIcon.classList.add("fa-solid", cDeleteIcon);
-		vDeleteIcon.style.margin = "5px";
-		vDeleteIcon.style.right = "0px";
-		vDeleteIcon.style.position = "absolute";
+		if (NoteManager.ownsNote(this.noteData)) {
+			let vPermissionButton = document.createElement("i");
+			vPermissionButton.classList.add("fa-solid", cPermissionIcon);
+			vPermissionButton.style.margin = "5px";
+			vElements.push(vPermissionButton);
+		}
 		
-		this.captionElement.appendChild(vTitle);
-		this.captionElement.appendChild(vColorChoices);
-		this.captionElement.appendChild(vPermissionButton);
-		this.captionElement.appendChild(vDeleteIcon);
+		if (NoteManager.canDeleteSelf(this.id)) {
+			let vDeleteIcon = document.createElement("i");
+			vDeleteIcon.classList.add("fa-solid", cDeleteIcon);
+			vDeleteIcon.style.margin = "5px";
+			vDeleteIcon.onclick = () => {NoteManager.deleteNote(this.id)};
+			vElements.push(vDeleteIcon);
+		}
+		
+		for (let vElement of vElements) {
+			let vClickEvent = vElement.onclick;
+			
+			vElement.onclick = (pEvent) => {
+				pEvent.stopPropagation(); 
+				
+				if (vClickEvent) {
+					vClickEvent(pEvent);
+				}
+			}
+			this.captionElement.appendChild(vElement);
+		}
 	}
 	
 	renderContent() {
 		//specific implementations required
 		//this.content
+	}
+	
+	get contentState() {
+		return this.mainElement.style.display != "none";
+	}
+	
+	set contentState(pState) {
+		if (pState != this.contentState) {
+			this.toggleContent;
+		}
+	}
+	
+	toggleContent() {
+		if (this.contentState) {
+			this.mainElement.style.display = "none";
+		}
+		else {
+			this.mainElement.style.display = "";
+		}
 	}
 	
 	updateRender(pupdatedNote, pUpdate) {
@@ -207,9 +250,5 @@ export class basicNote {
 	
 	applyFilter(pFilter) {
 		
-	}
-	
-	onElementAdded() {
-		console.log("???");
 	}
 }
