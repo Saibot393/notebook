@@ -9,8 +9,9 @@ const cNoteIcon = "fa-note-sticky";
 
 Hooks.once("ready", () => {
 	CONFIG[cModuleName] = {
+		basicNote : basicNote,
 		noteTypes : {
-			textNote : textNote
+			text : textNote
 		}
 	}
 	
@@ -39,8 +40,6 @@ Hooks.once("ready", () => {
 	
 	ui.sidebar.tabs[cModuleName] = new Notes({tab : vNoteTab});
 	
-	ui.sidebar.tabs[cModuleName].render();
-	
 	vSidebar.appendChild(vNoteTab);
 	
 	Hooks.call(cModuleName + ".notesReady", {NoteTab : vNoteTab, basicNote : basicNote});
@@ -53,17 +52,22 @@ class Notes /*extends SidebarTab*/ {
 		this.tab = options.tab;
 		
 		this.notes = NoteManager.viewableNotes();
+		
+		if (this.tab) {
+			this.render();
+		}
 	}
 	
 	render() {
 		let vHeader = document.createElement("header");
+		vHeader.style.flex = "none";
 		
 		let vButtons = document.createElement("div");
 		vButtons.classList.add("header-actions", "action-buttons", "flexrow");
 		
 		let vNewNoteButton = document.createElement("button");
 		vNewNoteButton.classList.add("create-document", "create-entry");
-		vNewNoteButton.onclick = () => {console.log("new button?")};
+		vNewNoteButton.onclick = () => {this.addEntry("text")};
 		
 		let vNewNoteIcon = document.createElement("i");
 		vNewNoteIcon.classList.add("fa-solid", cNoteIcon);
@@ -77,6 +81,7 @@ class Notes /*extends SidebarTab*/ {
 		this.tab.appendChild(vHeader);
 		
 		this.entries = document.createElement("ol");
+		this.entries.style.padding = "1px";
 		
 		this.tab.appendChild(this.entries);
 		
@@ -84,11 +89,26 @@ class Notes /*extends SidebarTab*/ {
 	}
 	
 	renderEntries() {
-		
+		for (let vKey of Object.keys(this.notes)) {
+			let vClass = CONFIG[cModuleName].noteTypes[this.notes[vKey].type];
+			
+			this.notes[vKey] = new vClass(vKey, this.notes[vKey]);
+			this.entries.appendChild(this.notes[vKey].element);
+		}
 	}
 	
-	addEntry() {
+	addEntry(pType) {
+		let vClass = CONFIG[cModuleName].noteTypes[pType];
 		
+		if (vClass) {
+			let vID = NoteManager.createNewNote({type : pType});
+			
+			let vNote = NoteManager.getNote(vID);
+		
+			this.notes[vID] = new vClass(vID, vNote);
+			this.entries.appendChild(this.notes[vID].element);
+			this.notes[vID].onElementAdded();
+		}
 	}
 	
 	filterEntries() {

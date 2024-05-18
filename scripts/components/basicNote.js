@@ -9,6 +9,16 @@ export class basicNote {
 		this.element = null;
 		
 		this.contentElements = {};
+		
+		this.render();
+	}
+	
+	get id() {
+		return this.noteID;
+	}
+	
+	get type() {
+		return undefined;
 	}
 	
 	get isOwner() {
@@ -23,29 +33,39 @@ export class basicNote {
 		return this.noteData.title;
 	}
 	
+	get content() {
+		return this.noteData.content;
+	}
+	
+	get color() {
+		return "white";
+	}
+	
 	render() {
 		this.element = document.createElement("div");
 		this.element.flexDirection = "column";
 		this.element.style.border = "black";
 		this.element.style.height = "auto";
 		
-		this.caption = document.createElement("div");
-		this.caption.style.top = 0;
-		this.caption.style.width = 100;
-		this.caption.style.backgroundColor = "black";
-		this.caption.style.color = "white";
-		this.caption.style.flexDirection = "row";
-		this.caption.style.height = "auto";
+		this.captionElement = document.createElement("div");
+		this.captionElement.style.top = 0;
+		this.captionElement.style.width = 100;
+		this.captionElement.style.backgroundColor = "black";
+		this.captionElement.style.color = "white";
+		this.captionElement.style.flexDirection = "row";
+		this.captionElement.style.height = "auto";
 		
-		this.content = document.createElement("div");
-		this.content.style.height = "auto";
+		this.mainElement = document.createElement("div");
+		this.mainElement.style.height = "auto";
 		
-		this.element.appendChild(this.caption);
-		this.element.appendChild(this.content);
+		this.element.appendChild(this.captionElement);
+		this.element.appendChild(this.mainElement);
+		
+		this.renderCaption();
 		
 		this.renderContent();
 		
-		if (!this.canEdit()) {
+		if (!this.canEdit) {
 			this.disable();
 		}
 	}
@@ -53,12 +73,13 @@ export class basicNote {
 	renderCaption() {
 		let vTitle = document.createElement("input");
 		vTitle.style.backgroundColor = "black";
+		vTitle.style.color = "white";
 		vTitle.type = "text";
 		vTitle.value = this.title;
-		vTitle.onchange = () => {this.updateData({title : vTitle.value})};
+		vTitle.oninput = () => {this.updateData({title : vTitle.value})};
 		vTitle.disabled = !this.canEdit;
 		
-		this.caption.appendChild(vTitle);
+		this.captionElement.appendChild(vTitle);
 	}
 	
 	renderContent() {
@@ -69,16 +90,30 @@ export class basicNote {
 	updateRender(pupdatedNote, pUpdate) {
 		this.noteData = pupdatedNote;
 		
-		if (this.canEdit) {
-			this.enable();
+		if (pUpdate.permissions) {
+			if (this.canEdit) {
+				this.enable();
+			}
+			else {
+				this.disable();
+			}
 		}
-		else {
-			this.disable();
+		
+		if (pUpdate.content) {
+			this.updateRenderContent(pupdatedNote, pUpdate.content, pUpdate);
 		}
+	}
+	
+	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
+		//called when the content updates
 	}
 	
 	updateData(pData) {
 		NoteManager.updateNote(this.noteID, pData);
+	}
+	
+	updateContent(pContent) {
+		this.updateData({content : pContent});
 	}
 	
 	disable() {
@@ -95,5 +130,9 @@ export class basicNote {
 	
 	applyFilter(pFilter) {
 		
+	}
+	
+	onElementAdded() {
+		console.log("???");
 	}
 }
