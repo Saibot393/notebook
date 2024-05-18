@@ -7,7 +7,7 @@ export class textNote extends basicNote {
 	}
 	
 	get text() {
-		return this.content.text;
+		return this.content.text != undefined ? this.content.text : "";
 	}
 	
 	set text(pText) {
@@ -18,9 +18,12 @@ export class textNote extends basicNote {
 		let vText = document.createElement("textarea");
 		vText.style.width = "100%";
 		//vText.style.height = "100%";
-		vText.style.maxHeight = "163px"
 		vText.style.backgroundColor = this.color;
 		vText.style.resize = "none";
+		vText.style.borderRadius = "0";
+		vText.style.marginTop = "3px";
+		vText.style.marginBottom = "3px";
+		vText.style.background = "transparent";
 		vText.value = this.text;
 		vText.oninput = () => {
 			this.updateTextHeight();
@@ -28,10 +31,14 @@ export class textNote extends basicNote {
 				this.text = vText.value;
 			}
 		};
+		vText.onblur = () => {this.updateTextHeight()};
+		vText.onfocus = () => {this.updateTextHeight()};
 		
 		this.mainElement.appendChild(vText);
 		
 		this.contentElements.text = vText;
+		
+		this.updateTextHeight();
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
@@ -49,14 +56,19 @@ export class textNote extends basicNote {
 		this.contentElements.text.disabled = false;
 	}
 	
-	updateTextHeight() {
-		console.log("updated");
-		console.log(this);
-		this.contentElements.text.style.height = 'auto';
-		this.contentElements.text.style.height = `${this.contentElements.text.scrollHeight+3}px`;
+	onMouseHoverChange() {
+		this.updateTextHeight();
 	}
 	
-	onElementAdded() {
-		this.updateTextHeight();
+	updateTextHeight() {
+		this.contentElements.text.style.height = 'auto';
+		this.contentElements.text.style.height = `${this.contentElements.text.scrollHeight+3}px`;
+		
+		if (this.contentElements.text == document.activeElement || this.isMouseHover) {
+			this.contentElements.text.style.maxHeight = "163px"
+		}
+		else {
+			this.contentElements.text.style.maxHeight = "48px"
+		}
 	}
 }

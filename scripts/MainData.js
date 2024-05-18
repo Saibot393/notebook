@@ -64,8 +64,10 @@ class NoteManager {
 			
 			if (vUserNotes) {
 				for (let vKey of Object.keys(vUserNotes)) {
-					if (NoteManager.canSeeSelf(vUserNotes[vKey])) {
-						vNotes[vKey] = vUserNotes[vKey];
+					if (vUserNotes[vKey]) {
+						if (NoteManager.canSeeSelf(vUserNotes[vKey])) {
+							vNotes[vKey] = vUserNotes[vKey];
+						}
 					}
 				}
 			}
@@ -242,15 +244,15 @@ class NoteManager {
 	}
 }
 
-Hooks.on("updateActor", (pActor, pChanges, pContext) => {
-	if (pChanges.flags[cModuleName] && Changes.flags[cModuleName][cNotesFlag]) {
-		let vNoteUpdates = Changes.flags[cModuleName][cNotesFlag];
+Hooks.on("updateUser", (pUser, pChanges, pContext) => {
+	if (pChanges.flags[cModuleName] && pChanges.flags[cModuleName][cNotesFlag]) {
+		let vNoteUpdates = pChanges.flags[cModuleName][cNotesFlag];
 		
-		for (let vKey of vNoteUpdates) {
-			let vPermission = pChanges.flags[cModuleName][cNotesFlag][vKey].permissions ? pChanges.flags[cModuleName][cNotesFlag][vKey].permissions[game.user.id] : undefined;
+		for (let vKey of Object.keys(vNoteUpdates)) {
+			let vPermission = pUser.flags[cModuleName][cNotesFlag][vKey].permissions ? pUser.flags[cModuleName][cNotesFlag][vKey].permissions[game.user.id] : undefined;
 			let vDeletion = pChanges.flags[cModuleName][cNotesFlag][vKey] == null;
 			
-			Hooks.call(cModuleName + ".updateNote", {...pActor.flags[cModuleName][cNotesFlag][vKey], id : vKey}, {...vNoteUpdates[vKey]}, {...pContext, permission : vPermission, deletion : vDeletion});
+			Hooks.call(cModuleName + ".updateNote", {...pUser.flags[cModuleName][cNotesFlag][vKey], id : vKey}, {...vNoteUpdates[vKey]}, {...pContext, permission : vPermission, deletion : vDeletion});
 		}
 	}
 });

@@ -56,6 +56,8 @@ class Notes /*extends SidebarTab*/ {
 		if (this.tab) {
 			this.render();
 		}
+		
+		Hooks.on(cModuleName + ".updateNote", (pNewNoteData, pNoteDataUpdate, pContext) => {this.renderUpdate(pNewNoteData, pNoteDataUpdate, pContext)});
 	}
 	
 	render() {
@@ -108,6 +110,14 @@ class Notes /*extends SidebarTab*/ {
 			this.notes[vID] = new vClass(vID, vNote);
 			this.entries.appendChild(this.notes[vID].element);
 			this.notes[vID].onElementAdded();
+		}
+	}
+	
+	renderUpdate(pNewNoteData, pNoteDataUpdate, pContext) {
+		let vNote = this.notes[pNewNoteData.id];
+		
+		if (vNote) {
+			vNote.updateRender(pNewNoteData, pNoteDataUpdate);
 		}
 	}
 	
