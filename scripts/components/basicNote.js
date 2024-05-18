@@ -1,5 +1,7 @@
 import {NoteManager} from "../MainData.js";
 
+import {notePermissionsWindow} from "../helpers/notePermissions.js";
+
 const cColors = ["white", "#f5ea20", "#e8ae1a", "#c73443", "#34c765", "#4287f5"];
 
 const cPermissionIcon = "fa-book-open-reader";
@@ -148,6 +150,7 @@ export class basicNote {
 			let vPermissionButton = document.createElement("i");
 			vPermissionButton.classList.add("fa-solid", cPermissionIcon);
 			vPermissionButton.style.margin = "5px";
+			vPermissionButton.onclick = () => { new notePermissionsWindow(this.id, this.noteData, {}).render(true)};
 			vElements.push(vPermissionButton);
 		}
 		

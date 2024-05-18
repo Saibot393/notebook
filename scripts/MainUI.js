@@ -84,7 +84,7 @@ class Notes /*extends SidebarTab*/ {
 		
 		this.entries = document.createElement("ol");
 		this.entries.style.padding = "1px";
-		this.entries.style.overflowY = "auto"
+		this.entries.style.overflowY = "auto";
 		
 		this.tab.appendChild(this.entries);
 		

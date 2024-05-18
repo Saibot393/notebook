@@ -11,7 +11,9 @@ const cDefaultNote = {
 	backColor : "white"
 }
 
-const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roundcounter"];
+export const cPermissionTypes = ["none", "see", "edit"];
+
+const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roundcounter", "chat"];
 
 class NoteManager {
 	//DECLARATIONS

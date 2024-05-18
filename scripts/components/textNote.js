@@ -63,7 +63,7 @@ export class textNote extends basicNote {
 	
 	updateTextHeight() {
 		this.contentElements.text.style.height = 'auto';
-		this.contentElements.text.style.height = `${this.contentElements.text.scrollHeight+3}px`;
+		this.contentElements.text.style.height = `${this.contentElements.text.scrollHeight+2}px`;
 		
 		if (this.contentElements.text == document.activeElement || this.isMouseHover) {
 			this.contentElements.text.style.maxHeight = "163px"
