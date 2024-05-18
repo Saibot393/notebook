@@ -7,11 +7,13 @@ const cDefaultNote = {
 	title : "no title",
 	content : {},
 	owner : "",
-	permissions : {},
+	permissions : {
+		default : "none"
+	},
 	backColor : "white"
 }
 
-export const cPermissionTypes = ["none", "see", "edit"];
+export const cPermissionTypes = ["default", "none", "see", "edit"];
 
 const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roundcounter", "chat"];
 
@@ -34,6 +36,8 @@ class NoteManager {
 	static owner(pID) {} //returns owner of note with pID
 	
 	static ownsNote(pNote) {} //returns if this user owns note (either ID or Note)
+	
+	static permissionLevel(pNote, pUserID) {} //retruns permission level of pUserID for pNote
 	
 	static canEdit(pNote, pUserID, pExplicit = false) {} //returns if user with pUserID can edit pNote (either ID or Note)
 	
@@ -81,7 +85,7 @@ class NoteManager {
 	static async updateNote(pID, pUpdate, pExplicitDelete = false) {
 		if (pUpdate || pExplicitDelete) {
 			if (NoteManager.canEditSelf(pID)) {
-				if (NoteManager.owner(pID)) {
+				if (NoteManager.ownsNote(pID)) {
 					await game.user.setFlag(cModuleName, cNotesFlag + `.${pID}`, pUpdate);
 				}
 				else {
@@ -91,7 +95,7 @@ class NoteManager {
 						await vOwner.setFlag(cModuleName, cNotesFlag + `.${pID}`, pUpdate);
 					}
 					else {
-						NoteManager.requestUpdate(pID, pUpdate, {userID : game.user.id});
+						NoteManager.requestNoteUpdate(pID, pUpdate, {userID : game.user.id});
 					}
 				}
 			}
@@ -110,7 +114,7 @@ class NoteManager {
 			
 			if (vRequesterhasPermission) {
 				if (vIsUpdater) {
-					await this.user.setFlag(cModuleName, cNotesFlag + `.${pID}`, pUpdate);
+					await game.user.setFlag(cModuleName, cNotesFlag + `.${pData.pNoteID}`, pData.pUpdate);
 				}
 				else {
 					if (game.user.isGM) {
@@ -143,7 +147,7 @@ class NoteManager {
 				let vUser = vUsers[i];
 				
 				vNote = vUser.getFlag(cModuleName, cNotesFlag + `.${pID}`);
-				
+
 				i = i + 1;
 			}
 			
@@ -165,11 +169,37 @@ class NoteManager {
 	
 	static ownsNote(pNote) {
 		if (typeof pNote == "string") {
-			game.user.getFlag(cModuleName, cNotesFlag + `.${pNote}`).owner == game.user.id;
+			return game.user.getFlag(cModuleName, cNotesFlag + `.${pNote}`)?.owner == game.user.id;
 		}
 		
 		if (typeof pNote == "object") {
 			return game.user.id == pNote.owner;
+		}
+	}
+	
+	static permissionLevel(pNote, pUserID) {
+		let vNote;
+		
+		if (typeof pNote == "string") {
+			vNote = NoteManager.getNote(pNote);
+		}
+		
+		if (typeof pNote == "object") {
+			vNote = pNote;
+		}
+		
+		if (vNote) {
+			if (NoteManager.ownsNote(vNote)) {
+				return "owner";
+			}
+			
+			let vLevel = vNote.permissions ? vNote.permissions[pUserID] : undefined;
+			
+			if (!vLevel || vLevel == "default") {
+				vLevel = vNote.permissions.default;
+			}
+			
+			return vLevel;
 		}
 	}
 	
@@ -189,7 +219,7 @@ class NoteManager {
 		}
 		
 		if (vNote) {
-			return vNote.permissions[pUserID] == "edit" || NoteManager.ownsNote(pNote);
+			return ["owner", "edit"].includes(NoteManager.permissionLevel(vNote, pUserID));
 		}
 	}
 	
@@ -213,7 +243,7 @@ class NoteManager {
 		}
 		
 		if (pNote) {
-			return pNote.permissions[pUserID] == "see" || NoteManager.ownsNote(pNote);
+			return ["owner", "edit", "see"].includes(NoteManager.permissionLevel(vNote, pUserID));
 		}
 	}
 	
@@ -236,8 +266,8 @@ class NoteManager {
 			vNote = pNote;
 		}
 		
-		if (pNote) {
-			return pNote.owner == pUserID;
+		if (vNote) {
+			return vNote.owner == pUserID;
 		}
 	}
 	
@@ -251,8 +281,8 @@ Hooks.on("updateUser", (pUser, pChanges, pContext) => {
 		let vNoteUpdates = pChanges.flags[cModuleName][cNotesFlag];
 		
 		for (let vKey of Object.keys(vNoteUpdates)) {
-			let vPermission = pUser.flags[cModuleName][cNotesFlag][vKey]?.permissions ? pUser.flags[cModuleName][cNotesFlag][vKey].permissions[game.user.id] : undefined;
-			let vDeletion = pChanges.flags[cModuleName][cNotesFlag][vKey] == null;
+			let vPermission = pUser.flags[cModuleName][cNotesFlag][vKey]?.permissions ? Boolean(pUser.flags[cModuleName][cNotesFlag][vKey].permissions[game.user.id]) : undefined;
+			let vDeletion = Boolean(pChanges.flags[cModuleName][cNotesFlag][vKey] == null);
 			
 			Hooks.call(cModuleName + ".updateNote", {...pUser.flags[cModuleName][cNotesFlag][vKey], id : vKey}, {...vNoteUpdates[vKey]}, {...pContext, permission : vPermission, deletion : vDeletion});
 		}

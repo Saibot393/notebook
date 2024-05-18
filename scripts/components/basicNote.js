@@ -77,7 +77,7 @@ export class basicNote {
 		this.element.onmouseenter = () => {this.isMouseHover = true};
 		this.element.onmouseleave = () => {this.isMouseHover = false};
 		this.element.style.marginBottom = "5px";
-		this.element.draggable = true;
+		//this.element.draggable = true;
 		
 		this.captionElement = document.createElement("div");
 		this.captionElement.style.top = 0;
@@ -88,6 +88,7 @@ export class basicNote {
 		this.captionElement.style.height = "auto";
 		this.captionElement.style.display = "flex";
 		this.captionElement.onclick = () => {this.toggleContent()};
+		this.captionElement.draggable = true;
 		
 		this.mainElement = document.createElement("div");
 		this.mainElement.style.height = "auto";
@@ -103,7 +104,7 @@ export class basicNote {
 		this.renderContent();
 		
 		if (!this.canEdit) {
-			this.disable();
+			this.disablebasic();
 		}
 	}
 	
@@ -118,12 +119,12 @@ export class basicNote {
 		vTitle.type = "text";
 		vTitle.value = this.title;
 		vTitle.oninput = () => {this.updateData({title : vTitle.value})};
-		vTitle.disabled = !this.canEdit;
 		vTitle.style.width = "50%";
 		vElements.push(vTitle);
 		
 		const cColorSize = 10;
 		let vColorChoices = document.createElement("div");
+		vColorChoices.id = "colorchoice";
 		vColorChoices.style.gridTemplateColumns = `repeat(3, ${cColorSize}px)`;
 		vColorChoices.style.display = "grid";
 		vColorChoices.style.margin = "1px";
@@ -205,10 +206,10 @@ export class basicNote {
 		
 		if (pUpdate.permissions) {
 			if (this.canEdit) {
-				this.enable();
+				this.enablebasic();
 			}
 			else {
-				this.disable();
+				this.disablebasic();
 			}
 		}
 		
@@ -239,12 +240,24 @@ export class basicNote {
 		this.updateData({content : pContent});
 	}
 	
+	disablebasic() {
+		this.captionElement.querySelector("#title").disabled = true;
+		this.captionElement.querySelector("#colorchoice").style.display = "none";
+		this.disable();
+	}
+	
 	disable() {
-		//enable all inputs
+		//disable all inputs
+	}
+	
+	enablebasic() {
+		this.captionElement.querySelector("#title").disabled = false;
+		this.captionElement.querySelector("#colorchoice").style.display = "grid";
+		this.enable();
 	}
 	
 	enable() {
-		//disable all inputs
+		//enable all inputs
 	}
 	
 	tick() {

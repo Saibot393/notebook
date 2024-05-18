@@ -7,14 +7,18 @@ import {textNote} from "./components/textNote.js";
 
 const cNoteIcon = "fa-note-sticky";
 
-Hooks.once("ready", () => {
-	CONFIG[cModuleName] = {
-		basicNote : basicNote,
-		noteTypes : {
-			text : textNote
-		}
+CONFIG[cModuleName] = {
+	basicNote : basicNote,
+	noteTypes : {
+		text : textNote
 	}
-	
+}
+
+Hooks.once("init", () => {
+	Hooks.call(cModuleName + ".notesInit", {basicNote : basicNote});
+});
+
+Hooks.once("ready", () => {
 	let vSidebar = ui.sidebar._element[0];
 	if (game.user.isGM) {
 		vSidebar.style.width = "315px"
@@ -38,11 +42,13 @@ Hooks.once("ready", () => {
 	vNoteTab.setAttribute("id", "notes");
 	vNoteTab.setAttribute("data-tab", "notes");
 	
+	Hooks.call(cModuleName + ".prepareNotes", {NoteTab : vNoteTab, basicNote : basicNote});
+	
 	ui.sidebar.tabs[cModuleName] = new Notes({tab : vNoteTab});
 	
 	vSidebar.appendChild(vNoteTab);
 	
-	Hooks.call(cModuleName + ".notesReady", {NoteTab : vNoteTab, basicNote : basicNote});
+	Hooks.call(cModuleName + ".notesReady", {NoteTab : vNoteTab, basicNote : basicNote, notes : ui.sidebar.tabs[cModuleName]});
 });
 
 class Notes /*extends SidebarTab*/ {
@@ -95,8 +101,10 @@ class Notes /*extends SidebarTab*/ {
 		for (let vKey of Object.keys(this.notes)) {
 			let vClass = CONFIG[cModuleName].noteTypes[this.notes[vKey].type];
 			
-			this.notes[vKey] = new vClass(vKey, this.notes[vKey]);
-			this.entries.appendChild(this.notes[vKey].element);
+			if (vClass) {
+				this.notes[vKey] = new vClass(vKey, this.notes[vKey]);
+				this.entries.appendChild(this.notes[vKey].element);
+			}
 		}
 	}
 	
@@ -106,10 +114,30 @@ class Notes /*extends SidebarTab*/ {
 		if (vClass) {
 			let vID = await NoteManager.createNewNote({type : pType});
 			
-			let vNote = NoteManager.getNote(vID);
+			this.addNode(vID);
+		}
+	}
+	
+	addNode(pID) {
+		this.deleteNote(pID);
 		
-			this.notes[vID] = new vClass(vID, vNote);
-			this.entries.appendChild(this.notes[vID].element);
+		let vNote = NoteManager.getNote(pID);
+		
+		let vClass = CONFIG[cModuleName].noteTypes[vNote.type];
+	
+		if (vClass && NoteManager.canSeeSelf(vNote)) {
+			this.notes[pID] = new vClass(pID, vNote);
+			this.entries.appendChild(this.notes[pID].element);
+		}
+	}
+	
+	deleteNote(pID) {
+		let vNote = this.notes[pID];
+		
+		if (vNote) {
+			delete this.notes[pID];
+			
+			vNote.element.remove();
 		}
 	}
 	
@@ -117,13 +145,16 @@ class Notes /*extends SidebarTab*/ {
 		let vNote = this.notes[pNewNoteData.id];
 		
 		if (vNote) {
-			if (pContext.deletion) {
-				delete this.notes[pNewNoteData.id];
-				
-				vNote.element.remove();
+			if (pContext.deletion || !NoteManager.canSeeSelf(pNewNoteData)) {
+				this.deleteNote(pNewNoteData.id);
 			}
 			else {
 				vNote.updateRender(pNewNoteData, pNoteDataUpdate);
+			}
+		}
+		else {
+			if (NoteManager.canSeeSelf(pNewNoteData)) {
+				this.addNode(pNewNoteData.id);
 			}
 		}
 	}

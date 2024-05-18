@@ -1,6 +1,6 @@
 import {cModuleName} from "../utils/utils.js";
 
-import {cPermissionTypes} from "../MainData.js";
+import {cPermissionTypes, NoteManager} from "../MainData.js";
 
 export class notePermissionsWindow extends Application {
 	constructor(pNoteID, pNoteData, pOptions) {
@@ -21,6 +21,10 @@ export class notePermissionsWindow extends Application {
 		return game.users.get(this.noteData.owner);
 	}
 	
+	get permissions() {
+		return this.noteData.permissions;
+	}
+	
 	//app stuff
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
@@ -35,8 +39,15 @@ export class notePermissionsWindow extends Application {
 		});
 	}
 	
-	relevantUsers() {
-		return Array.from(game.users).filter(vUser => vUser != this.owner);
+	relevantUsers(pWithDefault = false) {
+		let vUsers =  Array.from(game.users).filter(vUser => vUser != this.owner);
+		
+		vUsers.unshift({
+			name : "default",
+			id : "default"
+		});
+		
+		return vUsers;
 	}
 	
 	async _render(pforce=false, poptions={}) {
@@ -50,7 +61,7 @@ export class notePermissionsWindow extends Application {
 		let vPermissionTable = document.createElement("table");
 		vPermissionTable.style.overflowY = "auto";
 		
-		let vRelevantUsers = this.relevantUsers();
+		let vRelevantUsers = this.relevantUsers(true);
 		
 		let vTitle = document.createElement("tr");
 		
@@ -91,6 +102,11 @@ export class notePermissionsWindow extends Application {
 			}
 			
 			vPermission.appendChild(vPermissionSelect);
+			let vDefaultID = 0;
+			if (vUser.id == "default") {
+				vDefaultID = 1;
+			}
+			vPermissionSelect.value = this.permissions[vUser.id] || cPermissionTypes[vDefaultID];
 			
 			vEntry.appendChild(vPermission);
 			
@@ -103,7 +119,10 @@ export class notePermissionsWindow extends Application {
 		let vButtons = document.createElement("div");
 		
 		let vConfirmButton = document.createElement("button");
-		vConfirmButton.onclick = () => {this.applyPermissions()};
+		vConfirmButton.onclick = () => {
+			this.applyPermissions();
+			this.close();
+		};
 		
 		let vConfirmIcon = document.createElement("i");
 		vConfirmIcon.classList.add("fa-solid", "fa-check");
@@ -120,6 +139,14 @@ export class notePermissionsWindow extends Application {
 	}
 	
 	applyPermissions() {
+		let vCurrentPermission = {};
 		
+		let vUsers = this.relevantUsers(true);
+		
+		for (let vUserID of vUsers.map(vUser => vUser.id)) {
+			vCurrentPermission[vUserID] = this._element[0].querySelector(`#${vUserID}`).value;
+		}
+		
+		NoteManager.updateNote(this.noteID, {permissions : vCurrentPermission});
 	}
 }

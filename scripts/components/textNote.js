@@ -22,7 +22,6 @@ export class textNote extends basicNote {
 		vText.style.resize = "none";
 		vText.style.borderRadius = "0";
 		vText.style.marginTop = "3px";
-		vText.style.marginBottom = "3px";
 		vText.style.background = "transparent";
 		vText.style.fontFamily = "Arial";
 		vText.value = this.text;
