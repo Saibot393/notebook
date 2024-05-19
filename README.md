@@ -8,5 +8,5 @@ Please note, that the notes are saved per user. To edit a note you have have acc
 
 Multiple types of notes are available:
 
-#### Text note
-A simple note that allows you share small texts
+- #### Text notes:
+  A simple note that allows you share small texts
