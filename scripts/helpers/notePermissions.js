@@ -35,7 +35,7 @@ export class notePermissionsWindow extends Application {
 			template: `modules/${cModuleName}/templates/default.html`,
 			jQuery: true,
 			//title: Translate(cWindowID + ".titles." + "VisionChannels"),
-			resizable: false
+			resizable: true
 		});
 	}
 	
@@ -60,8 +60,12 @@ export class notePermissionsWindow extends Application {
 		vMainDIV.style.display = "flex";
 		vMainDIV.style.flexDirection = "column";
 		
+		let vTableDIV = document.createElement("div");
+		vTableDIV.style.overflowY = "auto";
+		//vTableDIV.style.flexGrow = "1";
+		vTableDIV.style.height = "calc(100%-32px)";
+		
 		let vPermissionTable = document.createElement("table");
-		vPermissionTable.style.overflowY = "auto";
 		
 		let vRelevantUsers = this.relevantUsers(true);
 		
@@ -116,10 +120,13 @@ export class notePermissionsWindow extends Application {
 			vPermissionTable.appendChild(vEntry);
 		}
 		
+		vTableDIV.appendChild(vPermissionTable);
+		
 		let vSpacer = document.createElement("div");
 		vSpacer.style.flexGrow = "1";
 		
 		let vButtons = document.createElement("div");
+		vButtons.style.height = "32px";
 		
 		let vConfirmButton = document.createElement("button");
 		vConfirmButton.onclick = () => {
@@ -134,7 +141,7 @@ export class notePermissionsWindow extends Application {
 		
 		vButtons.appendChild(vConfirmButton);
 		
-		vMainDIV.appendChild(vPermissionTable);
+		vMainDIV.appendChild(vTableDIV);
 		vMainDIV.appendChild(vSpacer);
 		vMainDIV.appendChild(vButtons);
 		
