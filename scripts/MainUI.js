@@ -1,28 +1,17 @@
 import {cModuleName} from "./utils/utils.js";
-import {NoteManager} from "./MainData.js";
+import {NoteManager, cleanUserData} from "./MainData.js";
 
 import {noteCreation} from "./helpers/noteCreation.js";
 
-import {basicNote} from "./components/basicNote.js";
-
-import {textNote} from "./components/textNote.js";
-import {counterNote} from "./components/counterNote.js";
-
 const cNoteIcon = "fa-note-sticky";
 
-CONFIG[cModuleName] = {
-	basicNote : basicNote,
-	noteTypes : {
-		text : textNote,
-		counter : counterNote
-	}
-}
-
 Hooks.once("init", () => {
-	Hooks.call(cModuleName + ".notesInit", {basicNote : basicNote});
+	Hooks.call(cModuleName + ".notesInit", {});
 });
 
-Hooks.once("ready", () => {
+Hooks.once("ready", async () => {
+	await cleanUserData(); //clean before to prevent bugs during delete
+	
 	let vSidebar = ui.sidebar._element[0];
 	if (game.user.isGM) {
 		vSidebar.style.width = "315px"
@@ -46,13 +35,13 @@ Hooks.once("ready", () => {
 	vNoteTab.setAttribute("id", "notes");
 	vNoteTab.setAttribute("data-tab", "notes");
 	
-	Hooks.call(cModuleName + ".prepareNotes", {NoteTab : vNoteTab, basicNote : basicNote});
+	Hooks.call(cModuleName + ".prepareNotes", {NoteTab : vNoteTab});
 	
 	ui.sidebar.tabs[cModuleName] = new Notes({tab : vNoteTab});
 	
 	vSidebar.appendChild(vNoteTab);
 	
-	Hooks.call(cModuleName + ".notesReady", {NoteTab : vNoteTab, basicNote : basicNote, notes : ui.sidebar.tabs[cModuleName]});
+	Hooks.call(cModuleName + ".notesReady", {NoteTab : vNoteTab, notes : ui.sidebar.tabs[cModuleName]});
 });
 
 const cNoteSortFlag = "notesort";
@@ -100,7 +89,14 @@ class Notes /*extends SidebarTab*/ {
 		
 		let vNewNoteButton = document.createElement("button");
 		vNewNoteButton.classList.add("create-document", "create-entry");
-		vNewNoteButton.onclick = () => {noteCreation(this.createEntry);};
+		vNewNoteButton.onclick = (pEvent) => {
+			if (pEvent.shiftKey) {
+				this.createEntry("text");
+			}
+			else {
+				noteCreation(this.createEntry);
+			}
+		};
 		
 		let vNewNoteIcon = document.createElement("i");
 		vNewNoteIcon.classList.add("fa-solid", cNoteIcon);
@@ -133,6 +129,9 @@ class Notes /*extends SidebarTab*/ {
 				this.notes[vKey] = new vClass(vKey, this.notes[vKey], this.defaultNoteOptions);
 				
 				this.entries.appendChild(this.notes[vKey].element);
+			}
+			else {
+				delete this.notes[vKey];
 			}
 		}
 		

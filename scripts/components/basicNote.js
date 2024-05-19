@@ -12,8 +12,6 @@ const cColors = ["white", "#f5ea20", "#e8ae1a", "#c73443", "#34c765", "#4287f5"]
 const cPermissionIcon = "fa-book-open-reader";
 const cDeleteIcon = "fa-trash-can";
 
-const cBlack = "#181818";
-
 export class basicNote {
 	constructor(pNoteID, pNoteData, pOptions = {}) {
 		this.noteID = pNoteID;
@@ -29,6 +27,8 @@ export class basicNote {
 		this._hastick = false;
 
 		this.render();
+		
+		this.onMouseHoverChange();
 	}
 	
 	get id() {
@@ -61,6 +61,18 @@ export class basicNote {
 	
 	get color() {
 		return this.noteData.backColor;
+	}
+	
+	get captionColor() {
+		return "#181818";
+	}
+	
+	get smallHeightLimit() {
+		return "87px";
+	}
+	
+	get largeHeightLimit() {
+		return "174px";
 	}
 	
 	set color(pColor) {
@@ -122,7 +134,7 @@ export class basicNote {
 		this.element = document.createElement("div");
 		this.element.id = this.id;
 		this.element.flexDirection = "column";
-		this.element.style.border = cBlack;
+		this.element.style.border = this.captionColor;
 		this.element.style.height = "auto";
 		this.element.onmouseenter = () => {this.isMouseHover = true};
 		this.element.onmouseleave = () => {this.isMouseHover = false};
@@ -132,7 +144,7 @@ export class basicNote {
 		this.captionElement = document.createElement("div");
 		this.captionElement.style.top = 0;
 		this.captionElement.style.width = 100;
-		this.captionElement.style.backgroundColor = cBlack;
+		this.captionElement.style.backgroundColor = this.captionColor;
 		this.captionElement.style.color = "white";
 		this.captionElement.style.flexDirection = "row";
 		this.captionElement.style.height = "auto";
@@ -173,7 +185,7 @@ export class basicNote {
 		let vTitle = document.createElement("input");
 		vTitle.id = "title";
 		vTitle.style.borderRadius = "0";
-		vTitle.style.backgroundColor = cBlack;
+		vTitle.style.backgroundColor = this.captionColor;
 		vTitle.style.color = "white";
 		vTitle.type = "text";
 		vTitle.value = this.title;

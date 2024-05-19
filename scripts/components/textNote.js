@@ -44,8 +44,6 @@ export class textNote extends basicNote {
 		this.mainElement.appendChild(vText);
 		
 		this.contentElements.text = vText;
-		
-		this.updateTextHeight();
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
@@ -72,10 +70,10 @@ export class textNote extends basicNote {
 		this.contentElements.text.style.height = `${this.contentElements.text.scrollHeight+2}px`;
 		
 		if (this.contentElements.text == document.activeElement || this.isMouseHover) {
-			this.contentElements.text.style.maxHeight = "163px"
+			this.contentElements.text.style.maxHeight = this.largeHeightLimit;
 		}
 		else {
-			this.contentElements.text.style.maxHeight = "48px"
+			this.contentElements.text.style.maxHeight = this.smallHeightLimit;
 		}
 	}
 }

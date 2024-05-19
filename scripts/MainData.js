@@ -1,6 +1,21 @@
 import {cModuleName} from "./utils/utils.js";
 
+import {basicNote} from "./components/basicNote.js";
+
+import {textNote} from "./components/textNote.js";
+import {counterNote} from "./components/counterNote.js";
+import {listNote} from "./components/listNote.js";
+
 const cNotesFlag = "notes";
+
+CONFIG[cModuleName] = {
+	basicNote : basicNote,
+	noteTypes : {
+		text : textNote,
+		counter : counterNote,
+		list : listNote
+	}
+}
 
 const cDefaultNote = {
 	type : "text",
@@ -15,7 +30,20 @@ const cDefaultNote = {
 
 export const cPermissionTypes = ["default", "none", "see", "edit"];
 
-const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roundcounter", "chat"];
+const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roundcounter", "chat", "image", "macros"];
+
+export async function cleanUserData() {
+	//remove empty note flags
+	let vNotes = game.user.getFlag(cModuleName, cNotesFlag);
+	
+	let vIDs = Object.keys(vNotes);
+	
+	for (let vID of vIDs) {
+		if (vNotes[vID] == null) {
+			await game.user.unsetFlag(cModuleName, `${cNotesFlag}.${vID}`);
+		}
+	}
+};
 
 class NoteManager {
 	//DECLARATIONS
@@ -282,7 +310,7 @@ Hooks.on("updateUser", (pUser, pChanges, pContext) => {
 		
 		for (let vKey of Object.keys(vNoteUpdates)) {
 			let vPermission = pUser.flags[cModuleName][cNotesFlag][vKey]?.permissions ? Boolean(pUser.flags[cModuleName][cNotesFlag][vKey].permissions[game.user.id]) : undefined;
-			let vDeletion = Boolean(pChanges.flags[cModuleName][cNotesFlag][vKey] == null);
+			let vDeletion = !pChanges.flags[cModuleName][cNotesFlag][vKey];
 			
 			Hooks.call(cModuleName + ".updateNote", {...pUser.flags[cModuleName][cNotesFlag][vKey], id : vKey}, {...vNoteUpdates[vKey]}, {...pContext, permission : vPermission, deletion : vDeletion});
 		}
