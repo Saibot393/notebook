@@ -12,6 +12,8 @@ const cColors = ["white", "#f5ea20", "#e8ae1a", "#c73443", "#34c765", "#4287f5"]
 const cPermissionIcon = "fa-book-open-reader";
 const cDeleteIcon = "fa-trash-can";
 
+const cStickyHover = false;
+
 export class basicNote {
 	constructor(pNoteID, pNoteData, pOptions = {}) {
 		this.noteID = pNoteID;
@@ -28,7 +30,7 @@ export class basicNote {
 
 		this.render();
 		
-		this.onMouseHoverChange();
+		this._mouseHoverCallBack = pOptions.mouseHoverCallBack;
 	}
 	
 	get id() {
@@ -86,6 +88,12 @@ export class basicNote {
 	set isMouseHover(pisMouseHover) {
 		if (this.isMouseHover != pisMouseHover) {
 			this._isMouseHover = pisMouseHover;
+			if (cStickyHover) {
+				if (pisMouseHover && this._mouseHoverCallBack) {
+					this._mouseHoverCallBack(this.id);
+				}
+			}
+			
 			this.onMouseHoverChange();
 		}
 	}
@@ -137,7 +145,7 @@ export class basicNote {
 		this.element.style.border = this.captionColor;
 		this.element.style.height = "auto";
 		this.element.onmouseenter = () => {this.isMouseHover = true};
-		this.element.onmouseleave = () => {this.isMouseHover = false};
+		if (!cStickyHover) this.element.onmouseleave = () => {this.isMouseHover = false};
 		this.element.style.marginBottom = "5px";
 		//this.element.draggable = true;
 		
@@ -177,6 +185,8 @@ export class basicNote {
 		}
 		
 		this.synchToggleState();
+		
+		this.onMouseHoverChange();
 	}
 	
 	renderCaption() {

@@ -63,7 +63,9 @@ class Notes /*extends SidebarTab*/ {
 	}
 	
 	get defaultNoteOptions() {
-		
+		return {
+			mouseHoverCallBack : (pID) => {this.onMouseHoverNote(pID)}
+		}
 	}
 	
 	get sortorder() {
@@ -221,6 +223,15 @@ class Notes /*extends SidebarTab*/ {
 			else {
 				this.sortatEnd(vDropData.id);
 			}	
+		}
+	}
+	
+	onMouseHoverNote(pID) {
+		console.log(notes);
+		for (let vKey of Object.keys(this.notes)) {
+			if (vKey != pID) {
+				this.notes[vKey].isMouseHover = false;
+			}
 		}
 	}
 	

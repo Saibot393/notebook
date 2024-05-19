@@ -1,6 +1,8 @@
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
 
+import {registerHoverShadow} from "../helpers/visualHelpers.js";
+
 export class listNote extends basicNote {
 	get type() {
 		return "list";
@@ -30,15 +32,16 @@ export class listNote extends basicNote {
 		this.updateList();
 		
 		let vAdddiv = document.createElement("div");
+		vAdddiv.style.width = "100%";
+		vAdddiv.style.textAlign = "center";
+		vAdddiv.style.color = "maroon";
 		
 		let vAdd = document.createElement("i");
 		vAdd.classList.add("fa-solid", "fa-plus");
 		vAdd.onclick = () => {this.appendList()};
+		registerHoverShadow(vAdd);
 		
 		vAdddiv.appendChild(vAdd);
-		vAdddiv.style.width = "100%";
-		vAdddiv.style.textAlign = "center";
-		vAdddiv.style.color = "maroon";
 		
 		this.mainElement.appendChild(vList);
 		this.mainElement.appendChild(vAdddiv);
@@ -114,11 +117,12 @@ export class listNote extends basicNote {
 				vCheckBorder.style.width = "22px";
 				vCheckBorder.style.fontSize = "15px"
 				vCheckBorder.style.border = "2px solid maroon";
-				vCheckBorder.style.textAlign = "center"
+				vCheckBorder.style.textAlign = "center";
 				let vCheck = document.createElement("i");
 				vCheck.style.margin = "auto";
 				vCheck.classList.add("fa-solid", "fa-check");
 				vCheck.style.color = "maroon";
+				registerHoverShadow(vCheck);
 				vSetCheckState(vCheck, vList[i].checked != undefined ? vList[i].checked : false);
 				vCheckBorder.appendChild(vCheck);
 				vCheckBorder.onclick = () => {
@@ -144,6 +148,7 @@ export class listNote extends basicNote {
 				vDelete.style.marginLeft = "3px";
 				vDelete.style.marginRight = "3px";
 				vDelete.onclick = () => { this.removeEntry(i)};
+				registerHoverShadow(vDelete);
 				
 				vEntry.appendChild(vCheckBorder);
 				vEntry.appendChild(vText);
