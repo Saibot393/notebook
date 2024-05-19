@@ -1,4 +1,7 @@
+import {cModuleName} from "../utils/utils.js";
+
 import {NoteManager} from "../MainData.js";
+import {cNoteToggleFlag} from "../MainUI.js";
 
 import {notePermissionsWindow} from "../helpers/notePermissions.js";
 
@@ -8,7 +11,7 @@ const cPermissionIcon = "fa-book-open-reader";
 const cDeleteIcon = "fa-trash-can";
 
 export class basicNote {
-	constructor(pNoteID, pNoteData) {
+	constructor(pNoteID, pNoteData, pOptions = {}) {
 		this.noteID = pNoteID;
 		
 		this.noteData = pNoteData;
@@ -69,8 +72,45 @@ export class basicNote {
 		
 	}
 	
+	get contentState() {
+		return this.mainElement.style.display != "none";
+	}
+	
+	set contentState(pState) {
+		if (pState != this.contentState) {
+			this.toggleContent();
+		}
+	}
+	
+	toggleContent() {
+		if (this.contentState) {
+			this.mainElement.style.display = "none";
+		}
+		else {
+			this.mainElement.style.display = "";
+		}
+		
+		game.user.setFlag(cModuleName, cNoteToggleFlag, {[this.id] : this.contentState});
+	}
+	
+	synchToggleState() {
+		let vStates = game.user.getFlag(cModuleName, cNoteToggleFlag);
+		
+		let vState;
+		if (vStates) {
+			vState = vStates[this.id];
+		}
+		
+		if (vState == undefined) {
+			vState = true;
+		}
+		
+		this.contentState = vState;
+	}
+	
 	render() {
 		this.element = document.createElement("div");
+		this.element.id = this.id;
 		this.element.flexDirection = "column";
 		this.element.style.border = "black";
 		this.element.style.height = "auto";
@@ -89,6 +129,12 @@ export class basicNote {
 		this.captionElement.style.display = "flex";
 		this.captionElement.onclick = () => {this.toggleContent()};
 		this.captionElement.draggable = true;
+		this.captionElement.ondragstart = (event) => {
+			event.dataTransfer.setData("text/plain", JSON.stringify({
+				id : this.id,
+				isNote : true
+			}));
+		};
 		
 		this.mainElement = document.createElement("div");
 		this.mainElement.style.height = "auto";
@@ -106,6 +152,8 @@ export class basicNote {
 		if (!this.canEdit) {
 			this.disablebasic();
 		}
+		
+		this.synchToggleState();
 	}
 	
 	renderCaption() {
@@ -180,25 +228,6 @@ export class basicNote {
 	renderContent() {
 		//specific implementations required
 		//this.content
-	}
-	
-	get contentState() {
-		return this.mainElement.style.display != "none";
-	}
-	
-	set contentState(pState) {
-		if (pState != this.contentState) {
-			this.toggleContent;
-		}
-	}
-	
-	toggleContent() {
-		if (this.contentState) {
-			this.mainElement.style.display = "none";
-		}
-		else {
-			this.mainElement.style.display = "";
-		}
 	}
 	
 	updateRender(pupdatedNote, pUpdate) {

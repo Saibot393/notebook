@@ -277,7 +277,7 @@ class NoteManager {
 }
 
 Hooks.on("updateUser", (pUser, pChanges, pContext) => {
-	if (pChanges.flags[cModuleName] && pChanges.flags[cModuleName][cNotesFlag]) {
+	if (pChanges.flags && pChanges.flags[cModuleName] && pChanges.flags[cModuleName][cNotesFlag]) {
 		let vNoteUpdates = pChanges.flags[cModuleName][cNotesFlag];
 		
 		for (let vKey of Object.keys(vNoteUpdates)) {

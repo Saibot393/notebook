@@ -65,11 +65,11 @@ export class notePermissionsWindow extends Application {
 		
 		let vTitle = document.createElement("tr");
 		
-		let vNameTitle = document.createElement("td");
+		let vNameTitle = document.createElement("th");
 		vNameTitle.innerHTML = "name";
 		vNameTitle.style.width = "70%";
 		
-		let vPermissionTitle = document.createElement("td");
+		let vPermissionTitle = document.createElement("th");
 		vPermissionTitle.innerHTML = "name";
 		
 		vTitle.appendChild(vNameTitle);
@@ -90,6 +90,7 @@ export class notePermissionsWindow extends Application {
 			vEntry.appendChild(vName);
 			
 			let vPermission = document.createElement("td");
+			vPermission.style.textAlign = "center";
 			let vPermissionSelect = document.createElement("select");
 			vPermissionSelect.id = vUser.id;
 			

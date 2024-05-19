@@ -1,6 +1,8 @@
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
 
+let vMaxTextLength = 20000;
+
 export class textNote extends basicNote {
 	get type() {
 		return "text";
@@ -26,7 +28,12 @@ export class textNote extends basicNote {
 		vText.style.fontFamily = "Arial";
 		vText.value = this.text;
 		vText.oninput = () => {
+			if (vText.value.length > vMaxTextLength) { //prevent data flooding
+				vText.value = vText.value.slice(0, vMaxTextLength);
+			}
+			
 			this.updateTextHeight();
+			
 			if (this.text != vText.value) {
 				this.text = vText.value;
 			}
