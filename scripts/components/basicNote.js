@@ -5,10 +5,14 @@ import {cNoteToggleFlag} from "../MainUI.js";
 
 import {notePermissionsWindow} from "../helpers/notePermissions.js";
 
+import {registerHoverShadow} from "../helpers/visualHelpers.js";
+
 const cColors = ["white", "#f5ea20", "#e8ae1a", "#c73443", "#34c765", "#4287f5"];
 
 const cPermissionIcon = "fa-book-open-reader";
 const cDeleteIcon = "fa-trash-can";
+
+const cBlack = "#181818";
 
 export class basicNote {
 	constructor(pNoteID, pNoteData, pOptions = {}) {
@@ -21,6 +25,8 @@ export class basicNote {
 		this.contentElements = {};
 		
 		this._isMouseHover = false;
+		
+		this._hastick = false;
 
 		this.render();
 	}
@@ -116,7 +122,7 @@ export class basicNote {
 		this.element = document.createElement("div");
 		this.element.id = this.id;
 		this.element.flexDirection = "column";
-		this.element.style.border = "black";
+		this.element.style.border = cBlack;
 		this.element.style.height = "auto";
 		this.element.onmouseenter = () => {this.isMouseHover = true};
 		this.element.onmouseleave = () => {this.isMouseHover = false};
@@ -126,12 +132,13 @@ export class basicNote {
 		this.captionElement = document.createElement("div");
 		this.captionElement.style.top = 0;
 		this.captionElement.style.width = 100;
-		this.captionElement.style.backgroundColor = "black";
+		this.captionElement.style.backgroundColor = cBlack;
 		this.captionElement.style.color = "white";
 		this.captionElement.style.flexDirection = "row";
 		this.captionElement.style.height = "auto";
 		this.captionElement.style.display = "flex";
 		this.captionElement.onclick = () => {this.toggleContent()};
+		this.captionElement.oncontextmenu = () => {this.toggleContent()};
 		this.captionElement.draggable = true;
 		this.captionElement.ondragstart = (event) => {
 			event.dataTransfer.setData("text/plain", JSON.stringify({
@@ -166,7 +173,7 @@ export class basicNote {
 		let vTitle = document.createElement("input");
 		vTitle.id = "title";
 		vTitle.style.borderRadius = "0";
-		vTitle.style.backgroundColor = "black";
+		vTitle.style.backgroundColor = cBlack;
 		vTitle.style.color = "white";
 		vTitle.type = "text";
 		vTitle.value = this.title;
@@ -204,6 +211,7 @@ export class basicNote {
 			vPermissionButton.classList.add("fa-solid", cPermissionIcon);
 			vPermissionButton.style.margin = "5px";
 			vPermissionButton.onclick = () => { new notePermissionsWindow(this.id, this.noteData, {}).render(true)};
+			registerHoverShadow(vPermissionButton);
 			vElements.push(vPermissionButton);
 		}
 		
@@ -212,6 +220,7 @@ export class basicNote {
 			vDeleteIcon.classList.add("fa-solid", cDeleteIcon);
 			vDeleteIcon.style.margin = "5px";
 			vDeleteIcon.onclick = () => {NoteManager.deleteNote(this.id)};
+			registerHoverShadow(vDeleteIcon);
 			vElements.push(vDeleteIcon);
 		}
 		
@@ -295,6 +304,10 @@ export class basicNote {
 	
 	tick() {
 		//tick every 100ms for time dependent stuff
+	}
+	
+	hastick() {
+		return this._hastick;
 	}
 	
 	round() {

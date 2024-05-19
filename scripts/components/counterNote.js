@@ -1,6 +1,8 @@
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
 
+import {registerHoverShadow} from "../helpers/visualHelpers.js";
+
 const cNumber = "0123456789";
 
 const cFastNumber = {
@@ -78,6 +80,7 @@ export class counterNote extends basicNote {
 		};
 		vMinus.style.marginLeft = "5px";
 		vMinus.style.marginRight = "5px";
+		registerHoverShadow(vMinus);
 		
 		let vCount = document.createElement("input");
 		vCount.type = "text";
@@ -122,6 +125,7 @@ export class counterNote extends basicNote {
 		};
 		vPlus.style.marginLeft = "5px";
 		vPlus.style.marginRight = "5px";
+		registerHoverShadow(vPlus);
 		
 		vCountDIV.appendChild(vMinus);
 		vCountDIV.appendChild(vCount);
@@ -160,6 +164,31 @@ export class counterNote extends basicNote {
 		this.contentElements.count.disabled = false;
 		this.contentElements.plus.style.display = "";
 		this.contentElements.minus.style.display = "";
+	}
+	
+	startAutoCount(pValue) {
+		this.autoCount = pValue;
+		
+		this.skipTicks = 4;
+		
+		this._hastick = true;
+	}
+	
+	stopAutoCount() {
+		this.autoCount = null;
+		
+		this._hastick = false;
+	}
+	
+	tick() {
+		if (this.skipTicks > 0) {
+			this.skipTicks = this.skipTicks - 1;
+		}
+		else {
+			if (this.autoCount) {
+				this.change(this.autoCount);
+			}
+		}
 	}
 	
 	onMouseHoverChange() {
