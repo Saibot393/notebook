@@ -1,0 +1,167 @@
+import {NoteManager} from "../MainData.js";
+import {basicNote} from "./basicNote.js";
+
+const cNumber = "0123456789";
+
+const cFastNumber = {
+	shift : 5,
+	alt : 50
+}
+
+export class counterNote extends basicNote {
+	get type() {
+		return "counter";
+	}
+	
+	get value() {
+		return this.content.value || 0;
+	}
+	
+	set value(pValue) {
+		this.updateContent({value : Number(pValue)});
+	}
+	
+	get max() {
+		return this.content.max || Infinity;
+	}
+	
+	set max(pMax) {
+		this.updateContent({max : Math.min(0, Number(pMax))});
+	}
+	
+	change(pChange) {
+		this.value = Math.max(Math.min(this.value +Number(pChange), this.max), 0)
+	}
+	
+	applyCount(pCount) {
+		let vUpdate = {
+			value : 0,
+			max : Infinity
+		};
+		
+		let vProcessed = pCount.split("/");
+		
+		if (vProcessed.length == 1) {
+			vUpdate.value = Number(vProcessed[0]);
+		}
+		
+		if (vProcessed.length == 2) {
+			vUpdate.value = Number(vProcessed[0]);
+			vUpdate.max = Number(vProcessed[1]);
+		}
+		
+		this.updateContent(vUpdate);
+	}
+	
+	renderContent() {
+		let vCountDIV = document.createElement("div");
+		vCountDIV.style.flexDirection = "row";
+		vCountDIV.style.display = "flex";
+		vCountDIV.style.color = "maroon";
+		vCountDIV.style.fontSize = "25px";
+		vCountDIV.style.textAlign = "center";
+		
+		let vMinus = document.createElement("i");
+		vMinus.classList.add("fa-solid", "fa-minus");
+		vMinus.style.margin = "auto";
+		vMinus.onclick = (pEvent) => {
+			let vValue = 1;
+			
+			if (pEvent.shiftKey) {
+				vValue = cFastNumber.shift;
+			}
+			if (pEvent.altKey) {
+				vValue = cFastNumber.alt;
+			}
+			
+			this.change(-1 * vValue);
+		};
+		vMinus.style.marginLeft = "5px";
+		vMinus.style.marginRight = "5px";
+		
+		let vCount = document.createElement("input");
+		vCount.type = "text";
+		vCount.style.width = "auto";
+		vCount.style.height = "auto";
+		vCount.style.fontSize = "50px";
+		vCount.style.color = "maroon";
+		vCount.style.backgroundColor = "rgba(255,255,255,0)";
+		vCount.style.border = "0px";
+		vCount.oninput = () => {
+			if (vCount.value.length > 0) {
+				let vValid = false;
+				let vCharacter = vCount.value[vCount.value.length-1];
+				
+				if (cNumber.includes(vCharacter) || (vCharacter == "/" && vCount.value.indexOf("/") == vCount.value.length-1 && vCount.value.length > 1)) {
+					vValid = true;
+				}
+				
+				if (!vValid) {
+					vCount.value = vCount.value.slice(0, vCount.value.length-1);
+				}
+			}
+		};
+		vCount.onchange = () => {
+			this.applyCount(vCount.value);
+		};
+		
+		let vPlus = document.createElement("i");
+		vPlus.classList.add("fa-solid", "fa-plus");
+		vPlus.style.margin = "auto";
+		vPlus.onclick = (pEvent) => {
+			let vValue = 1;
+			
+			if (pEvent.shiftKey) {
+				vValue = cFastNumber.shift;
+			}
+			if (pEvent.altKey) {
+				vValue = cFastNumber.alt;
+			}
+			
+			this.change(1 * vValue);
+		};
+		vPlus.style.marginLeft = "5px";
+		vPlus.style.marginRight = "5px";
+		
+		vCountDIV.appendChild(vMinus);
+		vCountDIV.appendChild(vCount);
+		vCountDIV.appendChild(vPlus);
+		
+		this.mainElement.appendChild(vCountDIV);
+		
+		this.contentElements.count = vCount;
+		this.contentElements.minus = vMinus;
+		this.contentElements.plus = vPlus;
+		this.updateCounter();
+	}
+	
+	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
+		if (pContentUpdate.hasOwnProperty("value") || pContentUpdate.hasOwnProperty("max")) {
+			this.updateCounter();
+		}
+	}
+	
+	updateCounter() {
+		if (this.max < Infinity) {
+			this.contentElements.count.value = `${this.value}/${this.max}`;
+		}
+		else {
+			this.contentElements.count.value = `${this.value}`;
+		}
+	}
+	
+	disable() {
+		this.contentElements.count.disabled = true;
+		this.contentElements.plus.style.display = "none";
+		this.contentElements.minus.style.display = "none";
+	}
+	
+	enable() {
+		this.contentElements.count.disabled = false;
+		this.contentElements.plus.style.display = "";
+		this.contentElements.minus.style.display = "";
+	}
+	
+	onMouseHoverChange() {
+	}
+}

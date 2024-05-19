@@ -12,6 +12,8 @@ export class notePermissionsWindow extends Application {
 		
 		this.noteID = pNoteID;
 		
+		this.selector = {};
+		
 		if (this.owner != game.user && !game.user.isGM) {
 			this.close();
 		}
@@ -99,6 +101,7 @@ export class notePermissionsWindow extends Application {
 			vPermission.style.textAlign = "center";
 			let vPermissionSelect = document.createElement("select");
 			vPermissionSelect.id = vUser.id;
+			this.selector[vUser.id] = vPermissionSelect;
 			
 			for (let vType of cPermissionTypes) {
 				let vOption = document.createElement("option");
@@ -154,7 +157,7 @@ export class notePermissionsWindow extends Application {
 		let vUsers = this.relevantUsers(true);
 		
 		for (let vUserID of vUsers.map(vUser => vUser.id)) {
-			vCurrentPermission[vUserID] = this._element[0].querySelector(`#${vUserID}`).value;
+			vCurrentPermission[vUserID] = this.selector[vUserID].value;
 		}
 		
 		NoteManager.updateNote(this.noteID, {permissions : vCurrentPermission});

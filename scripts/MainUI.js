@@ -6,13 +6,15 @@ import {noteCreation} from "./helpers/noteCreation.js";
 import {basicNote} from "./components/basicNote.js";
 
 import {textNote} from "./components/textNote.js";
+import {counterNote} from "./components/counterNote.js";
 
 const cNoteIcon = "fa-note-sticky";
 
 CONFIG[cModuleName] = {
 	basicNote : basicNote,
 	noteTypes : {
-		text : textNote
+		text : textNote,
+		counter : counterNote
 	}
 }
 

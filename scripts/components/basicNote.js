@@ -41,6 +41,10 @@ export class basicNote {
 		return NoteManager.canEditSelf(this.noteData);
 	}
 	
+	get permissionLevel() {
+		return NoteManager.permissionLevel(this.noteData, game.user.id);
+	}
+	
 	get title() {
 		return this.noteData.title != undefined ? this.noteData.title : "";
 	}
@@ -291,6 +295,10 @@ export class basicNote {
 	
 	tick() {
 		//tick every 100ms for time dependent stuff
+	}
+	
+	round() {
+		//called when a round ends
 	}
 	
 	applyFilter(pFilter) {
