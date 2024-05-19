@@ -1,6 +1,8 @@
 import {cModuleName} from "./utils/utils.js";
 import {NoteManager} from "./MainData.js";
 
+import {noteCreation} from "./helpers/noteCreation.js";
+
 import {basicNote} from "./components/basicNote.js";
 
 import {textNote} from "./components/textNote.js";
@@ -96,7 +98,7 @@ class Notes /*extends SidebarTab*/ {
 		
 		let vNewNoteButton = document.createElement("button");
 		vNewNoteButton.classList.add("create-document", "create-entry");
-		vNewNoteButton.onclick = () => {this.createEntry("text")};
+		vNewNoteButton.onclick = () => {noteCreation(this.createEntry);};
 		
 		let vNewNoteIcon = document.createElement("i");
 		vNewNoteIcon.classList.add("fa-solid", cNoteIcon);
@@ -135,13 +137,11 @@ class Notes /*extends SidebarTab*/ {
 		this.sortEntries();
 	}
 	
-	async createEntry(pType) {
+	createEntry(pType, pData) {
 		let vClass = CONFIG[cModuleName].noteTypes[pType];
 		
 		if (vClass) {
-			let vID = await NoteManager.createNewNote({type : pType});
-			
-			this.addNode(vID);
+			NoteManager.createNewNote({...pData, type : pType});
 		}
 	}
 	
@@ -190,8 +190,6 @@ class Notes /*extends SidebarTab*/ {
 	}
 	
 	ondrop(pEvent) {
-		console.log(pEvent);
-		
 		let vDropData = pEvent.dataTransfer.getData("text/plain") ? JSON.parse(pEvent.dataTransfer.getData("text/plain")) : undefined;
 		
 		if (vDropData.isNote) {

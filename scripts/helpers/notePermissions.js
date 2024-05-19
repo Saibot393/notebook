@@ -47,6 +47,8 @@ export class notePermissionsWindow extends Application {
 			id : "default"
 		});
 		
+		vUsers = vUsers.filter(vUser => !vUser.isGM);
+		
 		return vUsers;
 	}
 	
