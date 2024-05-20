@@ -1,4 +1,4 @@
-import {cModuleName, Translate} from "./utils/utils.js";
+import {cModuleName, cTickInterval, Translate} from "./utils/utils.js";
 import {NoteManager, cleanUserData} from "./MainData.js";
 
 import {noteCreation} from "./helpers/noteCreation.js";
@@ -67,7 +67,8 @@ class Notes /*extends SidebarTab*/ {
 	
 	get defaultNoteOptions() {
 		return {
-			mouseHoverCallBack : (pID) => {this.onMouseHoverNote(pID)}
+			mouseHoverCallBack : (pID) => {this.onMouseHoverNote(pID)},
+			onTickChange : (pID) => {this.onTickChange(pID)}
 		}
 	}
 	
@@ -247,6 +248,23 @@ class Notes /*extends SidebarTab*/ {
 			if (vKey != pID) {
 				this.notes[vKey].isMouseHover = false;
 			}
+		}
+	}
+	
+	onTickChange(pID) {
+		this.tickNotes = Object.values(this.notes).filter(vNote => vNote.hastick());
+		
+		if (this.tickNotes.length > 0) {
+			this.tick();
+		}
+	}
+	
+	tick() {
+		if (this.tickNotes.length > 0) {
+			for (let vNote of this.tickNotes) {
+				vNote.tick();
+			}
+			setTimeout(() => {this.tick()}, cTickInterval);
 		}
 	}
 	

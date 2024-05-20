@@ -1,5 +1,7 @@
 export const cModuleName = "notebook";
 
+export const cTickInterval = 100; //ms
+
 export function Translate(pName, pWords = {}){
 	let vContent = game.i18n.localize(cModuleName+"."+pName);
 	

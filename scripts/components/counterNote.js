@@ -4,6 +4,7 @@ import {basicNote} from "./basicNote.js";
 import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
 const cNumber = "0123456789";
+const cPM = "+-";
 
 const cFastNumber = {
 	shift : 5,
@@ -99,8 +100,17 @@ export class counterNote extends basicNote {
 			if (vCount.value.length > 0) {
 				let vValid = false;
 				let vCharacter = vCount.value[vCount.value.length-1];
+				let vFirst = vCount.value[0];
 				
-				if (cNumber.includes(vCharacter) || (vCharacter == "/" && vCount.value.indexOf("/") == vCount.value.length-1 && vCount.value.length > 1)) {
+				console.log("test");
+				console.log(vCharacter);
+				console.log(vCount.value);
+				
+				if 	(	
+						cNumber.includes(vCharacter) ||
+						(vCharacter == "/" && vCount.value.indexOf("/") == vCount.value.length-1 && vCount.value.length > 1 && !cPM.includes(vFirst)) ||
+						(cPM.includes(vCharacter) && vCount.value.length == 1)
+					) {
 					vValid = true;
 				}
 				
@@ -110,7 +120,16 @@ export class counterNote extends basicNote {
 			}
 		};
 		vCount.onchange = () => {
-			this.applyCount(vCount.value);
+			let vFirst = vCount.value[0];
+			
+			if (cPM.includes(vFirst)) {
+				if (vCount.value.length > 1) {
+					this.change(vCount.value);
+				}
+			}
+			else {
+				this.applyCount(vCount.value);
+			}
 		};
 		
 		let vPlus = document.createElement("i");

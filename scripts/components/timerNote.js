@@ -10,13 +10,116 @@ export class templateNote extends basicNote {
 		return "template";
 	}
 	
+	get now() {
+		return Date.now();
+	}
+	
+	get running() {
+		return this.content.running != undefined ? this.content.running : false;
+	}
+	
+	set running(pRunning) {
+		this.updateContent({running : pRunning});
+	}
+	
+	get basetime() {
+		return this.content.basetime || this.now;
+	}
+	
+	set basetime(pBaseTime) {
+		this.updateContent({basetime : Number(pBaseTime)});
+	}
+	
+	get offset() {
+		return this.content.offset || 0;
+	}
+	
+	set offset(pOffset) {
+		this.updateContent({offset : Number(pOffset)});
+	}
+	
+	get time() {
+		if (this.running) {
+			return this.direction * (this.now - this.basetime) + this.offset;
+		}
+		else {
+			return this.offset;
+		}
+	}
+	
+	set time(pTime) {
+		this.updateContent({basetime : this.now, offset : Number(pTime)});
+	}
+	
+	get timeSplit() {
+		return splitTime(this.time);
+	}
+	
+	set timeSplit(pSplit) {
+		this.time = summSplit(pSplit);
+	}
+	
+	get direction() {
+		return Math.sign(this.content.direction || 1);
+	}
+	
+	set direction(pDirection) {
+		this.updateContent({direction : Number(pDirection)});
+	}
+	
 	renderContent() {
 		//specific implementations required
 		//this.content
+		this.synchTicking();
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
 		//called when the content updates
+	}
+	
+	start() {
+		if (!this.running) {
+			this.updateContent({running : true, basetime : this.now});
+			this.startTick();
+		}
+	}
+	
+	stop() {
+		if (this.running) {
+			this.updateContent({running : true, offset : this.time});
+			this.stopTick();
+		}
+	}
+	
+	toggleRunning() {
+		if (this.running) {
+			this.stop();
+		}
+		else {
+			this.start();
+		}
+	}
+	
+	invertDirection(pKeepCurrent = false) {
+		if (!pKeepCurrent) {
+			this.direction = -this.direction;
+		}
+		else {
+			this.updateContent({direction : -this.direction, offset : this.time, basetime : this.now});
+		}
+	}
+	
+	updateBaseTime() {
+		this.updateContent({basetime : this.now, offset : this.time});
+	}
+	
+	synchTicking() {
+		if (this.running) {
+			this.startTick();
+		}
+		else {
+			this.stopTick();
+		}
 	}
 	
 	disable() {

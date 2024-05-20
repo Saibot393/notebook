@@ -1,4 +1,4 @@
-import {cModuleName, Translate} from "../utils/utils.js";
+import {cModuleName, cTickInterval, Translate} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
 import {cNoteToggleFlag} from "../MainUI.js";
@@ -32,6 +32,8 @@ export class basicNote {
 		this.render();
 		
 		this._mouseHoverCallBack = pOptions.mouseHoverCallBack;
+		
+		this._onTickChange = pOptions.onTickChange;
 	}
 	
 	get id() {
@@ -104,6 +106,18 @@ export class basicNote {
 	}
 	
 	onChangeColor(pColor) {
+		
+	}
+	
+	onTickChangebasic() {
+		if (this._onTickChange) {
+			this._onTickChange(this.id);
+		}
+		
+		this.onTickChange();
+	}
+	
+	onTickChange() {
 		
 	}
 	
@@ -353,12 +367,20 @@ export class basicNote {
 	}
 	
 	get tickinterval() {
-		return 100;
+		return cTickInterval;
 	}
 	
 	hastick() {
 		//Ticks? Disgusting, where? oh there it is -> *
 		return this._hastick;
+	}
+	
+	startTick() {
+		this._hastick = true;
+	}
+	
+	stopTick() {
+		this._hastick = false;
 	}
 	
 	round() {
