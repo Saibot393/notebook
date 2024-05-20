@@ -42,7 +42,7 @@ export class basicNote {
 	}
 	
 	get isOwner() {
-		NoteManager.ownsNote(this.noteData);
+		return NoteManager.ownsNote(this.noteData);
 	}
 	
 	get canEdit() {
