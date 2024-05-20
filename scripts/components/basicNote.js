@@ -1,4 +1,4 @@
-import {cModuleName} from "../utils/utils.js";
+import {cModuleName, Translate} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
 import {cNoteToggleFlag} from "../MainUI.js";
@@ -47,7 +47,7 @@ export class basicNote {
 	}
 	
 	get canEdit() {
-		return NoteManager.canEditSelf(this.noteData);
+		return NoteManager.canEditSelf(this.noteData) && NoteManager.isActive(this.noteData);
 	}
 	
 	get permissionLevel() {
@@ -100,6 +100,10 @@ export class basicNote {
 	}
 	
 	onMouseHoverChange() {
+		
+	}
+	
+	onChangeColor(pColor) {
 		
 	}
 	
@@ -181,9 +185,7 @@ export class basicNote {
 		
 		this.renderContent();
 		
-		if (!this.canEdit) {
-			this.disablebasic();
-		}
+		this.checkEnabled();
 		
 		this.synchToggleState();
 		
@@ -280,12 +282,7 @@ export class basicNote {
 		this.noteData = pupdatedNote;
 		
 		if (pUpdate.permissions) {
-			if (this.canEdit) {
-				this.enablebasic();
-			}
-			else {
-				this.disablebasic();
-			}
+			this.checkEnabled();
 		}
 		
 		if (pUpdate.content) {
@@ -300,12 +297,22 @@ export class basicNote {
 		
 		if (pUpdate.backColor) {
 			this.mainElement.style.backgroundColor = this.color;
+			this.onChangeColor(pUpdate.backColor);
 		}
 		
 		if (pUpdate.permissions) {
 			if (this.captionElement.permissioninfo) {
 				this.captionElement.permissioninfo.setAttribute("data-tooltip", NoteManager.permissionOverview(this.noteData));
 			}
+		}
+	}
+	
+	checkEnabled() {
+		if (this.canEdit) {
+			this.enablebasic();
+		}
+		else {
+			this.disablebasic();
 		}
 	}
 	
@@ -345,7 +352,12 @@ export class basicNote {
 		//tick every 100ms for time dependent stuff
 	}
 	
+	get tickinterval() {
+		return 100;
+	}
+	
 	hastick() {
+		//Ticks? Disgusting, where? oh there it is -> *
 		return this._hastick;
 	}
 	

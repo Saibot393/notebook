@@ -1,4 +1,4 @@
-import {cModuleName} from "./utils/utils.js";
+import {cModuleName, Translate} from "./utils/utils.js";
 
 import {basicNote} from "./components/basicNote.js";
 
@@ -6,18 +6,9 @@ import {textNote} from "./components/textNote.js";
 import {counterNote} from "./components/counterNote.js";
 import {listNote} from "./components/listNote.js";
 import {sliderNote} from "./components/sliderNote.js";
+import {chatNote} from "./components/chatNote.js";
 
 const cNotesFlag = "notes";
-
-CONFIG[cModuleName] = {
-	basicNote : basicNote,
-	noteTypes : {
-		text : textNote,
-		counter : counterNote,
-		list : listNote,
-		slider : sliderNote
-	}
-}
 
 const cDefaultNote = {
 	type : "text",
@@ -30,9 +21,22 @@ const cDefaultNote = {
 	backColor : "white"
 }
 
+const cLockedProperties = ["type", "owner"];
+
 export const cPermissionTypes = ["default", "none", "see", "edit"];
 
 const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roundcounter", "chat", "image", "macros"];
+
+CONFIG[cModuleName] = {
+	basicNote : basicNote,
+	noteTypes : {
+		text : textNote,
+		counter : counterNote,
+		list : listNote,
+		slider : sliderNote,
+		chat : chatNote
+	}
+}
 
 export async function cleanUserData() {
 	//remove empty note flags
@@ -71,6 +75,8 @@ class NoteManager {
 	
 	static permissionOverview(pNote) {} //returns overview of permissions
 	
+	static isActive(pNote) {} //if pNote is active, i.e. some who can edit it is online
+	
 	static canEdit(pNote, pUserID, pExplicit = false) {} //returns if user with pUserID can edit pNote (either ID or Note)
 	
 	static canEditSelf(pNote, pExplicit = false) {} //returns if this user can edit pNote (either ID or Note)
@@ -87,7 +93,11 @@ class NoteManager {
 	static async createNewNote(pData) {
 		let vID = randomID();
 		
-		let vData = {...cDefaultNote,...pData, owner : game.user.id};
+		let vData = {...cDefaultNote, ...pData, owner : game.user.id};
+		
+		if (!vData.title) {
+			vData.title = Translate("Titles.newNote");
+		}
 		
 		await game.user.setFlag(cModuleName, cNotesFlag + `.${vID}`, vData);
 		
@@ -116,6 +126,12 @@ class NoteManager {
 	
 	static async updateNote(pID, pUpdate, pExplicitDelete = false) {
 		if (pUpdate || pExplicitDelete) {
+			for (let vDelete of cLockedProperties) {
+				if (pUpdate?.hasOwnProperty(vDelete)) {
+					delete pUpdate[vDelete];
+				}
+			}
+			
 			if (NoteManager.canEditSelf(pID)) {
 				if (NoteManager.ownsNote(pID)) {
 					await game.user.setFlag(cModuleName, cNotesFlag + `.${pID}`, pUpdate);
@@ -228,7 +244,7 @@ class NoteManager {
 			let vLevel = vNote.permissions ? vNote.permissions[pUserID] : undefined;
 			
 			if (!vLevel || vLevel == "default") {
-				vLevel = vNote.permissions.default;
+				vLevel = vNote.permissions?.default || cPermissionTypes[1];
 			}
 			
 			return vLevel;
@@ -241,10 +257,10 @@ class NoteManager {
 		let vOwner = game.users.get(pNote.owner);
 		
 		if (vOwner) {
-			vOverview = vOverview + `<b>Owner:</b> ${vOwner.name}${vOwner.isSelf ? " [self]" : ""}`
+			vOverview = vOverview + `<b>${Translate("Titles.owner")}:</b> ${vOwner.name}${vOwner.isSelf ? ` [${Translate("Titles.self")}]` : ""}`
 		}
 		else {
-			vOverview = vOverview + `<b>Owner:</b> ???`
+			vOverview = vOverview + `<b>${Translate("Titles.owner")}:</b> ???`
 		}
 		
 		let vEdit = [];
@@ -269,22 +285,50 @@ class NoteManager {
 		}
 		
 		if (vEdit.length) {
-			vOverview = vOverview + `<br><b>edit</b>`;
+			vOverview = vOverview + `<br><b>${Translate("Titles.editor")}</b>`;
 			
 			for (let vEditor of vEdit) {
-				vOverview = vOverview + `<br>• ${vEditor.name}${vEditor.isSelf ? " [self]" : ""}`
+				vOverview = vOverview + `<br>• ${vEditor.name}${vEditor.isSelf ? ` [${Translate("Titles.self")}]` : ""}`
 			}
 		}
 		
 		if (vSee.length) {
-			vOverview = vOverview + `<br><b>see</b>`;
+			vOverview = vOverview + `<br><b>${Translate("Titles.seer")}</b>`;
 			
 			for (let vSeer of vSee) {
-				vOverview = vOverview + `<br>• ${vSeer.name}${vSeer.isSelf ? " [self]" : ""}`
+				vOverview = vOverview + `<br>• ${vSeer.name}${vSeer.isSelf ? ` [${Translate("Titles.self")}]` : ""}`
 			}
 		}
 		
 		return vOverview;
+	}
+	
+	static isActive(pNote) {
+		if (game.user.isGM) {
+			return true;
+		}
+		
+		let vNote;
+		
+		if (typeof pNote == "string") {
+			vNote = NoteManager.getNote(pNote);
+		}
+		
+		if (typeof pNote == "object") {
+			vNote = pNote;
+		}
+		
+		if (vNote) {
+			if (game.user.id == vNote.owner) {
+				return true;
+			}
+			
+			let vActiveUser = Array.from(game.users).filter(vUser => vUser.active);
+			
+			return vActiveUser.find(vUser => vUser.isGM || vUser.id == vNote.owner);
+		}
+		
+		return false;
 	}
 	
 	static canEdit(pNote, pUserID, pExplicit = false) {

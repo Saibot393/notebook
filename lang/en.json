@@ -1,27 +1,44 @@
 {
-	"phantomtokens" : {
+	"notebook" : {
+		"notebook" 							: "Notebook",
+		
 		"Titles" : {
-			"togglePhantomVision"			: "Toggle phantom vision",
+			"defaultTitle"					: "Note Title",
+			"newNote"						: "New Note",
+			"name"							: "Name",
 			
-			"modes" : {
-				"normal.descrp"				: "A normal token",
-				"anchor.descrp"				: "An immovable token",
-				"unclickable.descrp"		: "An unclickable token",
-				"phantom.descrp"			: "An invisible token"
-			}
-		},
-		
-		"Keys" : {
-			"TogglePhantomRealm.name"		: "Toggle phantom vision",
-			"IncreaseModeSelected.name"		: "Increase phantom mode of selected tokens",
-			"DecreaseModeSelected.name"		: "Decrease phantom mode of selected tokens"
-		},
-		
-		"Settings" : {
-			"anchorpreventteleport" : {
-				"name"						: "Prevent anchored teleport",
-				"descrp"					: "Prevent anchored tokens from being teleported (using stairways)"
-			}
+			"userName"						: "User names",
+			"self"							: "self",
+			"default"						: "default",
+			
+			"createNote"					: "Create new Note",
+			
+			
+			"owner"							: "Owner",
+			"seer"							: "Observers",
+			"editor"						: "Editors",
+			
+			"permissions"					: "Permissions",
+			"permissionsTypes" : {
+				"default"					: "default",
+				"none"						: "none",
+				"see"						: "see",
+				"edit"						: "edit"
+			},
+			
+			"type"							: "Type",
+			"notesTypes" : {
+				"text"						: "Text",
+				"counter"					: "Counter",
+				"list"						: "List",
+				"slider"					: "Slider",
+				"chat"						: "Chat",
+				"timer"						: "Timer"
+			},
+			
+			"min"							: "Min",
+			"max"							: "Max",
+			"steps"							: "Steps"
 		}
 	}
 }

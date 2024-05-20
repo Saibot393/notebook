@@ -218,7 +218,9 @@ export class listNote extends basicNote {
 			this.contentElements.listElements[i].delete.style.display = "";
 		}
 		
-		this.contentElements.add.style.display = "";
+		if (this.isMouseHover) {
+			this.contentElements.add.style.display = "";
+		}
 	}
 	
 	onMouseHoverChange() {

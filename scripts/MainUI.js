@@ -1,4 +1,4 @@
-import {cModuleName} from "./utils/utils.js";
+import {cModuleName, Translate} from "./utils/utils.js";
 import {NoteManager, cleanUserData} from "./MainData.js";
 
 import {noteCreation} from "./helpers/noteCreation.js";
@@ -61,6 +61,8 @@ class Notes /*extends SidebarTab*/ {
 		}
 		
 		Hooks.on(cModuleName + ".updateNote", (pNewNoteData, pNoteDataUpdate, pContext) => {this.renderUpdate(pNewNoteData, pNoteDataUpdate, pContext)});
+		
+		Hooks.on("userConnected", () => {this.checkEnabled()});
 	}
 	
 	get defaultNoteOptions() {
@@ -145,6 +147,12 @@ class Notes /*extends SidebarTab*/ {
 		console.log("Please implement me");
 	}
 	
+	checkEnabled() {
+		for(let vNote of Object.values(this.notes)) {
+			vNote.checkEnabled();
+		}
+	}
+	
 	createEntry(pType, pData) {
 		let vClass = CONFIG[cModuleName].noteTypes[pType];
 		
@@ -158,14 +166,16 @@ class Notes /*extends SidebarTab*/ {
 		
 		let vNote = NoteManager.getNote(pID);
 		
-		let vClass = CONFIG[cModuleName].noteTypes[vNote.type];
-	
-		if (vClass && NoteManager.canSeeSelf(vNote)) {
-			this.notes[pID] = new vClass(pID, vNote, this.defaultNoteOptions);
-						
-			this.entries.appendChild(this.notes[pID].element);
-			
-			this.sortEntries();
+		if (vNote) {
+			let vClass = CONFIG[cModuleName].noteTypes[vNote.type];
+		
+			if (vClass && NoteManager.canSeeSelf(vNote)) {
+				this.notes[pID] = new vClass(pID, vNote, this.defaultNoteOptions);
+							
+				this.entries.appendChild(this.notes[pID].element);
+				
+				this.sortEntries();
+			}
 		}
 	}
 	

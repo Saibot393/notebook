@@ -15,7 +15,7 @@ export class sliderNote extends basicNote {
 	}
 	
 	set value(pValue) {
-		let vValue = Math.floor(Number(pValue)/this.step)*this.step;
+		let vValue = Math.round(Number(pValue)/this.step)*this.step;
 		vValue = Math.min(this.max, Math.max(this.min, pValue));
 		this.updateContent({value : vValue});
 	}
@@ -53,7 +53,9 @@ export class sliderNote extends basicNote {
 	}
 	
 	set step(pStep) {
-		this.updateContent({step : Number(pStep)});
+		if (pStep > 0) {
+			this.updateContent({step : Number(pStep)});
+		}
 	}
 	
 	renderContent() {

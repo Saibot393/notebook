@@ -52,6 +52,11 @@ export class counterNote extends basicNote {
 			vUpdate.max = Number(vProcessed[1]);
 		}
 		
+		if (vUpdate.value == this.value) {
+			//special case for smooth double updates
+			delete vUpdate.value;
+		}
+		
 		this.updateContent(vUpdate);
 	}
 	

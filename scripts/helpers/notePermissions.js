@@ -1,4 +1,4 @@
-import {cModuleName} from "../utils/utils.js";
+import {cModuleName, Translate} from "../utils/utils.js";
 
 import {cPermissionTypes, NoteManager} from "../MainData.js";
 
@@ -36,7 +36,7 @@ export class notePermissionsWindow extends Application {
 			height: 300,
 			template: `modules/${cModuleName}/templates/default.html`,
 			jQuery: true,
-			//title: Translate(cWindowID + ".titles." + "VisionChannels"),
+			title: Translate("Titles.permissions"),
 			resizable: true
 		});
 	}
@@ -45,7 +45,7 @@ export class notePermissionsWindow extends Application {
 		let vUsers =  Array.from(game.users).filter(vUser => vUser != this.owner);
 		
 		vUsers.unshift({
-			name : "default",
+			name :  Translate("Titles.default"),
 			id : "default"
 		});
 		
@@ -74,11 +74,11 @@ export class notePermissionsWindow extends Application {
 		let vTitle = document.createElement("tr");
 		
 		let vNameTitle = document.createElement("th");
-		vNameTitle.innerHTML = "name";
+		vNameTitle.innerHTML =  Translate("Titles.userName");
 		vNameTitle.style.width = "70%";
 		
 		let vPermissionTitle = document.createElement("th");
-		vPermissionTitle.innerHTML = "name";
+		vPermissionTitle.innerHTML =  Translate("Titles.permissions");
 		
 		vTitle.appendChild(vNameTitle);
 		vTitle.appendChild(vPermissionTitle);
@@ -103,10 +103,13 @@ export class notePermissionsWindow extends Application {
 			vPermissionSelect.id = vUser.id;
 			this.selector[vUser.id] = vPermissionSelect;
 			
-			for (let vType of cPermissionTypes) {
+			let vPermissionTypes = cPermissionTypes;
+			if (vUser.id == "default") vPermissionTypes = vPermissionTypes.filter(vType => vType != "default");
+				
+			for (let vType of vPermissionTypes) {
 				let vOption = document.createElement("option");
 				vOption.value = vType;
-				vOption.innerHTML = vType;
+				vOption.innerHTML = Translate("Titles.permissionsTypes." + vType);
 				
 				vPermissionSelect.appendChild(vOption);
 			}

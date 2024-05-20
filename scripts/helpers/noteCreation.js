@@ -1,23 +1,23 @@
-import {cModuleName} from "../utils/utils.js";
+import {cModuleName, Translate} from "../utils/utils.js";
 
 export function noteCreation(pCreationCallback) {
 	let vTypes = Object.keys(CONFIG[cModuleName].noteTypes);
 	
 	let vContent = `
 			<div style="display:flex;margin-bottom:5px"> 
-				<label> name </label>
+				<label> ${Translate("Titles.name")} </label>
 				<div style="flex-grow:1"></div>
-				<input type="text" name="name" placeholder="" style="width:60%" autofocus></input>
+				<input type="text" name="name" style="width:60%" autofocus placeholder="${Translate("Titles.defaultTitle")}"></input>
 			</div>
 			<div style="display:flex;margin-bottom:5px">
-				<label> type </label>
+				<label> ${Translate("Titles.type")} </label>
 				<div style="flex-grow:1"></div>
 				<select name="type" style="width:60%">
 	`
 	for (let vType of vTypes) {
 		vContent +=	`
 					<option value=${vType}>
-						${vType}
+						${Translate("Titles.notesTypes." + vType)}
 					</option>
 					`
 	}
@@ -27,7 +27,7 @@ export function noteCreation(pCreationCallback) {
 	`
 	
 	new Dialog({
-		title: "",
+		title: Translate("Titles.createNote"),
 		content: vContent,
 		buttons : {
 			accept : {
