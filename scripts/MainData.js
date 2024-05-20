@@ -5,6 +5,7 @@ import {basicNote} from "./components/basicNote.js";
 import {textNote} from "./components/textNote.js";
 import {counterNote} from "./components/counterNote.js";
 import {listNote} from "./components/listNote.js";
+import {sliderNote} from "./components/sliderNote.js";
 
 const cNotesFlag = "notes";
 
@@ -13,7 +14,8 @@ CONFIG[cModuleName] = {
 	noteTypes : {
 		text : textNote,
 		counter : counterNote,
-		list : listNote
+		list : listNote,
+		slider : sliderNote
 	}
 }
 
@@ -34,7 +36,7 @@ const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roun
 
 export async function cleanUserData() {
 	//remove empty note flags
-	let vNotes = game.user.getFlag(cModuleName, cNotesFlag);
+	let vNotes = game.user.getFlag(cModuleName, "notes");
 	
 	let vIDs = Object.keys(vNotes);
 	

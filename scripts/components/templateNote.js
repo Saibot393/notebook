@@ -1,17 +1,13 @@
 import {cModuleName} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
-import {cNoteToggleFlag} from "../MainUI.js";
+import {basicNote} from "./basicNote.js";
 
 import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
 export class templateNote extends basicNote {
 	get type() {
 		return "template";
-	}
-	
-	onMouseHoverChange() {
-		
 	}
 	
 	renderContent() {
@@ -29,6 +25,10 @@ export class templateNote extends basicNote {
 	
 	enable() {
 		//enable all inputs
+	}
+	
+	onMouseHoverChange() {
+		
 	}
 	
 	tick() {
