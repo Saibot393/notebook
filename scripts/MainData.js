@@ -258,8 +258,6 @@ class NoteManager {
 				vPermission = pNote.permissions.default;
 			}
 			
-			console.log(vPermission);
-			
 			switch(vPermission) {
 				case "edit" :
 					vEdit.push(game.users.get(vKey));

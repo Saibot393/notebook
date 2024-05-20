@@ -19,8 +19,8 @@ Hooks.once("ready", async () => {
 	
 	let vNoteTabButton = document.createElement("a");
 	vNoteTabButton.classList.add("item");
-	vNoteTabButton.setAttribute("data-tab", "notes");
-	vNoteTabButton.setAttribute("aria-controls", "notes");
+	vNoteTabButton.setAttribute("data-tab", cModuleName);
+	vNoteTabButton.setAttribute("aria-controls", cModuleName);
 	vNoteTabButton.setAttribute("role", "tab");
 	
 	let vNoteIcon = document.createElement("i");
@@ -32,12 +32,13 @@ Hooks.once("ready", async () => {
 	
 	let vNoteTab = document.createElement("section");
 	vNoteTab.classList.add("tab", "sidebar-tab", "chat-sidebar", "directory", "flexcol");
-	vNoteTab.setAttribute("id", "notes");
-	vNoteTab.setAttribute("data-tab", "notes");
+	vNoteTab.setAttribute("id", cModuleName);
+	vNoteTab.setAttribute("data-tab", cModuleName);
 	
 	Hooks.call(cModuleName + ".prepareNotes", {NoteTab : vNoteTab});
 	
-	ui.sidebar.tabs[cModuleName] = new Notes({tab : vNoteTab});
+	ui[cModuleName] = new Notes({tab : vNoteTab});
+	ui.sidebar.tabs[cModuleName] = ui[cModuleName];
 	
 	vSidebar.appendChild(vNoteTab);
 	
@@ -138,6 +139,10 @@ class Notes /*extends SidebarTab*/ {
 		}
 		
 		this.sortEntries();
+	}
+	
+	renderPopout() {
+		console.log("Please implement me");
 	}
 	
 	createEntry(pType, pData) {
