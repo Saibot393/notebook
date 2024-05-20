@@ -10,6 +10,7 @@ import {registerHoverShadow} from "../helpers/visualHelpers.js";
 const cColors = ["white", "#f5ea20", "#e8ae1a", "#c73443", "#34c765", "#4287f5"];
 
 const cPermissionIcon = "fa-book-open-reader";
+const cInfoIcon = "fa-circle-info";
 const cDeleteIcon = "fa-trash-can";
 
 const cStickyHover = false;
@@ -232,9 +233,19 @@ export class basicNote {
 			let vPermissionButton = document.createElement("i");
 			vPermissionButton.classList.add("fa-solid", cPermissionIcon);
 			vPermissionButton.style.margin = "5px";
+			vPermissionButton.setAttribute("data-tooltip", NoteManager.permissionOverview(this.noteData));
 			vPermissionButton.onclick = () => { new notePermissionsWindow(this.id, this.noteData, {}).render(true)};
 			registerHoverShadow(vPermissionButton);
+			this.captionElement.permissioninfo = vPermissionButton;
 			vElements.push(vPermissionButton);
+		}
+		else {
+			let vPermissionInfo = document.createElement("i");
+			vPermissionInfo.classList.add("fa-solid", cInfoIcon);
+			vPermissionInfo.style.margin = "5px";
+			vPermissionInfo.setAttribute("data-tooltip", NoteManager.permissionOverview(this.noteData));
+			this.captionElement.permissioninfo = vPermissionInfo;
+			vElements.push(vPermissionInfo);
 		}
 		
 		if (NoteManager.canDeleteSelf(this.id)) {
@@ -289,6 +300,12 @@ export class basicNote {
 		
 		if (pUpdate.backColor) {
 			this.mainElement.style.backgroundColor = this.color;
+		}
+		
+		if (pUpdate.permissions) {
+			if (this.captionElement.permissioninfo) {
+				this.captionElement.permissioninfo.setAttribute("data-tooltip", NoteManager.permissionOverview(this.noteData));
+			}
 		}
 	}
 	

@@ -69,6 +69,8 @@ class NoteManager {
 	
 	static permissionLevel(pNote, pUserID) {} //retruns permission level of pUserID for pNote
 	
+	static permissionOverview(pNote) {} //returns overview of permissions
+	
 	static canEdit(pNote, pUserID, pExplicit = false) {} //returns if user with pUserID can edit pNote (either ID or Note)
 	
 	static canEditSelf(pNote, pExplicit = false) {} //returns if this user can edit pNote (either ID or Note)
@@ -231,6 +233,60 @@ class NoteManager {
 			
 			return vLevel;
 		}
+	}
+	
+	static permissionOverview(pNote) {
+		let vOverview = ``;
+		
+		let vOwner = game.users.get(pNote.owner);
+		
+		if (vOwner) {
+			vOverview = vOverview + `<b>Owner:</b> ${vOwner.name}${vOwner.isSelf ? " [self]" : ""}`
+		}
+		else {
+			vOverview = vOverview + `<b>Owner:</b> ???`
+		}
+		
+		let vEdit = [];
+		
+		let vSee = [];
+		
+		for (let vKey of Array.from(game.users.keys()).filter(vKey => (vKey != pNote.owner) && !game.users.get(vKey).isGM)) {
+			let vPermission = pNote.permissions[vKey] || pNote.permissions.default;
+			
+			if (vPermission == "default") {
+				vPermission = pNote.permissions.default;
+			}
+			
+			console.log(vPermission);
+			
+			switch(vPermission) {
+				case "edit" :
+					vEdit.push(game.users.get(vKey));
+					break;
+				case "see" :
+					vSee.push(game.users.get(vKey));
+					break;
+			}
+		}
+		
+		if (vEdit.length) {
+			vOverview = vOverview + `<br><b>edit</b>`;
+			
+			for (let vEditor of vEdit) {
+				vOverview = vOverview + `<br>• ${vEditor.name}${vEditor.isSelf ? " [self]" : ""}`
+			}
+		}
+		
+		if (vSee.length) {
+			vOverview = vOverview + `<br><b>see</b>`;
+			
+			for (let vSeer of vSee) {
+				vOverview = vOverview + `<br>• ${vSeer.name}${vSeer.isSelf ? " [self]" : ""}`
+			}
+		}
+		
+		return vOverview;
 	}
 	
 	static canEdit(pNote, pUserID, pExplicit = false) {
