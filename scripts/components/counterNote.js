@@ -99,6 +99,7 @@ export class counterNote extends basicNote {
 		vMinus.onmouseup = () => {
 			this.stopAutoCount();
 		};
+		vMinus.onmouseleave = vMinus.onmouseup;
 		vMinus.style.marginLeft = "5px";
 		vMinus.style.marginRight = "5px";
 		registerHoverShadow(vMinus);
@@ -181,6 +182,7 @@ export class counterNote extends basicNote {
 		vPlus.onmouseup = () => {
 			this.stopAutoCount();
 		};
+		vPlus.onmouseleave = vPlus.onmouseup;
 		vPlus.style.marginLeft = "5px";
 		vPlus.style.marginRight = "5px";
 		registerHoverShadow(vPlus);
