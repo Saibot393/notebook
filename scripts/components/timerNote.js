@@ -5,9 +5,9 @@ import {basicNote} from "./basicNote.js";
 
 import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
-export class templateNote extends basicNote {
+export class timerNote extends basicNote {
 	get type() {
-		return "template";
+		return "timer";
 	}
 	
 	get now() {
@@ -141,10 +141,6 @@ export class templateNote extends basicNote {
 	
 	round() {
 		//called when a round ends
-	}
-	
-	applyFilter(pFilter) {
-		
 	}
 }
 

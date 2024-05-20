@@ -25,7 +25,7 @@ const cLockedProperties = ["type", "owner"];
 
 export const cPermissionTypes = ["default", "none", "see", "edit"];
 
-const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roundcounter", "chat", "image", "macros"];
+const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roundcounter", "chat", "image", "macros", "freehand"];
 
 CONFIG[cModuleName] = {
 	basicNote : basicNote,

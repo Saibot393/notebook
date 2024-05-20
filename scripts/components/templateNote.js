@@ -28,7 +28,11 @@ export class templateNote extends basicNote {
 	}
 	
 	onMouseHoverChange() {
-		
+		//used to change note content size when mouse hovers in (check this.isMouseHover)
+	}
+	
+	onTickChange() {
+		//called when tick changes (this.hasTick);
 	}
 	
 	tick() {
@@ -38,9 +42,5 @@ export class templateNote extends basicNote {
 	
 	round() {
 		//called when a round ends
-	}
-	
-	applyFilter(pFilter) {
-		
 	}
 }

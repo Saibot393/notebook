@@ -84,6 +84,21 @@ export class counterNote extends basicNote {
 			
 			this.change(-1 * vValue);
 		};
+		vMinus.onmousedown = (pEvent) => {
+			let vValue = 1;
+			
+			if (pEvent.shiftKey) {
+				vValue = cFastNumber.shift;
+			}
+			if (pEvent.altKey) {
+				vValue = cFastNumber.alt;
+			}
+			
+			this.startAutoCount(-1 * vValue);
+		};
+		vMinus.onmouseup = () => {
+			this.stopAutoCount();
+		};
 		vMinus.style.marginLeft = "5px";
 		vMinus.style.marginRight = "5px";
 		registerHoverShadow(vMinus);
@@ -101,10 +116,6 @@ export class counterNote extends basicNote {
 				let vValid = false;
 				let vCharacter = vCount.value[vCount.value.length-1];
 				let vFirst = vCount.value[0];
-				
-				console.log("test");
-				console.log(vCharacter);
-				console.log(vCount.value);
 				
 				if 	(	
 						cNumber.includes(vCharacter) ||
@@ -126,9 +137,17 @@ export class counterNote extends basicNote {
 				if (vCount.value.length > 1) {
 					this.change(vCount.value);
 				}
+				else {
+					this.updateCounter();
+				}
 			}
 			else {
-				this.applyCount(vCount.value);
+				if (vCount.value.length > 0) {
+					this.applyCount(vCount.value);
+				}
+				else {
+					this.updateCounter();
+				}
 			}
 		};
 		
@@ -146,6 +165,21 @@ export class counterNote extends basicNote {
 			}
 			
 			this.change(1 * vValue);
+		};
+		vPlus.onmousedown = (pEvent) => {
+			let vValue = 1;
+			
+			if (pEvent.shiftKey) {
+				vValue = cFastNumber.shift;
+			}
+			if (pEvent.altKey) {
+				vValue = cFastNumber.alt;
+			}
+			
+			this.startAutoCount(1 * vValue);
+		};
+		vPlus.onmouseup = () => {
+			this.stopAutoCount();
 		};
 		vPlus.style.marginLeft = "5px";
 		vPlus.style.marginRight = "5px";
@@ -195,13 +229,13 @@ export class counterNote extends basicNote {
 		
 		this.skipTicks = 4;
 		
-		this._hastick = true;
+		this.startTick();
 	}
 	
 	stopAutoCount() {
 		this.autoCount = null;
 		
-		this._hastick = false;
+		this.stopTick();
 	}
 	
 	tick() {
@@ -216,5 +250,6 @@ export class counterNote extends basicNote {
 	}
 	
 	onMouseHoverChange() {
+		
 	}
 }

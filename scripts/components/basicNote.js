@@ -17,11 +17,11 @@ const cStickyHover = false;
 
 export class basicNote {
 	constructor(pNoteID, pNoteData, pOptions = {}) {
-		this.noteID = pNoteID;
+		this._noteID = pNoteID;
 		
-		this.noteData = pNoteData;
+		this._noteData = pNoteData;
 		
-		this.element = null;
+		this._element = null;
 		
 		this.contentElements = {};
 		
@@ -36,12 +36,24 @@ export class basicNote {
 		this._onTickChange = pOptions.onTickChange;
 	}
 	
+	get valid() {
+		return this.type == this.noteData.type;
+	}
+	
 	get id() {
-		return this.noteID;
+		return this._noteID;
 	}
 	
 	get type() {
 		return undefined;
+	}
+	
+	get noteData() {
+		return this._noteData;
+	}
+	
+	get element() {
+		return this._element;
 	}
 	
 	get isOwner() {
@@ -158,14 +170,14 @@ export class basicNote {
 	}
 	
 	render() {
-		this.element = document.createElement("div");
-		this.element.id = this.id;
-		this.element.flexDirection = "column";
-		this.element.style.border = this.captionColor;
-		this.element.style.height = "auto";
-		this.element.onmouseenter = () => {this.isMouseHover = true};
-		if (!cStickyHover) this.element.onmouseleave = () => {this.isMouseHover = false};
-		this.element.style.marginBottom = "5px";
+		this._element = document.createElement("div");
+		this._element.id = this.id;
+		this._element.flexDirection = "column";
+		this._element.style.border = this.captionColor;
+		this._element.style.height = "auto";
+		this._element.onmouseenter = () => {this.isMouseHover = true};
+		if (!cStickyHover) this._element.onmouseleave = () => {this.isMouseHover = false};
+		this._element.style.marginBottom = "5px";
 		//this.element.draggable = true;
 		
 		this.captionElement = document.createElement("div");
@@ -192,8 +204,8 @@ export class basicNote {
 		this.mainElement.style.backgroundBlendMode = "multiply";
 		this.mainElement.style.backgroundColor = this.color;
 		
-		this.element.appendChild(this.captionElement);
-		this.element.appendChild(this.mainElement);
+		this._element.appendChild(this.captionElement);
+		this._element.appendChild(this.mainElement);
 		
 		this.renderCaption();
 		
@@ -292,8 +304,16 @@ export class basicNote {
 		//this.content
 	}
 	
+	reRender() {
+		let vNote = NoteManager.getNote(this.id, true);
+		
+		if (vNote) {
+			this.updateRender(vNote, vNote);
+		}
+	}
+	
 	updateRender(pupdatedNote, pUpdate) {
-		this.noteData = pupdatedNote;
+		this._noteData = pupdatedNote;
 		
 		if (pUpdate.permissions) {
 			this.checkEnabled();
@@ -335,7 +355,7 @@ export class basicNote {
 	}
 	
 	updateData(pData) {
-		NoteManager.updateNote(this.noteID, pData);
+		NoteManager.updateNote(this.id, pData);
 	}
 	
 	updateContent(pContent) {
@@ -370,17 +390,19 @@ export class basicNote {
 		return cTickInterval;
 	}
 	
-	hastick() {
+	get hastick() {
 		//Ticks? Disgusting, where? oh there it is -> *
 		return this._hastick;
 	}
 	
 	startTick() {
 		this._hastick = true;
+		this.onTickChangebasic();
 	}
 	
 	stopTick() {
 		this._hastick = false;
+		this.onTickChangebasic();
 	}
 	
 	round() {

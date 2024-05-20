@@ -106,6 +106,8 @@ export class chatNote extends basicNote {
 				let vuserAlignDIV = document.createElement("div");
 				
 				let vUsercap = document.createElement("p");
+				vUsercap.style.marginTop = "0.2em";
+				vUsercap.style.marginBottom = "0.2em";
 				let vUserundercap = document.createElement("u");
 				vUserundercap.innerHTML = (game.users.get(vtoRender.user)?.name || "???") + ":";
 				vUsercap.appendChild(vUserundercap);
@@ -179,18 +181,5 @@ export class chatNote extends basicNote {
 			this.contentElements.inputdiv.style.display = "none";
 			this.contentElements.chat.style.borderBottom = "";
 		}
-	}
-	
-	tick() {
-		//tick every 100ms for time dependent stuff
-		//make sure to set _hastick or overwrite hastick()
-	}
-	
-	round() {
-		//called when a round ends
-	}
-	
-	applyFilter(pFilter) {
-		
 	}
 }

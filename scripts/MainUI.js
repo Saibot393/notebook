@@ -56,6 +56,8 @@ class Notes /*extends SidebarTab*/ {
 		
 		this.notes = NoteManager.viewableNotes();
 		
+		this.tickNotes = [];
+		
 		if (this.tab) {
 			this.render();
 		}
@@ -243,7 +245,6 @@ class Notes /*extends SidebarTab*/ {
 	}
 	
 	onMouseHoverNote(pID) {
-		console.log(notes);
 		for (let vKey of Object.keys(this.notes)) {
 			if (vKey != pID) {
 				this.notes[vKey].isMouseHover = false;
@@ -252,19 +253,28 @@ class Notes /*extends SidebarTab*/ {
 	}
 	
 	onTickChange(pID) {
-		this.tickNotes = Object.values(this.notes).filter(vNote => vNote.hastick());
+		if (this.notes[pID]?.hastick) {
+			this.tickNotes.push(this.notes[pID]);
+		}
+		else {
+			this.tickNotes = this.tickNotes.filter(vNote => vNote?.hastick);
+		}
 		
-		if (this.tickNotes.length > 0) {
+		if (this.tickNotes.length > 0 && !this.hasTick) {
 			this.tick();
 		}
 	}
 	
-	tick() {
+	tick(pForce) {
 		if (this.tickNotes.length > 0) {
+			this.hasTick = true;
 			for (let vNote of this.tickNotes) {
-				vNote.tick();
+				vNote?.tick();
 			}
 			setTimeout(() => {this.tick()}, cTickInterval);
+		}
+		else {
+			this.hasTick = false;
 		}
 	}
 	

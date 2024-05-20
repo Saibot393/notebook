@@ -7,7 +7,7 @@ import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
 export class sliderNote extends basicNote {
 	get type() {
-		return "template";
+		return "slider";
 	}
 	
 	get value(){
@@ -245,19 +245,5 @@ export class sliderNote extends basicNote {
 		else {
 			this.contentElements.settings.style.display = "none";
 		}
-
-	}
-	
-	tick() {
-		//tick every 100ms for time dependent stuff
-		//make sure to set _hastick or overwrite hastick()
-	}
-	
-	round() {
-		//called when a round ends
-	}
-	
-	applyFilter(pFilter) {
-		
 	}
 }
