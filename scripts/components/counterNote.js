@@ -20,7 +20,8 @@ export class counterNote extends basicNote {
 	
 	get defaultContent() {
 		return {
-			value : 0
+			value : 0,
+			max : Infinity
 		};
 	}
 	
@@ -33,7 +34,7 @@ export class counterNote extends basicNote {
 	}
 	
 	get max() {
-		return this.content.max || Infinity;
+		return this.content.max;
 	}
 	
 	set max(pMax) {
@@ -81,16 +82,21 @@ export class counterNote extends basicNote {
 		vMinus.classList.add("fa-solid", "fa-minus");
 		vMinus.style.margin = "auto";
 		vMinus.onclick = (pEvent) => {
-			let vValue = 1;
-			
-			if (pEvent.shiftKey) {
-				vValue = cFastNumber.shift;
+			if (pEvent.ctrlKey) {
+				this.value = 0;
 			}
-			if (pEvent.altKey) {
-				vValue = cFastNumber.alt;
+			else {
+				let vValue = 1;
+				
+				if (pEvent.shiftKey) {
+					vValue = cFastNumber.shift;
+				}
+				if (pEvent.altKey) {
+					vValue = cFastNumber.alt;
+				}
+				
+				this.change(-1 * vValue);
 			}
-			
-			this.change(-1 * vValue);
 		};
 		vMinus.onmousedown = (pEvent) => {
 			let vValue = 1;
@@ -164,16 +170,23 @@ export class counterNote extends basicNote {
 		vPlus.classList.add("fa-solid", "fa-plus");
 		vPlus.style.margin = "auto";
 		vPlus.onclick = (pEvent) => {
-			let vValue = 1;
-			
-			if (pEvent.shiftKey) {
-				vValue = cFastNumber.shift;
+			if (pEvent.ctrlKey) {
+				if (this.max < Infinity) {
+					this.value = this.max;
+				}
 			}
-			if (pEvent.altKey) {
-				vValue = cFastNumber.alt;
+			else {
+				let vValue = 1;
+				
+				if (pEvent.shiftKey) {
+					vValue = cFastNumber.shift;
+				}
+				if (pEvent.altKey) {
+					vValue = cFastNumber.alt;
+				}
+				
+				this.change(1 * vValue);
 			}
-			
-			this.change(1 * vValue);
 		};
 		vPlus.onmousedown = (pEvent) => {
 			let vValue = 1;

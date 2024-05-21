@@ -19,7 +19,8 @@ const cDefaultNote = {
 	permissions : {
 		default : "none"
 	},
-	backColor : "white"
+	backColor : "white",
+	notifySound : "sounds/notify.wav"
 }
 
 const cLockedProperties = ["type", "owner"];

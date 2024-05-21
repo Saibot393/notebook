@@ -16,6 +16,8 @@ const cWindowIcon = "fa-window-maximize";
 const cSoundOnIcon = "fa-volume-xmark";
 const cSoundOffIcon = "fa-volume-high";
 
+//AudioHelper.play({src: "sounds/notify.wav", volume: 1});
+
 const cStickyHover = false;
 
 export class basicNote {
