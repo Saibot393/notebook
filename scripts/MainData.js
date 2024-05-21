@@ -117,7 +117,7 @@ class NoteManager {
 				for (let vKey of Object.keys(vUserNotes)) {
 					if (vUserNotes[vKey]) {
 						if (NoteManager.canSeeSelf(vUserNotes[vKey])) {
-							vNotes[vKey] = vUserNotes[vKey];
+							vNotes[vKey] = {...cDefaultNote, ...vUserNotes[vKey]};
 						}
 					}
 				}
@@ -202,7 +202,7 @@ class NoteManager {
 				i = i + 1;
 			}
 			
-			return vNote;
+			return {...cDefaultNote, ...vNote};
 		}
 	}
 	

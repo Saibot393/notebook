@@ -139,7 +139,7 @@ class Notes /*extends SidebarTab*/ {
 			if (vClass) {
 				this.notes[vKey] = new vClass(vKey, this.notes[vKey], this.defaultNoteOptions);
 				
-				this.entries.appendChild(this.notes[vKey].element);
+				this.entries.appendChild(this.notes[vKey].render());
 			}
 			else {
 				delete this.notes[vKey];
@@ -179,7 +179,7 @@ class Notes /*extends SidebarTab*/ {
 			if (vClass && NoteManager.canSeeSelf(vNote)) {
 				this.notes[pID] = new vClass(pID, vNote, this.defaultNoteOptions);
 							
-				this.entries.appendChild(this.notes[pID].element);
+				this.entries.appendChild(this.notes[pID].render());
 				
 				this.sortEntries();
 				this.rebuildTickList();

@@ -34,11 +34,13 @@ export class basicNote {
 		
 		this._hastick = false;
 		
+		this._window = pOptions.window;
+		
 		this._mouseHoverCallBack = pOptions.mouseHoverCallBack;
 		
 		this._onTickChange = pOptions.onTickChange;
 
-		this.render();
+		//this.render();
 	}
 	
 	get valid() {
@@ -63,6 +65,10 @@ export class basicNote {
 	
 	get element() {
 		return this._element;
+	}
+	
+	get window() {
+		return this._window;
 	}
 	
 	get isOwner() {
@@ -267,6 +273,8 @@ export class basicNote {
 		this.onMouseHoverChange();
 		
 		this.synchToggleState();
+		
+		return this.element;
 	}
 	
 	renderCaption() {
