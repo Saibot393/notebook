@@ -7,6 +7,8 @@ import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
 const cTimeInputs = ["d", "h", "m", "s"];
 
+const cZeroSplit = {ms : 0, s : 0, m : 0, h : 0, d : 0, sgn : 1}
+
 const cPlayIcon = "fa-play";
 const cStopIcon = "fa-pause";
 const cUpIcon = "fa-rotate-right";
@@ -23,7 +25,8 @@ export class timerNote extends basicNote {
 			running : false,
 			offset : 0,
 			basetime : undefined,
-			direction : 1
+			direction : 1,
+			lastsplit : cZeroSplit
 		};
 	}
 	
@@ -73,7 +76,14 @@ export class timerNote extends basicNote {
 	}
 	
 	set timeSplit(pSplit) {
-		this.time = summSplit({...this.timeSplit, ...pSplit});
+		let vSplit = {...this.timeSplit, ...pSplit};
+		
+		this.time = summSplit(vSplit);
+		this.updateContent({lastsplit : vSplit})
+	}
+	
+	get lastSplit() {
+		return this.content.lastsplit;
 	}
 	
 	get direction() {
@@ -365,7 +375,7 @@ export class timerNote extends basicNote {
 	}
 	
 	resetCount() {
-		this.updateContent({basetime : this.now});
+		this.timeSplit = this.lastSplit;
 	}
 	
 	synchTicking() {
@@ -443,7 +453,7 @@ function splitTime(pTime) {
 }
 
 function summSplit(pSplit) {
-	let vSplit = {ms : 0, s : 0, m : 0, h : 0, d : 0, ...pSplit};
+	let vSplit = {...cZeroSplit, ...pSplit};
 	
 	return pSplit.sgn * (vSplit.ms + 1000 * (vSplit.s + 60 * (vSplit.m + 60 * (vSplit.h + 24 * (vSplit.d)))));
 }
