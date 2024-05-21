@@ -24,4 +24,4 @@ Multiple types of notes are available:
   A chat notes allowing all users that can edit the notes to chat with all users that can see the note. The chat colors are based on the user colors.
 
 - #### Timer notes:
-  A timer that counts even while the user of offline or the server is down. The time (seconds, minutes, hours and days(top left)) can be set directly by entering the values. Using the menu to right, that appears when hovering over the note, the direction in which the timer ticks can be chosen (up or down), the timer can be started or paused, and the timer can be reset to 0 (if the timer ticks up) or reset to the last manually set time (of the timer ticks down).
+  A timer that counts even while the user of offline or the server is down. The time (seconds, minutes, hours and days(top left)) can be set directly by entering the values. Using the menu to right, that appears when hovering over the note, the direction in which the timer ticks can be chosen (up or down), the timer can be started or paused, and the timer can be reset to 0 (if the timer ticks up) or reset to the last manually set time (if the timer ticks down).
