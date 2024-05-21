@@ -3,6 +3,8 @@
 		"notebook" 							: "Notebook",
 		
 		"Titles" : {
+			"notebook" 						: "Notebook",
+			
 			"defaultTitle"					: "Note Title",
 			"newNote"						: "New Note",
 			"name"							: "Name",

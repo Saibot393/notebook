@@ -69,7 +69,7 @@ class NoteManager {
 	
 	static getNote(pID, pTestPermission = false) {} //returns note identified via pID
 	
-	static owner(pID) {} //returns owner of note with pID
+	static owner(pNote) {} //returns owner of note with pID
 	
 	static ownsNote(pNote) {} //returns if this user owns note (either ID or Note)
 	
@@ -205,7 +205,11 @@ class NoteManager {
 		}
 	}
 	
-	static owner(pID) {
+	static owner(pNote) {
+		if (pNote?.owner) {
+			return game.users.get(pNote.owner);
+		}
+		
 		if (game.user.getFlag(cModuleName, cNotesFlag + `.${pID}`)?.owner == game.user.id) {
 			return game.user;
 		}

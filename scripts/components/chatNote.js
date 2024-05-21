@@ -66,7 +66,7 @@ export class chatNote extends basicNote {
 			}
 		};
 		vInput.style.borderRadius = "0";
-		vInput.style.borderColor = "maroon";
+		vInput.style.borderColor = this.primeColor;
 		vInput.style.borderWidth = "2px";
 		
 		vWritediv.appendChild(vInput);

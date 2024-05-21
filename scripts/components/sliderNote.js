@@ -91,7 +91,7 @@ export class sliderNote extends basicNote {
 		//vSliderInput.value = this.value;
 		vSliderInput.style.borderWidth = "2px";
 		vSliderInput.style.borderRadius = "0";
-		vSliderInput.style.borderColor	 = "maroon";
+		vSliderInput.style.borderColor	 = this.primeColor;
 		vSliderInput.style.maxWidth = "50px";
 		vSliderInput.style.marginLeft = "8px";
 		vSliderInput.oninput = () => {
@@ -112,7 +112,7 @@ export class sliderNote extends basicNote {
 		vSettingDIV.style.padding = "0.1px";
 		
 		let vSettingBar = document.createElement("div");
-		vSettingBar.style.backgroundColor = "maroon";
+		vSettingBar.style.backgroundColor = this.primeColor;
 		vSettingBar.style.width = "50px";
 		vSettingBar.style.height = "5px";
 		vSettingBar.style.borderRadius = "5px";
@@ -123,7 +123,7 @@ export class sliderNote extends basicNote {
 		vSettingContentDIV.style.width = "100%";
 		vSettingContentDIV.style.height = "auto";
 		vSettingContentDIV.style.display = "flex";
-		vSettingContentDIV.style.color = "maroon";
+		vSettingContentDIV.style.color = this.primeColor;
 		vSettingContentDIV.style.textAlign = "center";
 		
 		let vMinLabel  = document.createElement("label");

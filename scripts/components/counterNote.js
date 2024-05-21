@@ -73,7 +73,7 @@ export class counterNote extends basicNote {
 		let vCountDIV = document.createElement("div");
 		vCountDIV.style.flexDirection = "row";
 		vCountDIV.style.display = "flex";
-		vCountDIV.style.color = "maroon";
+		vCountDIV.style.color = this.primeColor;
 		vCountDIV.style.fontSize = "25px";
 		vCountDIV.style.textAlign = "center";
 		
@@ -117,7 +117,7 @@ export class counterNote extends basicNote {
 		vCount.style.width = "auto";
 		vCount.style.height = "auto";
 		vCount.style.fontSize = "50px";
-		vCount.style.color = "maroon";
+		vCount.style.color = this.primeColor;
 		vCount.style.backgroundColor = "rgba(255,255,255,0)";
 		vCount.style.border = "0px";
 		vCount.oninput = () => {

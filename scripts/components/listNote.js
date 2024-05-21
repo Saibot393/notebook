@@ -42,7 +42,7 @@ export class listNote extends basicNote {
 		let vAdddiv = document.createElement("div");
 		vAdddiv.style.width = "100%";
 		vAdddiv.style.textAlign = "center";
-		vAdddiv.style.color = "maroon";
+		vAdddiv.style.color = this.primeColor;
 		
 		let vAdd = document.createElement("i");
 		vAdd.classList.add("fa-solid", "fa-plus");
@@ -129,7 +129,7 @@ export class listNote extends basicNote {
 				let vCheck = document.createElement("i");
 				vCheck.style.margin = "auto";
 				vCheck.classList.add("fa-solid", "fa-check");
-				vCheck.style.color = "maroon";
+				vCheck.style.color = this.primeColor;
 				registerHoverShadow(vCheck);
 				vSetCheckState(vCheck, vList[i].checked ?? false);
 				vCheckBorder.appendChild(vCheck);
@@ -152,7 +152,7 @@ export class listNote extends basicNote {
 				let vDelete = document.createElement("i");
 				vDelete.classList.add("fa-solid", "fa-xmark");
 				vDelete.style.margin = "auto";
-				vDelete.style.color = "maroon";
+				vDelete.style.color = this.primeColor;
 				vDelete.style.marginLeft = "3px";
 				vDelete.style.marginRight = "3px";
 				vDelete.onclick = () => { this.removeEntry(i)};

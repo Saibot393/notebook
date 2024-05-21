@@ -20,7 +20,7 @@ export class timerNote extends basicNote {
 	
 	get defaultContent() {
 		return {
-			running : true,
+			running : false,
 			offset : 0,
 			basetime : undefined,
 			direction : 1
@@ -92,13 +92,13 @@ export class timerNote extends basicNote {
 		let vTimeDIV = document.createElement("div");
 		vTimeDIV.style.flexDirection = "row";
 		vTimeDIV.style.display = "flex";
-		vTimeDIV.style.color = "maroon";
+		vTimeDIV.style.color = this.primeColor;
 		vTimeDIV.style.fontSize = "40px";
 		vTimeDIV.style.flexGrow = "1";
 		
 		let vStyleInput = (pInput) => {
 			pInput.type = "number";
-			pInput.style.color = "maroon";
+			pInput.style.color = this.primeColor;
 			pInput.style.width = "60px";
 			pInput.style.height = "40px";
 			pInput.style.border = "0px";
@@ -179,7 +179,7 @@ export class timerNote extends basicNote {
 		let vSettingsDIV = document.createElement("div");
 		vSettingsDIV.style.display = "flex";
 		vSettingsDIV.style.flexDirection = "column";
-		vSettingsDIV.style.color = "maroon";
+		vSettingsDIV.style.color = this.primeColor;
 		vSettingsDIV.style.textAlign = "center";
 		vSettingsDIV.style.marginRight = "2px";
 		

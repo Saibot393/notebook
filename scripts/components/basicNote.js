@@ -64,6 +64,10 @@ export class basicNote {
 		return NoteManager.ownsNote(this.noteData);
 	}
 	
+	get owner() {
+		return NoteManager.owner(this.noteData);
+	}
+	
 	get canEdit() {
 		return NoteManager.canEditSelf(this.noteData) && NoteManager.isActive(this.noteData);
 	}
@@ -80,12 +84,24 @@ export class basicNote {
 		return this.noteData.content;
 	}
 	
-	get color() {
+	get backColor() {
 		return this.noteData.backColor;
 	}
 	
 	get captionColor() {
 		return "#181818";
+	}
+	
+	get primeColor() {
+		return "maroon";
+	}
+	
+	get ownerColor() {
+		return this.owner?.color;
+	}
+	
+	get ownerName() {
+		return this.owner?.name;
 	}
 	
 	get smallHeightLimit() {
@@ -96,7 +112,7 @@ export class basicNote {
 		return "174px";
 	}
 	
-	set color(pColor) {
+	set backColor(pColor) {
 		this.updateData({backColor : pColor});
 	}
 	
@@ -209,7 +225,14 @@ export class basicNote {
 		this.captionElement.style.flexDirection = "row";
 		this.captionElement.style.height = "auto";
 		this.captionElement.style.display = "flex";
-		this.captionElement.onclick = () => {this.toggleContent()};
+		this.captionElement.onclick = (pEvent) => {
+			if (pEvent.shiftKey) {
+				this.popOut();
+			}
+			else {
+				this.toggleContent()
+			}
+		};
 		this.captionElement.oncontextmenu = () => {this.toggleContent()};
 		this.captionElement.draggable = true;
 		this.captionElement.ondragstart = (event) => {
@@ -223,7 +246,7 @@ export class basicNote {
 		this.mainElement.style.height = "auto";
 		this.mainElement.style.background = 'url("http://localhost:30000/ui/parchment.jpg")';
 		this.mainElement.style.backgroundBlendMode = "multiply";
-		this.mainElement.style.backgroundColor = this.color;
+		this.mainElement.style.backgroundColor = this.backColor;
 		
 		this._element.appendChild(this.captionElement);
 		this._element.appendChild(this.mainElement);
@@ -262,17 +285,17 @@ export class basicNote {
 		vColorChoices.style.display = "grid";
 		vColorChoices.style.margin = "1px";
 		vColorChoices.style.marginLeft = "3px";
-		vColorChoices.onclick	 = (pEvent) => {this.captionElement.onclick(pEvent)};
-		for (let vColor of cColors) {
-			let vColorDiv = document.createElement("div");
-			vColorDiv.style.width = `${cColorSize}px`;
-			vColorDiv.style.height = `${cColorSize}px`;
-			vColorDiv.style.borderRadius = "50%";
-			vColorDiv.style.backgroundColor = vColor;
-			vColorDiv.onclick = (pEvent) => {pEvent.stopPropagation(); this.color = vColor};
-			
-			vColorChoices.appendChild(vColorDiv);
-		}
+		vColorChoices.onclick = (pEvent) => {this.captionElement.onclick(pEvent)};
+			for (let vColor of cColors) {
+				let vColorDiv = document.createElement("div");
+				vColorDiv.style.width = `${cColorSize}px`;
+				vColorDiv.style.height = `${cColorSize}px`;
+				vColorDiv.style.borderRadius = "50%";
+				vColorDiv.style.backgroundColor = vColor;
+				vColorDiv.onclick = (pEvent) => {if (!pEvent.shiftKey) {pEvent.stopPropagation(); this.backColor = vColor}};
+				
+				vColorChoices.appendChild(vColorDiv);
+			}
 		vElements.push(vColorChoices);
 		
 		let vSpacer = document.createElement("div");
@@ -325,10 +348,12 @@ export class basicNote {
 			let vClickEvent = vElement.onclick;
 			
 			vElement.onclick = (pEvent) => {
-				pEvent.stopPropagation(); 
-				
-				if (vClickEvent) {
-					vClickEvent(pEvent);
+				if (!pEvent.shiftKey || vElement.nodeName == "I") {
+					pEvent.stopPropagation(); 
+					
+					if (vClickEvent) {
+						vClickEvent(pEvent);
+					}
 				}
 			}
 			this.captionElement.appendChild(vElement);
@@ -362,7 +387,7 @@ export class basicNote {
 		}
 		
 		if (pUpdate.backColor) {
-			this.mainElement.style.backgroundColor = this.color;
+			this.mainElement.style.backgroundColor = this.backColor;
 			this.onChangeColor(pUpdate.backColor);
 		}
 		
@@ -453,6 +478,10 @@ export class basicNote {
 	
 	applyFilter(pFilter) {
 		
+	}
+	
+	popOut() {
+		console.log("pop");
 	}
 	
 	delete() {
