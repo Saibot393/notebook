@@ -133,6 +133,13 @@ export class timerNote extends basicNote {
 		let vMinus = document.createElement("div");
 		vMinus.innerHTML = "-";
 		vMinus.style.margin = "auto";
+		vMinus.onclick = (pEvent) => {
+			if (pEvent.shiftKey) {
+				if (this.canEdit && this.time < 0) {
+					this.time = -this.time;
+				}
+			}
+		}
 		
 		let vHourInput = document.createElement("input");
 		vStyleInput(vHourInput);
@@ -205,7 +212,12 @@ export class timerNote extends basicNote {
 		vNowTime.classList.add("fa-solid", cNowIcon);
 		vNowTime.onclick = () => {
 			if (this.canEdit) {
-				this.time = 0;
+				if (this.direction >= 0) {
+					this.time = 0;
+				}
+				else {
+					this.resetCount();
+				}
 			}
 		}
 		vNowTime.style.flexGrow = "1";
@@ -350,6 +362,10 @@ export class timerNote extends basicNote {
 	
 	reBase() {
 		this.updateContent({basetime : this.now, offset : this.time});
+	}
+	
+	resetCount() {
+		this.updateContent({basetime : this.now});
 	}
 	
 	synchTicking() {

@@ -12,6 +12,9 @@ const cColors = ["white", "#f5ea20", "#e8ae1a", "#c73443", "#34c765", "#4287f5"]
 const cPermissionIcon = "fa-book-open-reader";
 const cInfoIcon = "fa-circle-info";
 const cDeleteIcon = "fa-trash-can";
+const cWindowIcon = "fa-window-maximize";
+const cSoundOnIcon = "fa-volume-xmark";
+const cSoundOffIcon = "fa-volume-high";
 
 const cStickyHover = false;
 
