@@ -10,8 +10,14 @@ export class chatNote extends basicNote {
 		return "chat";
 	}
 	
+	get defaultContent() {
+		return {
+			history : []
+		};
+	}
+	
 	get history() {
-		return this.content.history || [];
+		return this.content.history;
 	}
 	
 	set history(pHistory) {
@@ -72,7 +78,7 @@ export class chatNote extends basicNote {
 		this.contentElements.inputdiv = vWritediv;
 		this.contentElements.input = vInput;
 		
-		this.renderChatHistory();
+		//this.renderChatHistory();
 	}
 	
 	renderChatHistory() {

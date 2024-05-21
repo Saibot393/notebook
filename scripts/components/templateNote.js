@@ -10,6 +10,10 @@ export class templateNote extends basicNote {
 		return "template";
 	}
 	
+	get defaultContent() {
+		return {}; //return default content
+	}
+	
 	renderContent() {
 		//specific implementations required
 		//this.content

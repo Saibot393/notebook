@@ -48,8 +48,12 @@ export class basicNote {
 		return undefined;
 	}
 	
+	get defaultContent() {
+		return {};
+	}
+	
 	get noteData() {
-		return this._noteData;
+		return {...this._noteData, content : {...this.defaultContent, ...this._noteData.content}};
 	}
 	
 	get element() {
@@ -211,11 +215,13 @@ export class basicNote {
 		
 		this.renderContent();
 		
+		this.refreshContent();
+		
 		this.checkEnabled();
 		
-		this.synchToggleState();
-		
 		this.onMouseHoverChange();
+		
+		this.synchToggleState();
 	}
 	
 	renderCaption() {
@@ -304,6 +310,10 @@ export class basicNote {
 		//this.content
 	}
 	
+	refreshContent() {
+		this.updateRenderContent(this.noteData, this.noteData.content, {content : this.noteData.content});
+	}
+	
 	reRender() {
 		let vNote = NoteManager.getNote(this.id, true);
 		
@@ -315,14 +325,6 @@ export class basicNote {
 	updateRender(pupdatedNote, pUpdate) {
 		this._noteData = pupdatedNote;
 		
-		if (pUpdate.permissions) {
-			this.checkEnabled();
-		}
-		
-		if (pUpdate.content) {
-			this.updateRenderContent(pupdatedNote, pUpdate.content, pUpdate);
-		}
-		
 		if (pUpdate.title) {
 			if (this.title != this.captionElement.querySelector("#title").value) {
 				this.captionElement.querySelector("#title").value = this.title;
@@ -332,6 +334,14 @@ export class basicNote {
 		if (pUpdate.backColor) {
 			this.mainElement.style.backgroundColor = this.color;
 			this.onChangeColor(pUpdate.backColor);
+		}
+		
+		if (pUpdate.content) {
+			this.updateRenderContent(pupdatedNote, pUpdate.content, pUpdate);
+		}
+		
+		if (pUpdate.permissions) {
+			this.checkEnabled();
 		}
 		
 		if (pUpdate.permissions) {
@@ -380,6 +390,12 @@ export class basicNote {
 	
 	enable() {
 		//enable all inputs
+	}
+	
+	tickbasic() {
+		if (this.hastick) {
+			this.tick();
+		}
 	}
 	
 	tick() {

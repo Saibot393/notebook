@@ -10,6 +10,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
+//Hooks.on("renderSidebarTab", async (pDirectory, pElements, pContext) => {
 	await cleanUserData(); //clean before to prevent bugs during delete
 	
 	let vSidebar = ui.sidebar._element[0];
@@ -269,7 +270,7 @@ class Notes /*extends SidebarTab*/ {
 		if (this.tickNotes.length > 0) {
 			this.hasTick = true;
 			for (let vNote of this.tickNotes) {
-				vNote?.tick();
+				vNote?.tickbasic();
 			}
 			setTimeout(() => {this.tick()}, cTickInterval);
 		}

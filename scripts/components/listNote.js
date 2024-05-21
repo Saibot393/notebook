@@ -8,8 +8,14 @@ export class listNote extends basicNote {
 		return "list";
 	}
 	
+	get defaultContent() {
+		return {
+			list : [{checked : false, text : ""}]
+		};
+	}
+	
 	get list() {
-		return this.content.list || [{checked : false, text : ""}];
+		return this.content.list;
 	}
 	
 	set list(pList) {
@@ -29,7 +35,7 @@ export class listNote extends basicNote {
 		
 		this.contentElements.list = vList;
 		
-		this.updateList();
+		//this.updateList();
 		
 		let vAdddiv = document.createElement("div");
 		vAdddiv.style.width = "100%";

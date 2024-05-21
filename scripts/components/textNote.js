@@ -8,8 +8,14 @@ export class textNote extends basicNote {
 		return "text";
 	}
 	
+	get defaultContent() {
+		return {
+			text : ""
+		};
+	}
+	
 	get text() {
-		return this.content.text != undefined ? this.content.text : "";
+		return this.content.text;
 	}
 	
 	set text(pText) {
@@ -26,7 +32,7 @@ export class textNote extends basicNote {
 		vText.style.marginTop = "3px";
 		vText.style.background = "transparent";
 		vText.style.fontFamily = "Arial";
-		vText.value = this.text;
+		//vText.value = this.text;
 		vText.oninput = () => {
 			if (vText.value.length > vMaxTextLength) { //prevent data flooding
 				vText.value = vText.value.slice(0, vMaxTextLength);

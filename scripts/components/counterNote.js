@@ -16,8 +16,14 @@ export class counterNote extends basicNote {
 		return "counter";
 	}
 	
+	get defaultContent() {
+		return {
+			value : 0
+		};
+	}
+	
 	get value() {
-		return this.content.value || 0;
+		return this.content.value;
 	}
 	
 	set value(pValue) {
@@ -196,7 +202,7 @@ export class counterNote extends basicNote {
 		this.contentElements.count = vCount;
 		this.contentElements.minus = vMinus;
 		this.contentElements.plus = vPlus;
-		this.updateCounter();
+		//this.updateCounter();
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {

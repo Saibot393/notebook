@@ -10,8 +10,17 @@ export class sliderNote extends basicNote {
 		return "slider";
 	}
 	
+	get defaultContent() {
+		return {
+			value : 0,
+			min : -10,
+			max : 10,
+			step : 1
+		};
+	}
+	
 	get value(){
-		return this.content.value != undefined ? this.content.value : 0;
+		return this.content.value;
 	}
 	
 	set value(pValue) {
@@ -21,7 +30,7 @@ export class sliderNote extends basicNote {
 	}
 	
 	get min(){
-		return this.content.min != undefined ? this.content.min : -10;
+		return this.content.min;
 	}
 	
 	set min(pMin) {
@@ -35,7 +44,7 @@ export class sliderNote extends basicNote {
 	}
 	
 	get max(){
-		return this.content.max != undefined ? this.content.max : 10;
+		return this.content.max;
 	}
 	
 	set max(pMax) {
@@ -49,7 +58,7 @@ export class sliderNote extends basicNote {
 	}
 	
 	get step(){
-		return this.content.step != undefined ? this.content.step : 1;
+		return this.content.step;
 	}
 	
 	set step(pStep) {
@@ -70,7 +79,7 @@ export class sliderNote extends basicNote {
 		vSlider.min = this.min;
 		vSlider.max = this.max;
 		vSlider.step = this.step;
-		vSlider.value = this.value;
+		//vSlider.value = this.value;
 		vSlider.style.flexGrowth = "1";
 		vSlider.style.margin = "auto"
 		vSlider.oninput = () => {
@@ -79,7 +88,7 @@ export class sliderNote extends basicNote {
 		
 		let vSliderInput = document.createElement("input");
 		vSliderInput.type = "number";
-		vSliderInput.value = this.value;
+		//vSliderInput.value = this.value;
 		vSliderInput.style.borderWidth = "2px";
 		vSliderInput.style.borderRadius = "0";
 		vSliderInput.style.borderColor	 = "maroon";
@@ -126,7 +135,7 @@ export class sliderNote extends basicNote {
 		let vMinInput = document.createElement("input");
 		vMinInput.type = "number";
 		vMinInput.style.flexGrowth = "1";
-		vMinInput.value = this.min;
+		//vMinInput.value = this.min;
 		vMinInput.style.border = "0px";
 		vMinInput.style.borderRadius = "0";
 		vMinInput.style.margin = "3px";
@@ -143,7 +152,7 @@ export class sliderNote extends basicNote {
 		let vMaxInput = document.createElement("input");
 		vMaxInput.type = "number";
 		vMaxInput.style.flexGrowth = "1";
-		vMaxInput.value = this.max;
+		//vMaxInput.value = this.max;
 		vMaxInput.style.border = "0px";
 		vMaxInput.style.borderRadius = "0";
 		vMaxInput.style.margin = "3px";
@@ -160,7 +169,7 @@ export class sliderNote extends basicNote {
 		let vStepInput = document.createElement("input");
 		vStepInput.type = "number";
 		vStepInput.style.flexGrowth = "1";
-		vStepInput.value = this.step;
+		//vStepInput.value = this.step;
 		vStepInput.style.border = "0px";
 		vStepInput.style.borderRadius = "0";
 		vStepInput.style.margin = "3px";
@@ -202,7 +211,7 @@ export class sliderNote extends basicNote {
 				this.contentElements.slider.value = pContentUpdate.value;
 			}
 			
-			if (this.contentElements.sliderInput.value != pContentUpdate.value) {
+			if (this.contentElements.sliderInput.value != pContentUpdate.value || this.contentElements.sliderInput.value == "") {
 				this.contentElements.sliderInput.value = pContentUpdate.value;
 			}
 		}

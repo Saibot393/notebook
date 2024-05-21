@@ -7,6 +7,7 @@ import {counterNote} from "./components/counterNote.js";
 import {listNote} from "./components/listNote.js";
 import {sliderNote} from "./components/sliderNote.js";
 import {chatNote} from "./components/chatNote.js";
+import {timerNote} from "./components/timerNote.js";
 
 const cNotesFlag = "notes";
 
@@ -34,7 +35,8 @@ CONFIG[cModuleName] = {
 		counter : counterNote,
 		list : listNote,
 		slider : sliderNote,
-		chat : chatNote
+		chat : chatNote,
+		timer : timerNote
 	}
 }
 
