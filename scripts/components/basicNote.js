@@ -28,12 +28,12 @@ export class basicNote {
 		this._isMouseHover = false;
 		
 		this._hastick = false;
-
-		this.render();
 		
 		this._mouseHoverCallBack = pOptions.mouseHoverCallBack;
 		
 		this._onTickChange = pOptions.onTickChange;
+
+		this.render();
 	}
 	
 	get valid() {
@@ -123,6 +123,23 @@ export class basicNote {
 	
 	onChangeColor(pColor) {
 		
+	}
+	
+	get tickinterval() {
+		return cTickInterval;
+	}
+	
+	get hastick() {
+		//Ticks? Disgusting, where? oh there it is -> *
+		return this._hastick;
+	}
+	
+	get skipTicks() {
+		return this._skipTicks ?? 0;
+	}
+	
+	set skipTicks(pIgnoreTicks) {
+		this._skipTicks = Number(pIgnoreTicks);
 	}
 	
 	onTickChangebasic() {
@@ -286,7 +303,20 @@ export class basicNote {
 			let vDeleteIcon = document.createElement("i");
 			vDeleteIcon.classList.add("fa-solid", cDeleteIcon);
 			vDeleteIcon.style.margin = "5px";
-			vDeleteIcon.onclick = () => {NoteManager.deleteNote(this.id)};
+			vDeleteIcon.onclick = (pEvent) => {
+				if (pEvent.shiftKey) {
+					this.delete();
+				}
+				else {
+				Dialog.confirm({
+					title: Translate("Titles.delete"),
+					content: Translate("Titles.deleteNoteConfirm", {pTitle : this.title}),
+					yes: () => {this.delete()},
+					no: () => {},
+					defaultYes: false
+				});
+				}
+			};
 			registerHoverShadow(vDeleteIcon);
 			vElements.push(vDeleteIcon);
 		}
@@ -392,23 +422,19 @@ export class basicNote {
 		//enable all inputs
 	}
 	
-	tickbasic() {
+	tickbasic(pTickCount) {
 		if (this.hastick) {
-			this.tick();
+			if (this.skipTicks <= 0) {
+				this.tick(pTickCount);
+			}
+			else {
+				this.skipTicks = this.skipTicks - 1;
+			}
 		}
 	}
 	
-	tick() {
+	tick(pTickCount) {
 		//tick every 100ms for time dependent stuff
-	}
-	
-	get tickinterval() {
-		return cTickInterval;
-	}
-	
-	get hastick() {
-		//Ticks? Disgusting, where? oh there it is -> *
-		return this._hastick;
 	}
 	
 	startTick() {
@@ -427,5 +453,9 @@ export class basicNote {
 	
 	applyFilter(pFilter) {
 		
+	}
+	
+	delete() {
+		NoteManager.deleteNote(this.id);
 	}
 }

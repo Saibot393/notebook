@@ -1,4 +1,4 @@
-import {cModuleName} from "../utils/utils.js";
+import {cModuleName, isActiveElement} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
@@ -143,7 +143,7 @@ export class sliderNote extends basicNote {
 			this.min = vMinInput.value;
 		}
 		
-		let vMaxLabel  = document.createElement("label");
+		let vMaxLabel = document.createElement("label");
 		vMaxLabel.innerHTML = "max";
 		vMaxLabel.style.margin = "auto";
 		vMaxLabel.style.marginLeft = "3px";

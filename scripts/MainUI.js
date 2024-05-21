@@ -59,6 +59,8 @@ class Notes /*extends SidebarTab*/ {
 		
 		this.tickNotes = [];
 		
+		this.tickCount = 0;
+		
 		if (this.tab) {
 			this.render();
 		}
@@ -145,6 +147,7 @@ class Notes /*extends SidebarTab*/ {
 		}
 		
 		this.sortEntries();
+		this.rebuildTickList();
 	}
 	
 	renderPopout() {
@@ -179,6 +182,7 @@ class Notes /*extends SidebarTab*/ {
 				this.entries.appendChild(this.notes[pID].element);
 				
 				this.sortEntries();
+				this.rebuildTickList();
 			}
 		}
 	}
@@ -255,7 +259,9 @@ class Notes /*extends SidebarTab*/ {
 	
 	onTickChange(pID) {
 		if (this.notes[pID]?.hastick) {
-			this.tickNotes.push(this.notes[pID]);
+			if (!this.tickNotes.find(vNote => vNote.id == pID)) {
+				this.tickNotes.push(this.notes[pID]);
+			}
 		}
 		else {
 			this.tickNotes = this.tickNotes.filter(vNote => vNote?.hastick);
@@ -266,11 +272,20 @@ class Notes /*extends SidebarTab*/ {
 		}
 	}
 	
+	rebuildTickList() {
+		this.tickNotes = Object.values(this.notes).filter(vNote => vNote?.hastick);
+		
+		if (this.tickNotes.length > 0 && !this.hasTick) {
+			this.tick();
+		}
+	}
+	
 	tick(pForce) {
 		if (this.tickNotes.length > 0) {
 			this.hasTick = true;
+			this.tickCount = this.tickCount + 1;
 			for (let vNote of this.tickNotes) {
-				vNote?.tickbasic();
+				vNote?.tickbasic(this.tickCount);
 			}
 			setTimeout(() => {this.tick()}, cTickInterval);
 		}

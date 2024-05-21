@@ -1,3 +1,5 @@
+import {cModuleName, isActiveElement} from "../utils/utils.js";
+
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
 
@@ -75,7 +77,7 @@ export class textNote extends basicNote {
 		this.contentElements.text.style.height = 'auto';
 		this.contentElements.text.style.height = `${this.contentElements.text.scrollHeight+2}px`;
 		
-		if (this.contentElements.text == document.activeElement || this.isMouseHover) {
+		if (isActiveElement(this.contentElements.text) || this.isMouseHover) {
 			this.contentElements.text.style.maxHeight = this.largeHeightLimit;
 		}
 		else {

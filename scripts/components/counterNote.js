@@ -1,3 +1,5 @@
+import {cModuleName, isActiveElement} from "../utils/utils.js";
+
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
 
@@ -247,14 +249,7 @@ export class counterNote extends basicNote {
 	}
 	
 	tick() {
-		if (this.skipTicks > 0) {
-			this.skipTicks = this.skipTicks - 1;
-		}
-		else {
-			if (this.autoCount) {
-				this.change(this.autoCount);
-			}
-		}
+		this.change(this.autoCount);
 	}
 	
 	onMouseHoverChange() {

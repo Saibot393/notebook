@@ -1,3 +1,5 @@
+import {cModuleName, isActiveElement} from "../utils/utils.js";
+
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
 
@@ -83,7 +85,7 @@ export class listNote extends basicNote {
 		}
 	}
 	
-	updateList() {
+	renderList() {
 		if (!this.contentElements.listElements) {
 			this.contentElements.listElements = [];
 		}
@@ -129,7 +131,7 @@ export class listNote extends basicNote {
 				vCheck.classList.add("fa-solid", "fa-check");
 				vCheck.style.color = "maroon";
 				registerHoverShadow(vCheck);
-				vSetCheckState(vCheck, vList[i].checked != undefined ? vList[i].checked : false);
+				vSetCheckState(vCheck, vList[i].checked ?? false);
 				vCheckBorder.appendChild(vCheck);
 				vCheckBorder.onclick = () => {
 					if (this.canEdit) {
@@ -205,7 +207,7 @@ export class listNote extends basicNote {
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
 		if (pContentUpdate.list) {
-			this.updateList();
+			this.renderList();
 		}
 	}
 	

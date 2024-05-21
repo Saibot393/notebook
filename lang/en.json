@@ -6,13 +6,14 @@
 			"defaultTitle"					: "Note Title",
 			"newNote"						: "New Note",
 			"name"							: "Name",
+			"delete"						: "Delete",
 			
 			"userName"						: "User names",
 			"self"							: "self",
 			"default"						: "default",
 			
 			"createNote"					: "Create new Note",
-			
+			"deleteNoteConfirm"				: "Delete note \"{pTitle}\" ?",
 			
 			"owner"							: "Owner",
 			"seer"							: "Observers",

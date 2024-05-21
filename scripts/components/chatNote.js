@@ -1,4 +1,4 @@
-import {cModuleName} from "../utils/utils.js";
+import {cModuleName, isActiveElement} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
@@ -144,7 +144,7 @@ export class chatNote extends basicNote {
 			this.contentElements.chatHistory.push(vEntryDIV);
 		}
 		
-		if (!(this.contentElements.input == document.activeElement || this.isMouseHover) || (vLastOwner == game.user.id)) {
+		if (!(isActiveElement(this.contentElements.input) || this.isMouseHover) || (vLastOwner == game.user.id)) {
 			this.scrolltoEnd();
 		}
 	}	
@@ -175,7 +175,7 @@ export class chatNote extends basicNote {
 	}
 	
 	onMouseHoverChange() {
-		if (this.contentElements.input == document.activeElement || this.isMouseHover) {
+		if (isActiveElement(this.contentElements.input) || this.isMouseHover) {
 			this.contentElements.chat.style.maxHeight = this.largeHeightLimit;
 			if (this.canEdit) {
 				this.contentElements.chat.style.borderBottom = "solid maroon 1px";

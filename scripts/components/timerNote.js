@@ -1,4 +1,4 @@
-import {cModuleName} from "../utils/utils.js";
+import {cModuleName, isActiveElement} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
@@ -9,8 +9,8 @@ const cTimeInputs = ["d", "h", "m", "s"];
 
 const cPlayIcon = "fa-play";
 const cStopIcon = "fa-pause";
-const cUpIcon = "fa-arrow-up";
-const cDownIcon = "fa-arrow-down";
+const cUpIcon = "fa-rotate-right";
+const cDownIcon = "fa-rotate-left";
 const cNowIcon = "fa-circle-dot";
 
 export class timerNote extends basicNote {
@@ -20,8 +20,10 @@ export class timerNote extends basicNote {
 	
 	get defaultContent() {
 		return {
-			running : false,
+			running : true,
 			offset : 0,
+			basetime : undefined,
+			direction : 1
 		};
 	}
 	
@@ -38,7 +40,7 @@ export class timerNote extends basicNote {
 	}
 	
 	get basetime() {
-		return this.content.basetime || this.now;
+		return this.content.basetime ?? this.now;
 	}
 	
 	set basetime(pBaseTime) {
@@ -75,7 +77,7 @@ export class timerNote extends basicNote {
 	}
 	
 	get direction() {
-		return Math.sign(this.content.direction || 1);
+		return Math.sign(this.content.direction);
 	}
 	
 	set direction(pDirection) {
@@ -83,13 +85,16 @@ export class timerNote extends basicNote {
 	}
 	
 	renderContent() {
+		let vTimerDIV = document.createElement("div");
+		vTimerDIV.style.display = "flex";
+		vTimerDIV.style.flexDirection = "row";
+		
 		let vTimeDIV = document.createElement("div");
 		vTimeDIV.style.flexDirection = "row";
 		vTimeDIV.style.display = "flex";
 		vTimeDIV.style.color = "maroon";
 		vTimeDIV.style.fontSize = "40px";
-		
-		let vsmallTimeDIV = document.createElement("div");
+		vTimeDIV.style.flexGrow = "1";
 		
 		let vStyleInput = (pInput) => {
 			pInput.type = "number";
@@ -97,6 +102,7 @@ export class timerNote extends basicNote {
 			pInput.style.width = "60px";
 			pInput.style.height = "40px";
 			pInput.style.border = "0px";
+			pInput.style.borderRadius = "";
 			pInput.style.backgroundColor = "rgba(255,255,255,0)";
 			pInput.style.margin = "auto";
 			pInput.style.textAlign = "center";
@@ -123,6 +129,10 @@ export class timerNote extends basicNote {
 		let vSpacer1 = document.createElement("div");
 		vSpacer1.style.flexGrow = "1";
 		vSpacer1.style.width = "0px";
+		
+		let vMinus = document.createElement("div");
+		vMinus.innerHTML = "-";
+		vMinus.style.margin = "auto";
 		
 		let vHourInput = document.createElement("input");
 		vStyleInput(vHourInput);
@@ -158,6 +168,7 @@ export class timerNote extends basicNote {
 		vSpacer1.appendChild(vDayInput);
 		
 		vTimeDIV.appendChild(vSpacer1);
+		vTimeDIV.appendChild(vMinus);
 		vTimeDIV.appendChild(vHourInput);
 		vTimeDIV.appendChild(vHourSeperator);
 		vTimeDIV.appendChild(vMinuteInput);
@@ -166,9 +177,47 @@ export class timerNote extends basicNote {
 		vTimeDIV.appendChild(vSpacer2);
 		
 		let vSettingsDIV = document.createElement("div");
+		vSettingsDIV.style.display = "flex";
+		vSettingsDIV.style.flexDirection = "column";
+		vSettingsDIV.style.color = "maroon";
+		vSettingsDIV.style.textAlign = "center";
+		vSettingsDIV.style.marginRight = "2px";
 		
-		this.mainElement.appendChild(vTimeDIV);
-		this.mainElement.appendChild(vSettingsDIV);
+		let vReverse = document.createElement("i");
+		vReverse.classList.add("fa-solid");
+		vReverse.onclick = () => {
+			if (this.canEdit) {
+				this.invertDirection(true);
+			}
+		}
+		vReverse.style.flexGrow = "1";
+		
+		let vStartStop = document.createElement("i");
+		vStartStop.classList.add("fa-solid");
+		vStartStop.onclick = () => {
+			if (this.canEdit) {
+				this.toggleRunning();
+			}
+		}
+		vStartStop.style.flexGrow = "1";
+		
+		let vNowTime = document.createElement("i");
+		vNowTime.classList.add("fa-solid", cNowIcon);
+		vNowTime.onclick = () => {
+			if (this.canEdit) {
+				this.time = 0;
+			}
+		}
+		vNowTime.style.flexGrow = "1";
+		
+		vSettingsDIV.appendChild(vReverse);
+		vSettingsDIV.appendChild(vStartStop);
+		vSettingsDIV.appendChild(vNowTime);
+		
+		vTimerDIV.appendChild(vTimeDIV);
+		vTimerDIV.appendChild(vSettingsDIV);
+		
+		this.mainElement.appendChild(vTimerDIV);
 		
 		this.contentElements.d = vDayInput;
 		this.contentElements.h = vHourInput;
@@ -176,27 +225,66 @@ export class timerNote extends basicNote {
 		this.contentElements.s = vSecondInput;
 		this.contentElements.hSeperator = vHourSeperator;
 		this.contentElements.mSeperator = vMinuteSeperator;
+		this.contentElements.minus = vMinus;
+		
+		this.contentElements.reverse = vReverse;
+		this.contentElements.startstop = vStartStop;
 		
 		this.contentElements.settings = vSettingsDIV;
 		
 		//this.updateTime();
-		this.synchTicking();
+		//this.synchTicking();
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
 		if (pContentUpdate.hasOwnProperty("basetime") || pContentUpdate.hasOwnProperty("offset")) {
 			this.updateTime();
 		}
+
+		if (pContentUpdate.hasOwnProperty("running")) {
+			if (this.running) {
+				this.contentElements.startstop.classList.remove(cPlayIcon);
+				this.contentElements.startstop.classList.add(cStopIcon);
+				this.start();
+			}
+			else {
+				this.contentElements.startstop.classList.remove(cStopIcon);
+				this.contentElements.startstop.classList.add(cPlayIcon);
+				this.stop();
+			}
+		}
+		
+		if (pContentUpdate.hasOwnProperty("direction")) {
+			if (this.direction < 0) {
+				this.contentElements.reverse.classList.remove(cUpIcon);
+				this.contentElements.reverse.classList.add(cDownIcon);
+			}
+			else {
+				this.contentElements.reverse.classList.remove(cDownIcon);
+				this.contentElements.reverse.classList.add(cUpIcon);
+			}
+		}
 	}
 	
 	updateTime(pRenderTime = true) {
 		let vSplit = this.timeSplit;
 		
-		for (let vInput of cTimeInputs) {
-			this.contentElements[vInput].value = vSplit[vInput];
+		let vRenderTime = pRenderTime;
+		
+		if (vSplit.s == 0) {
+			vRenderTime = true; //manage tick over
 		}
 		
-		if (pRenderTime) {
+		for (let vInput of cTimeInputs) {
+			if (!isActiveElement(this.contentElements[vInput])) {
+				this.contentElements[vInput].value = vSplit[vInput];
+				if (vInput != "d" && this.contentElements[vInput].value.length < 2) {
+					this.contentElements[vInput].value = "0" + this.contentElements[vInput].value;
+				}
+			}
+		}
+		
+		if (vRenderTime) {
 			this.renderTime(vSplit);
 		}
 	}
@@ -208,37 +296,38 @@ export class timerNote extends basicNote {
 			vSplit = this.timeSplit;
 		}
 		
-		let vPrevZero = false;
+		let vPrevZero = true;
 		
 		for (let vInput of cTimeInputs) {
-			if (!this.isMouseHover && vPrevZero && vSplit[vInput] == 0 && vInput != "s") {
+			if (!this.isMouseHover && vPrevZero && vSplit[vInput] == 0 && !["s", "m"].includes(vInput)) {
 				this.contentElements[vInput].style.display = "none";
 				if (this.contentElements[vInput + "Seperator"]) {
 					this.contentElements[vInput + "Seperator"].style.display = "none";
 				}
 			}
 			else {
-				vPrevZero = vInput == "d";
 				this.contentElements[vInput].style.display = "";
 				if (this.contentElements[vInput + "Seperator"]) {
 					this.contentElements[vInput + "Seperator"].style.display = "";
 				}
 			}
 		}
+		
+		this.contentElements.minus.style.display = (vSplit.sgn < 0 ? "" : "none");
 	}
 	
 	start() {
 		if (!this.running) {
 			this.updateContent({running : true, basetime : this.now});
-			this.startTick();
 		}
+		this.startTick();
 	}
 	
 	stop() {
 		if (this.running) {
-			this.updateContent({running : true, offset : this.time});
-			this.stopTick();
+			this.updateContent({running : false, offset : this.time});
 		}
+		this.stopTick();
 	}
 	
 	toggleRunning() {
@@ -259,7 +348,7 @@ export class timerNote extends basicNote {
 		}
 	}
 	
-	updateBaseTime() {
+	reBase() {
 		this.updateContent({basetime : this.now, offset : this.time});
 	}
 	
@@ -273,20 +362,39 @@ export class timerNote extends basicNote {
 	}
 	
 	disable() {
-		//disable all inputs
+		this.contentElements.settings.style.display = "none";
+		for (let vInput of cTimeInputs) {
+			this.contentElements[vInput].disabled = true;
+		}
 	}
 	
 	enable() {
-		//enable all inputs
+		if (this.isMouseHover) {
+			this.contentElements.settings.style.display = "flex";
+		}
+		for (let vInput of cTimeInputs) {
+			this.contentElements[vInput].disabled = false;
+		}
 	}
 	
 	onMouseHoverChange() {
 		this.renderTime();
+		
+		if (this.isMouseHover) {
+			if (this.canEdit) {
+				this.contentElements.settings.style.display = "flex";
+			}
+		}
+		else {
+			this.contentElements.settings.style.display = "none";
+		}
 	}
 	
-	tick() {
-		//tick every 100ms for time dependent stuff
-		//make sure to set _hastick or overwrite hastick()
+	tick(pTickCount) {
+		if (pTickCount%5 == 0) {
+			this.updateTime(false);
+		}
+		//this.ignoreTicks = 5;
 	}
 	
 	round() {
@@ -295,7 +403,7 @@ export class timerNote extends basicNote {
 }
 
 function splitTime(pTime) {
-	let vLeft = pTime;
+	let vLeft = Math.abs(pTime);
 	
 	let vSplit = {};
 	
@@ -313,11 +421,13 @@ function splitTime(pTime) {
 	
 	vSplit.d = vLeft;
 	
+	vSplit.sgn = Math.sign(pTime);
+	
 	return vSplit;
 }
 
 function summSplit(pSplit) {
 	let vSplit = {ms : 0, s : 0, m : 0, h : 0, d : 0, ...pSplit};
 	
-	return vSplit.ms + 1000 * (vSplit.s + 60 * (vSplit.m + 60 * (vSplit.h + 24 * (vSplit.d))));
+	return pSplit.sgn * (vSplit.ms + 1000 * (vSplit.s + 60 * (vSplit.m + 60 * (vSplit.h + 24 * (vSplit.d)))));
 }

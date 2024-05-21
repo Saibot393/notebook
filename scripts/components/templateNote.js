@@ -1,4 +1,4 @@
-import {cModuleName} from "../utils/utils.js";
+import {cModuleName, isActiveElement} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
@@ -39,7 +39,7 @@ export class templateNote extends basicNote {
 		//called when tick changes (this.hasTick);
 	}
 	
-	tick() {
+	tick(pTickCount) {
 		//tick every 100ms for time dependent stuff
 		//make sure to set _hastick or overwrite hastick()
 	}
