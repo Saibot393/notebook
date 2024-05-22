@@ -2,6 +2,7 @@ import {cModuleName, cTickInterval, Translate} from "./utils/utils.js";
 import {NoteManager, cleanUserData} from "./MainData.js";
 
 import {noteCreation} from "./helpers/noteCreation.js";
+import {noteFilter} from "./helpers/noteFilter.js";
 
 const cNoteIcon = "fa-note-sticky";
 
@@ -117,6 +118,7 @@ class Notes /*extends SidebarTab*/ {
 		vButtons.appendChild(vNewNoteButton);
 		
 		vHeader.appendChild(vButtons);
+		vHeader.appendChild((new noteFilter((pFilter) => {this.filterEntries(pFilter)})).element);
 		
 		this.tab.appendChild(vHeader);
 		
@@ -341,8 +343,12 @@ class Notes /*extends SidebarTab*/ {
 		}
 	}
 	
-	filterEntries() {
-		
+	filterEntries(pFilter) {
+		if (pFilter) {
+			for (let vNote of Object.values(this.notes)) {
+				vNote.applyFilter(pFilter);
+			}
+		}
 	}
 	
 	sortEntries(pSort = undefined) {

@@ -10,6 +10,10 @@ export class chatNote extends basicNote {
 		return "chat";
 	}
 	
+	get icon() {
+		return "fa-comment";
+	}
+	
 	get defaultContent() {
 		return {
 			history : []
@@ -42,14 +46,19 @@ export class chatNote extends basicNote {
 	
 	renderContent() {
 		let vChatdiv = document.createElement("div");
-		vChatdiv.style.width = "100%";
-		//vChatdiv.style.height = "auto";
-		vChatdiv.style.flexGrow = "1";
 		vChatdiv.style.display = "flex";
-		vChatdiv.style.flexDirection = "column";
-		vChatdiv.style.color = "black"
-		vChatdiv.style.padding = "3px";
-		vChatdiv.style.overflowY = "auto";
+		vChatdiv.style.flexDirection = "column"
+		vChatdiv.style.height = "100%";
+		
+		let vHistorydiv = document.createElement("div");
+		vHistorydiv.style.width = "100%";
+		//vHistorydiv.style.height = "auto";
+		vHistorydiv.style.flexGrow = "1";
+		vHistorydiv.style.display = "flex";
+		vHistorydiv.style.flexDirection = "column";
+		vHistorydiv.style.color = "black"
+		vHistorydiv.style.padding = "3px";
+		vHistorydiv.style.overflowY = "auto";
 		
 		let vWritediv = document.createElement("div");
 		vWritediv.style.marginRight = "5px";
@@ -71,10 +80,12 @@ export class chatNote extends basicNote {
 		
 		vWritediv.appendChild(vInput);
 		
-		this.mainElement.appendChild(vChatdiv);
-		this.mainElement.appendChild(vWritediv);
+		vChatdiv.appendChild(vHistorydiv);
+		vChatdiv.appendChild(vWritediv);
 		
-		this.contentElements.chat = vChatdiv;
+		this.mainElement.appendChild(vChatdiv);
+		
+		this.contentElements.history = vHistorydiv;
 		this.contentElements.inputdiv = vWritediv;
 		this.contentElements.input = vInput;
 		
@@ -123,7 +134,7 @@ export class chatNote extends basicNote {
 				vOrderElement(vuserAlignDIV, vtoRender.user);
 				
 				vuserAlignDIV.appendChild(vUsercap);
-				this.contentElements.chat.appendChild(vuserAlignDIV);
+				this.contentElements.history.appendChild(vuserAlignDIV);
 			}
 			
 			let vAlignDIV = document.createElement("div");
@@ -139,7 +150,7 @@ export class chatNote extends basicNote {
 			vOrderElement(vAlignDIV, vtoRender.user);
 			
 			vAlignDIV.appendChild(vEntryDIV);
-			this.contentElements.chat.appendChild(vAlignDIV);
+			this.contentElements.history.appendChild(vAlignDIV);
 			
 			this.contentElements.chatHistory.push(vEntryDIV);
 		}
@@ -150,7 +161,7 @@ export class chatNote extends basicNote {
 	}	
 	
 	scrolltoEnd() {
-		this.contentElements.chat.scrollTo(0, this.contentElements.chat.scrollHeight);
+		this.contentElements.history.scrollTo(0, this.contentElements.history.scrollHeight);
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
@@ -162,7 +173,7 @@ export class chatNote extends basicNote {
 	disable() {
 		this.contentElements.input.disabled = true;
 		this.contentElements.inputdiv.style.display = "none";
-		this.contentElements.chat.style.borderBottom = "";
+		this.contentElements.history.style.borderBottom = "";
 		//disable all inputs
 	}
 	
@@ -170,22 +181,22 @@ export class chatNote extends basicNote {
 		this.contentElements.input.disabled = false;
 		if (this.isMouseHover) {
 			this.contentElements.inputdiv.style.display = "";
-			this.contentElements.chat.style.borderBottom = "solid maroon 1px";
+			this.contentElements.history.style.borderBottom = "solid maroon 1px";
 		}
 	}
 	
 	onMouseHoverChange() {
 		if (isActiveElement(this.contentElements.input) || this.isMouseHover) {
-			this.contentElements.chat.style.maxHeight = this.largeHeightLimit;
+			this.contentElements.history.style.maxHeight = this.largeHeightLimit;
 			if (this.canEdit) {
-				this.contentElements.chat.style.borderBottom = "solid maroon 1px";
+				this.contentElements.history.style.borderBottom = "solid maroon 1px";
 				this.contentElements.inputdiv.style.display = "";
 			}
 		}
 		else {
-			this.contentElements.chat.style.maxHeight = this.smallHeightLimit;
+			this.contentElements.history.style.maxHeight = this.smallHeightLimit;
 			this.contentElements.inputdiv.style.display = "none";
-			this.contentElements.chat.style.borderBottom = "";
+			this.contentElements.history.style.borderBottom = "";
 		}
 	}
 }

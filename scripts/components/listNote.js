@@ -10,6 +10,10 @@ export class listNote extends basicNote {
 		return "list";
 	}
 	
+	get icon() {
+		return "fa-list";
+	}
+	
 	get defaultContent() {
 		return {
 			list : [{checked : false, text : ""}]
@@ -31,11 +35,14 @@ export class listNote extends basicNote {
 	}
 	
 	renderContent() {
+		let vListdiv = document.createElement("div");
+		vListdiv.style.display = "flex";
+		vListdiv.style.flexDirection = "column"
+		vListdiv.style.height = "100%";
+		vListdiv.style.overflowY = "auto";
+		
 		let vList = document.createElement("div");
 		vList.style.marginTop = "3px";
-		vList.style.overflowY = "auto";
-		
-		this.contentElements.list = vList;
 		
 		//this.updateList();
 		
@@ -51,9 +58,13 @@ export class listNote extends basicNote {
 		
 		vAdddiv.appendChild(vAdd);
 		
-		this.mainElement.appendChild(vList);
-		this.mainElement.appendChild(vAdddiv);
+		vListdiv.appendChild(vList);
+		vListdiv.appendChild(vAdddiv);
 		
+		this.mainElement.appendChild(vListdiv);
+		
+		this.contentElements.list = vList;
+		this.contentElements.listdiv = vListdiv;
 		this.contentElements.add = vAdddiv;
 	}
 	
@@ -233,13 +244,13 @@ export class listNote extends basicNote {
 	
 	onMouseHoverChange() {
 		if (this.isMouseHover) {
-			this.contentElements.list.style.maxHeight = this.largeHeightLimit;
+			this.contentElements.listdiv.style.maxHeight = this.largeHeightLimit;
 			if (this.canEdit) {
 				this.contentElements.add.style.display = "";
 			}
 		}
 		else {
-			this.contentElements.list.style.maxHeight = this.smallHeightLimit;
+			this.contentElements.listdiv.style.maxHeight = this.smallHeightLimit;
 			this.contentElements.add.style.display = "none";
 		}
 	}

@@ -10,6 +10,10 @@ export class textNote extends basicNote {
 		return "text";
 	}
 	
+	get icon() {
+		return "fa-font";
+	}
+	
 	get defaultContent() {
 		return {
 			text : ""
@@ -25,15 +29,19 @@ export class textNote extends basicNote {
 	}
 	
 	renderContent() {
+		let vTextDIV = document.createElement("div");
+		vTextDIV.style.display = "flex";
+		vTextDIV.style.height = "100%";
+		
 		let vText = document.createElement("textarea");
 		vText.style.width = "100%";
 		//vText.style.height = "100%";
 		vText.style.backgroundColor = this.color;
 		vText.style.resize = "none";
 		vText.style.borderRadius = "0";
-		vText.style.marginTop = "3px";
 		vText.style.background = "transparent";
 		vText.style.fontFamily = "Arial";
+		//vText.style.height = "auto";
 		//vText.value = this.text;
 		vText.oninput = () => {
 			if (vText.value.length > vMaxTextLength) { //prevent data flooding
@@ -49,9 +57,11 @@ export class textNote extends basicNote {
 		vText.onblur = () => {this.updateTextHeight()};
 		vText.onfocus = () => {this.updateTextHeight()};
 		
-		this.mainElement.appendChild(vText);
+		vTextDIV.appendChild(vText);
+		this.mainElement.appendChild(vTextDIV);
 		
 		this.contentElements.text = vText;
+		this.contentElements.textdiv = vTextDIV;
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
@@ -74,14 +84,16 @@ export class textNote extends basicNote {
 	}
 	
 	updateTextHeight() {
-		this.contentElements.text.style.height = 'auto';
-		this.contentElements.text.style.height = `${this.contentElements.text.scrollHeight+2}px`;
-		
-		if (isActiveElement(this.contentElements.text) || this.isMouseHover) {
-			this.contentElements.text.style.maxHeight = this.largeHeightLimit;
-		}
-		else {
-			this.contentElements.text.style.maxHeight = this.smallHeightLimit;
+		if (!this.windowed) {
+			this.contentElements.text.style.height = 'auto';
+			this.contentElements.text.style.height = `${this.contentElements.text.scrollHeight+2}px`;
+			
+			if (isActiveElement(this.contentElements.text) || this.isMouseHover) {
+				this.contentElements.text.style.maxHeight = this.largeHeightLimit;
+			}
+			else {
+				this.contentElements.text.style.maxHeight = this.smallHeightLimit;
+			}
 		}
 	}
 }

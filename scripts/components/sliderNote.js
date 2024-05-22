@@ -10,6 +10,18 @@ export class sliderNote extends basicNote {
 		return "slider";
 	}
 	
+	get icon() {
+		return "fa-sliders";
+	}
+	
+	get windowOptions() {
+		return {
+			...super.windowOptions,
+			resizable: false,
+			height: 100.19
+		}
+	}
+	
 	get defaultContent() {
 		return {
 			value : 0,
@@ -188,15 +200,19 @@ export class sliderNote extends basicNote {
 		vSettingContentDIV.appendChild(vStepLabel);
 		vSettingContentDIV.appendChild(vStepInput);
 		
-		vSettingContentDIV.style.display = "none";
-		
-		vSettingDIV.onmouseenter = () => {
-			vSettingContentDIV.style.display = "flex";
-		}
-		vSettingDIV.onmouseleave = () => {
+		if (!this.windowed) {
+			vSettingDIV.appendChild(vSettingBar);
+			
 			vSettingContentDIV.style.display = "none";
+			
+			vSettingDIV.onmouseenter = () => {
+				vSettingContentDIV.style.display = "flex";
+			}
+			vSettingDIV.onmouseleave = () => {
+				vSettingContentDIV.style.display = "none";
+			}
 		}
-		vSettingDIV.appendChild(vSettingBar);
+		
 		vSettingDIV.appendChild(vSettingContentDIV);
 		
 		this.contentElements.settings = vSettingDIV;

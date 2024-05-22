@@ -4,6 +4,7 @@
 		
 		"Titles" : {
 			"notebook" 						: "Notebook",
+			"note"							: "Note",
 			
 			"defaultTitle"					: "Note Title",
 			"newNote"						: "New Note",
@@ -30,6 +31,7 @@
 			},
 			
 			"type"							: "Type",
+			"typeTitle"						: "{pType} Note",
 			"notesTypes" : {
 				"text"						: "Text",
 				"counter"					: "Counter",

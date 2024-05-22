@@ -20,6 +20,22 @@ export class timerNote extends basicNote {
 		return "timer";
 	}
 	
+	get icon() {
+		return "fa-clock";
+	}
+	
+	get windowedAMH() {
+		return false;
+	}
+	
+	get windowOptions() {
+		return {
+			...super.windowOptions,
+			resizable: false,
+			height: 50 + 30
+		}
+	}
+	
 	get defaultContent() {
 		return {
 			running : false,
@@ -208,6 +224,7 @@ export class timerNote extends basicNote {
 			}
 		}
 		vReverse.style.flexGrow = "1";
+		registerHoverShadow(vReverse);
 		
 		let vStartStop = document.createElement("i");
 		vStartStop.classList.add("fa-solid");
@@ -217,6 +234,7 @@ export class timerNote extends basicNote {
 			}
 		}
 		vStartStop.style.flexGrow = "1";
+		registerHoverShadow(vStartStop);
 		
 		let vNowTime = document.createElement("i");
 		vNowTime.classList.add("fa-solid", cNowIcon);
@@ -231,6 +249,7 @@ export class timerNote extends basicNote {
 			}
 		}
 		vNowTime.style.flexGrow = "1";
+		registerHoverShadow(vNowTime);
 		
 		vSettingsDIV.appendChild(vReverse);
 		vSettingsDIV.appendChild(vStartStop);

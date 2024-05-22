@@ -211,11 +211,11 @@ class NoteManager {
 			return game.users.get(pNote.owner);
 		}
 		
-		if (game.user.getFlag(cModuleName, cNotesFlag + `.${pID}`)?.owner == game.user.id) {
+		if (game.user.getFlag(cModuleName, cNotesFlag + `.${pNote}`)?.owner == game.user.id) {
 			return game.user;
 		}
 		
-		let vNote = NoteManager.getNote(pID);
+		let vNote = NoteManager.getNote(pNote);
 		
 		if (vNote) {
 			return game.users.get(vNote.owner);

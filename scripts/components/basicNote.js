@@ -3,22 +3,27 @@ import {cModuleName, cTickInterval, Translate} from "../utils/utils.js";
 import {NoteManager} from "../MainData.js";
 import {cNoteToggleFlag} from "../MainUI.js";
 
+import {noteWindow} from "../helpers/noteWindow.js";
+
 import {notePermissionsWindow} from "../helpers/notePermissions.js";
 
 import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
-const cColors = ["white", "#f5ea20", "#e8ae1a", "#c73443", "#34c765", "#4287f5"];
+				//w			y			o			r			g			b
+export const cColors = ["white", "#f5ea20", "#e8ae1a", "#c73443", "#34c765", "#4287f5"];
 
 const cPermissionIcon = "fa-book-open-reader";
 const cInfoIcon = "fa-circle-info";
 const cDeleteIcon = "fa-trash-can";
-const cWindowIcon = "fa-window-maximize";
+const cWindowIcon = "fa-arrow-up-from-bracket";
 const cSoundOnIcon = "fa-volume-xmark";
 const cSoundOffIcon = "fa-volume-high";
 
 //AudioHelper.play({src: "sounds/notify.wav", volume: 1});
 
 const cStickyHover = false;
+
+const cShowIcon = true;
 
 export class basicNote {
 	constructor(pNoteID, pNoteData, pOptions = {}) {
@@ -29,6 +34,8 @@ export class basicNote {
 		this._element = null;
 		
 		this.contentElements = {};
+		
+		this.captionElements = {};
 		
 		this._isMouseHover = false;
 		
@@ -55,6 +62,10 @@ export class basicNote {
 		return undefined;
 	}
 	
+	get icon() {
+		return "fa-note-sticky";
+	}
+	
 	get defaultContent() {
 		return {};
 	}
@@ -69,6 +80,22 @@ export class basicNote {
 	
 	get window() {
 		return this._window;
+	}
+	
+	get windowed() {
+		return Boolean(this.window);
+	}
+	
+	get windowedAMH() {
+		return true; //if being windowed should always be treated as always(A) having a mouse(M) hover(H) the note (AMH)
+	}
+	
+	get windowOptions() {
+		return {
+			resizable: true,
+			width: 313,
+			height: 400
+		}
 	}
 	
 	get isOwner() {
@@ -115,11 +142,19 @@ export class basicNote {
 		return this.owner?.name;
 	}
 	
+	get ownerID() {
+		return this.owner?.id;
+	}
+	
 	get smallHeightLimit() {
 		return "87px";
 	}
 	
 	get largeHeightLimit() {
+		if (this.windowed) {
+			return "100%";
+		}
+		
 		return "174px";
 	}
 	
@@ -128,7 +163,7 @@ export class basicNote {
 	}
 	
 	get isMouseHover() {
-		return this._isMouseHover;
+		return this._isMouseHover || (this.windowed && this.windowedAMH);
 	}
 	
 	set isMouseHover(pisMouseHover) {
@@ -218,33 +253,46 @@ export class basicNote {
 	}
 	
 	render() {
-		this._element = document.createElement("div");
-		this._element.id = this.id;
-		this._element.flexDirection = "column";
-		this._element.style.border = this.captionColor;
-		this._element.style.height = "auto";
-		this._element.onmouseenter = () => {this.isMouseHover = true};
-		if (!cStickyHover) this._element.onmouseleave = () => {this.isMouseHover = false};
-		this._element.style.marginBottom = "5px";
-		//this.element.draggable = true;
+		if (!this.windowed) {
+			this._element = document.createElement("div");
+			this._element.id = this.id;
+			this._element.flexDirection = "column";
+			this._element.style.border = this.captionColor;
+			this._element.style.height = "auto";
+			this._element.onmouseenter = () => {this.isMouseHover = true};
+			if (!cStickyHover) this._element.onmouseleave = () => {this.isMouseHover = false};
+			this._element.style.marginBottom = "5px";
+			//this.element.draggable = true;
+		}
 		
-		this.captionElement = document.createElement("div");
-		this.captionElement.style.top = 0;
-		this.captionElement.style.width = 100;
+		if (!this.windowed) {
+			this.captionElement = document.createElement("div");
+			this.captionElement.style.top = 0;
+			this.captionElement.style.width = 100;
+		}
+		else {
+			this.captionElement = this.window.header;
+		}
 		this.captionElement.style.backgroundColor = this.captionColor;
 		this.captionElement.style.color = "white";
 		this.captionElement.style.flexDirection = "row";
 		this.captionElement.style.height = "auto";
 		this.captionElement.style.display = "flex";
 		this.captionElement.onclick = (pEvent) => {
-			if (pEvent.shiftKey) {
-				this.popOut();
-			}
-			else {
-				this.toggleContent()
+			if (!this.windowed) {
+				if (pEvent.shiftKey) {
+					this.popOut();
+				}
+				else {
+					this.toggleContent()
+				}
 			}
 		};
-		this.captionElement.oncontextmenu = () => {this.toggleContent()};
+		this.captionElement.oncontextmenu = () => {
+			if (!this.windowed) {
+				this.toggleContent();
+			}
+		};
 		this.captionElement.draggable = true;
 		this.captionElement.ondragstart = (event) => {
 			event.dataTransfer.setData("text/plain", JSON.stringify({
@@ -253,14 +301,21 @@ export class basicNote {
 			}));
 		};
 		
-		this.mainElement = document.createElement("div");
-		this.mainElement.style.height = "auto";
+		if (!this.windowed) {
+			this.mainElement = document.createElement("div");
+			this.mainElement.style.height = "auto";
+		}
+		else {
+			this.mainElement = this.window.body;
+		}
 		this.mainElement.style.background = 'url("http://localhost:30000/ui/parchment.jpg")';
 		this.mainElement.style.backgroundBlendMode = "multiply";
 		this.mainElement.style.backgroundColor = this.backColor;
 		
-		this._element.appendChild(this.captionElement);
-		this._element.appendChild(this.mainElement);
+		if (!this.windowed) {
+			this._element.appendChild(this.captionElement);
+			this._element.appendChild(this.mainElement);
+		}
 		
 		this.renderCaption();
 		
@@ -272,13 +327,25 @@ export class basicNote {
 		
 		this.onMouseHoverChange();
 		
-		this.synchToggleState();
+		if (!this.windowed) this.synchToggleState();
 		
 		return this.element;
 	}
 	
 	renderCaption() {
 		let vElements = [];
+		
+		if (cShowIcon) {
+			let vNoteIcon = document.createElement("i");
+			vNoteIcon.classList.add("fa-solid", this.icon);
+			vNoteIcon.style.margin = "5px";
+			if (this.windowed) vNoteIcon.style.cursor = "move";
+			vNoteIcon.style.color = this.backColor;
+			vNoteIcon.onclick = this.captionElement.onclick;
+			vNoteIcon.setAttribute("data-tooltip", Translate("Titles.typeTitle", {pType : Translate("Titles.notesTypes." + this.type)}));
+			vElements.push(vNoteIcon);
+			this.captionElements.icon = vNoteIcon;
+		}
 		
 		let vTitle = document.createElement("input");
 		vTitle.id = "title";
@@ -288,7 +355,13 @@ export class basicNote {
 		vTitle.type = "text";
 		vTitle.value = this.title;
 		vTitle.oninput = () => {this.updateData({title : vTitle.value})};
-		vTitle.style.width = "50%";
+		vTitle.style.minWidth = "25%";
+		vTitle.style.width = "0px";
+		vTitle.style.flexGrow = this.windowed ? "3" : "2.5";
+		vTitle.style.cursor = "text";
+		vTitle.style.display = "block";
+		vTitle.placeholder = Translate("Titles.note");
+		this.captionElements.title = vTitle;
 		vElements.push(vTitle);
 		
 		const cColorSize = 10;
@@ -298,6 +371,7 @@ export class basicNote {
 		vColorChoices.style.display = "grid";
 		vColorChoices.style.margin = "1px";
 		vColorChoices.style.marginLeft = "3px";
+		this.captionElements.color = vColorChoices;
 		vColorChoices.onclick = (pEvent) => {this.captionElement.onclick(pEvent)};
 			for (let vColor of cColors) {
 				let vColorDiv = document.createElement("div");
@@ -314,7 +388,19 @@ export class basicNote {
 		let vSpacer = document.createElement("div");
 		vSpacer.style.flexGrow = "1";
 		vSpacer.onclick	= (pEvent) => {this.captionElement.onclick(pEvent)};
+		vSpacer.style.cursor = "move";
+		vSpacer.style.display = "block";
 		vElements.push(vSpacer);
+		
+		if (!this.windowed) {
+			let vPopoutButton = document.createElement("i");
+			vPopoutButton.classList.add("fa-solid", cWindowIcon);
+			vPopoutButton.style.margin = "5px";
+			this.captionElements.popout = vPopoutButton;
+			vPopoutButton.onclick = () => {this.popOut()};
+			registerHoverShadow(vPopoutButton);
+			vElements.push(vPopoutButton);
+		}
 		
 		if (NoteManager.ownsNote(this.noteData)) {
 			let vPermissionButton = document.createElement("i");
@@ -323,7 +409,7 @@ export class basicNote {
 			vPermissionButton.setAttribute("data-tooltip", NoteManager.permissionOverview(this.noteData));
 			vPermissionButton.onclick = () => { new notePermissionsWindow(this.id, this.noteData, {}).render(true)};
 			registerHoverShadow(vPermissionButton);
-			this.captionElement.permissioninfo = vPermissionButton;
+			this.captionElements.permissioninfo = vPermissionButton;
 			vElements.push(vPermissionButton);
 		}
 		else {
@@ -331,7 +417,7 @@ export class basicNote {
 			vPermissionInfo.classList.add("fa-solid", cInfoIcon);
 			vPermissionInfo.style.margin = "5px";
 			vPermissionInfo.setAttribute("data-tooltip", NoteManager.permissionOverview(this.noteData));
-			this.captionElement.permissioninfo = vPermissionInfo;
+			this.captionElements.permissioninfo = vPermissionInfo;
 			vElements.push(vPermissionInfo);
 		}
 		
@@ -339,6 +425,7 @@ export class basicNote {
 			let vDeleteIcon = document.createElement("i");
 			vDeleteIcon.classList.add("fa-solid", cDeleteIcon);
 			vDeleteIcon.style.margin = "5px";
+			this.captionElements.delete = vDeleteIcon;
 			vDeleteIcon.onclick = (pEvent) => {
 				if (pEvent.shiftKey) {
 					this.delete();
@@ -358,12 +445,29 @@ export class basicNote {
 		}
 		
 		for (let vElement of vElements) {
+			if (!vElement.style.flexGrow) {
+				vElement.style.flexGrow = "0";
+			}
+			
+			if (!vElement.style.cursor) {
+				vElement.style.cursor = "pointer";
+			}
+			
+			if (this.windowed) {
+				vElement.onondragstart = (pEvent) => {pEvent.stopPropagation()};
+				vElement.ondragenter = (pEvent) => {pEvent.stopPropagation()};
+				vElement.onselect = (pEvent) => {pEvent.stopPropagation()};
+				if (vElement.nodeName == "INPUT") {
+					vElement.onfocus = (pEvent) => {if (this.canEdit) {pEvent.stopPropagation(); vElement.focus()}};
+					vElement.onclick = (pEvent) => {if (this.canEdit) {pEvent.stopPropagation(); vElement.focus()}};
+				}; 
+			}
 			let vClickEvent = vElement.onclick;
 			
 			vElement.onclick = (pEvent) => {
 				if (!pEvent.shiftKey || vElement.nodeName == "I") {
 					pEvent.stopPropagation(); 
-					
+
 					if (vClickEvent) {
 						vClickEvent(pEvent);
 					}
@@ -393,7 +497,7 @@ export class basicNote {
 	updateRender(pupdatedNote, pUpdate) {
 		this._noteData = pupdatedNote;
 		
-		if (pUpdate.title) {
+		if (pUpdate.hasOwnProperty("title")) {
 			if (this.title != this.captionElement.querySelector("#title").value) {
 				this.captionElement.querySelector("#title").value = this.title;
 			}
@@ -401,6 +505,7 @@ export class basicNote {
 		
 		if (pUpdate.backColor) {
 			this.mainElement.style.backgroundColor = this.backColor;
+			if (this.captionElements.icon) this.captionElements.icon.style.color = this.backColor;
 			this.onChangeColor(pUpdate.backColor);
 		}
 		
@@ -410,11 +515,8 @@ export class basicNote {
 		
 		if (pUpdate.permissions) {
 			this.checkEnabled();
-		}
-		
-		if (pUpdate.permissions) {
-			if (this.captionElement.permissioninfo) {
-				this.captionElement.permissioninfo.setAttribute("data-tooltip", NoteManager.permissionOverview(this.noteData));
+			if (this.captionElements.permissioninfo) {
+				this.captionElements.permissioninfo.setAttribute("data-tooltip", NoteManager.permissionOverview(this.noteData));
 			}
 		}
 	}
@@ -460,6 +562,40 @@ export class basicNote {
 		//enable all inputs
 	}
 	
+	reduceCaption() {
+		let vTarget = {
+			icon : "block",
+			title : "block",
+			color : "none",
+			popout : "none",
+			permissioninfo : "none",
+			delete : "none"
+		}
+		
+		for (let vKey of Object.keys(vTarget)) {
+			if (this.captionElements[vKey]) {
+				this.captionElements[vKey].style.display = vTarget[vKey];
+			}
+		}
+	}
+	
+	expandCaption() {
+		let vTarget = {
+			icon : "block",
+			title : "block",
+			color : "grid",
+			popout : "",
+			permissioninfo : "",
+			delete : ""
+		}
+		
+		for (let vKey of Object.keys(vTarget)) {
+			if (this.captionElements[vKey]) {
+				this.captionElements[vKey].style.display = vTarget[vKey];
+			}
+		}
+	}
+	
 	tickbasic(pTickCount) {
 		if (this.hastick) {
 			if (this.skipTicks <= 0) {
@@ -490,11 +626,31 @@ export class basicNote {
 	}
 	
 	applyFilter(pFilter) {
-		
+		if (this.element) {
+			if (pFilter?.match) {
+				let vMatch = pFilter?.match({
+					title : this.title,
+					type : this.type,
+					color : this.backColor,
+					permission : this.permissionLevel,
+					owner : this.ownerID
+				});
+				
+				if (vMatch) {
+					this.element.style.display = "";
+				}
+				else {
+					this.element.style.display = "none";
+				}
+			}
+			else {
+				this.element.style.display = "";
+			}
+		}
 	}
 	
 	popOut() {
-		console.log("pop");
+		new noteWindow(this.id, this._noteData, this.windowOptions).render(true);
 	}
 	
 	delete() {

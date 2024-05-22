@@ -18,10 +18,22 @@ export class counterNote extends basicNote {
 		return "counter";
 	}
 	
+	get icon() {
+		return "fa-hashtag";
+	}
+	
+	get windowOptions() {
+		return {
+			...super.windowOptions,
+			resizable: false,
+			height: 64 + 30
+		}
+	}
+	
 	get defaultContent() {
 		return {
 			value : 0,
-			max : Infinity
+			max : null
 		};
 	}
 	
@@ -34,11 +46,11 @@ export class counterNote extends basicNote {
 	}
 	
 	get max() {
-		return this.content.max;
+		return this.content.max ?? Infinity;
 	}
 	
 	set max(pMax) {
-		this.updateContent({max : Math.min(0, Number(pMax))});
+		this.updateContent({max : Math.max(0, Number(pMax))});
 	}
 	
 	change(pChange) {
@@ -48,7 +60,7 @@ export class counterNote extends basicNote {
 	applyCount(pCount) {
 		let vUpdate = {
 			value : 0,
-			max : Infinity
+			max : null
 		};
 		
 		let vProcessed = pCount.split("/");
