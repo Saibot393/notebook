@@ -36,16 +36,58 @@ export class noteFilter {
 		vMainDIV.appendChild(vResetButton);
 		
 		let vDetailDIV = document.createElement("div");
+		vDetailDIV.style.display  = "flex";
+		vDetailDIV.style.padding = "3px";
+		
+		let vTypeSelect = document.createElement("select");
+		vTypeSelect.style.flexGrow = "1";
+		vTypeSelect.style.background = "rgba(255, 255, 245, 0.8)";
+		for (let vType of ["", ...Object.keys(CONFIG.notebook.noteTypes)]) {
+			let vTypeOption = document.createElement("option");
+			vTypeOption.value = vType;
+			vTypeOption.innerHTML = vType ? Translate("Titles.notesTypes." + vType) : "";
+			vTypeSelect.appendChild(vTypeOption);
+		}
+		
+		let vPermissionSelect = document.createElement("select");
+		vPermissionSelect.style.flexGrow = "1";
+		vPermissionSelect.style.background = "rgba(255, 255, 245, 0.8)";
+		for (let vPermission of ["", "owner", "edit", "see"]) {
+			let vPermissionOption = document.createElement("option");
+			vPermissionOption.value = vPermission;
+			vPermissionOption.innerHTML = vPermission ? Translate("Titles.permissionsTypes." + vPermission) : "";
+			vPermissionSelect.appendChild(vPermissionOption);
+		}
+		
+		let vOwnerSelect = document.createElement("select");
+		vOwnerSelect.style.flexGrow = "1";
+		vOwnerSelect.style.background = "rgba(255, 255, 245, 0.8)";
+		for (let vOwner of [{id : ""}, ...Array.from(game.users).filter(vUser => !vUser.isSelf)]) {
+			let vOwnerOption = document.createElement("option");
+			vOwnerOption.value = vOwner.id;
+			vOwnerOption.innerHTML = vOwner.name ? vOwner.name : "";
+			vOwnerSelect.appendChild(vOwnerOption);
+		}
+		
+		vDetailDIV.appendChild(vTypeSelect);
+		vDetailDIV.appendChild(vPermissionSelect);
+		vDetailDIV.appendChild(vOwnerSelect);
 		
 		this.element.appendChild(vMainDIV);
 		this.element.appendChild(vDetailDIV);
 		
 		this.inputs = {
-			title : vTitleInput
+			title : vTitleInput,
+			type : vTypeSelect,
+			permission : vPermissionSelect,
+			owner : vOwnerSelect
 		}
 		
 		for (let vKey of Object.keys(this.inputs)) {
 			this.inputs[vKey].oninput = () => {
+				this.updateFilter();
+			}
+			this.inputs[vKey].onchange = () => {
 				this.updateFilter();
 			}
 		}
@@ -75,7 +117,9 @@ export class noteFilter {
 	}
 	
 	resetFilter() {
-		this.inputs.title.value = "";
+		for (let vKey of Object.keys(this.inputs)) {
+			this.inputs[vKey].value = "";
+		}
 		
 		this.filterData = {};
 		

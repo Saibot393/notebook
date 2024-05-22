@@ -27,7 +27,8 @@
 				"default"					: "default",
 				"none"						: "none",
 				"see"						: "see",
-				"edit"						: "edit"
+				"edit"						: "edit",
+				"owner"						: "owner"
 			},
 			
 			"type"							: "Type",
