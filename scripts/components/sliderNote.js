@@ -1,4 +1,4 @@
-import {cModuleName, isActiveElement} from "../utils/utils.js";
+import {cModuleName, isActiveElement, Translate} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
@@ -139,7 +139,7 @@ export class sliderNote extends basicNote {
 		vSettingContentDIV.style.textAlign = "center";
 		
 		let vMinLabel  = document.createElement("label");
-		vMinLabel.innerHTML = "min";
+		vMinLabel.innerHTML = Translate("Titles.min") + ":";
 		vMinLabel.style.margin = "auto";
 		vMinLabel.style.marginLeft = "3px";
 		vMinLabel.style.marginRight = "3px";
@@ -156,7 +156,7 @@ export class sliderNote extends basicNote {
 		}
 		
 		let vMaxLabel = document.createElement("label");
-		vMaxLabel.innerHTML = "max";
+		vMaxLabel.innerHTML = Translate("Titles.max") + ":";
 		vMaxLabel.style.margin = "auto";
 		vMaxLabel.style.marginLeft = "3px";
 		vMaxLabel.style.marginRight = "3px";
@@ -173,7 +173,7 @@ export class sliderNote extends basicNote {
 		}
 		
 		let vStepLabel  = document.createElement("label");
-		vStepLabel.innerHTML = "step";
+		vStepLabel.innerHTML = Translate("Titles.steps") + ":";
 		vStepLabel.style.margin = "auto";
 		vStepLabel.style.marginLeft = "3px";
 		vStepLabel.style.marginRight = "3px";

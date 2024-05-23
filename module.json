@@ -30,7 +30,7 @@
   "esmodules": [
 	"scripts/helpers/SocketHandler.js",
 	"scripts/MainData.js",
-	"scripts/MainUI.js"
+	"scripts/MainTab.js"
   ],
   "url": "https://github.com/Saibot393/skribble",
   "download": "https://github.com/Saibot393/skribble/archive/refs/tags/v1.1.1.zip",

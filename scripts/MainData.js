@@ -8,6 +8,7 @@ import {listNote} from "./components/listNote.js";
 import {sliderNote} from "./components/sliderNote.js";
 import {chatNote} from "./components/chatNote.js";
 import {timerNote} from "./components/timerNote.js";
+import {progressclockNote} from "./components/progressclockNote.js";
 
 const cNotesFlag = "notes";
 
@@ -37,7 +38,8 @@ CONFIG[cModuleName] = {
 		list : listNote,
 		slider : sliderNote,
 		chat : chatNote,
-		timer : timerNote
+		timer : timerNote,
+		progressclock : progressclockNote
 	}
 }
 
@@ -45,11 +47,13 @@ export async function cleanUserData() {
 	//remove empty note flags
 	let vNotes = game.user.getFlag(cModuleName, "notes");
 	
-	let vIDs = Object.keys(vNotes);
-	
-	for (let vID of vIDs) {
-		if (vNotes[vID] == null) {
-			await game.user.unsetFlag(cModuleName, `${cNotesFlag}.${vID}`);
+	if (vNotes) {
+		let vIDs = Object.keys(vNotes);
+		
+		for (let vID of vIDs) {
+			if (vNotes[vID] == null) {
+				await game.user.unsetFlag(cModuleName, `${cNotesFlag}.${vID}`);
+			}
 		}
 	}
 };

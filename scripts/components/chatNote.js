@@ -30,6 +30,50 @@ export class chatNote extends basicNote {
 		}
 	}
 	
+	get JournalText() {
+		let vText;
+		
+		vText = "<ul>";
+		
+		let vLastUser;
+		
+		for (let vEntry of this.history) {
+			if (vLastUser != vEntry.user) {
+				if (vLastUser) {
+					vText = vText + "</li>";
+				}
+				vText = vText + "<li>";
+				vText = vText + "<p>";
+				vText = vText + `<span style="text-decoration: underline;">`
+				vText = vText + "<strong>"
+				vText = vText + game.users.get(vEntry.user)?.name || "???";
+				vText = vText + "</strong>"
+				vText = vText + "</span>"
+				vText = vText + ":";
+				vText = vText + "</p>";
+				
+			}
+			vLastUser = vEntry.user;
+			
+			vText = vText + "<p>";
+			vText = vText + vEntry.text;
+			vText = vText + "</p>";
+		}
+		
+		vText = vText + "</li>";
+		
+		vText = vText + "</ul>";
+		
+		return {
+			content : vText
+		};
+		
+		
+		return {
+			content : vText
+		};
+	}
+	
 	addMessage(pText) {
 		let vMessage = {
 			text : pText,
@@ -138,21 +182,31 @@ export class chatNote extends basicNote {
 			}
 			
 			let vAlignDIV = document.createElement("div");
-			let vEntryDIV = document.createElement("label");
-			vEntryDIV.innerHTML = vtoRender.text;
-			vEntryDIV.style.maxWidth = "80%";
-			vEntryDIV.style.display = "inline-block";
-			vEntryDIV.style.backgroundColor = game.users.get(vtoRender.user) ? game.users.get(vtoRender.user).color + "50" : "";
-			vEntryDIV.style.paddingLeft = "4px";
-			vEntryDIV.style.paddingRight = "4px";
-			vEntryDIV.style.borderRadius = "3px";
+			let vEntry = document.createElement("label");
+			vEntry.innerHTML = vtoRender.text;
+			vEntry.style.maxWidth = "80%";
+			vEntry.style.display = "inline-block";
+			if (game.users.get(vtoRender.user)) {
+				let vColor = game.users.get(vtoRender.user).color;
+				
+				if (vColor) {
+					if (!(typeof vColor == "string")) {
+						vColor = vColor.toHTML();
+					}
+						
+					vEntry.style.backgroundColor = vColor + "50";
+				}
+			}
+			vEntry.style.paddingLeft = "4px";
+			vEntry.style.paddingRight = "4px";
+			vEntry.style.borderRadius = "3px";
 			
 			vOrderElement(vAlignDIV, vtoRender.user);
 			
-			vAlignDIV.appendChild(vEntryDIV);
+			vAlignDIV.appendChild(vEntry);
 			this.contentElements.history.appendChild(vAlignDIV);
 			
-			this.contentElements.chatHistory.push(vEntryDIV);
+			this.contentElements.chatHistory.push(vEntry);
 		}
 		
 		if (!(isActiveElement(this.contentElements.input) || this.isMouseHover) || (vLastOwner == game.user.id)) {

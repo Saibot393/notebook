@@ -11,6 +11,8 @@
 			"name"							: "Name",
 			"delete"						: "Delete",
 			
+			"searchNote"					: "Search Note",
+			
 			"userName"						: "User names",
 			"self"							: "self",
 			"default"						: "default",
@@ -39,12 +41,14 @@
 				"list"						: "List",
 				"slider"					: "Slider",
 				"chat"						: "Chat",
-				"timer"						: "Timer"
+				"timer"						: "Timer",
+				"progressclock"				: "Progress Clock"
 			},
 			
 			"min"							: "Min",
 			"max"							: "Max",
-			"steps"							: "Steps"
+			"steps"							: "Steps",
+			"segments"						: "Segments"
 		}
 	}
 }

@@ -5,6 +5,8 @@ import {basicNote} from "./basicNote.js";
 
 import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
+const cCheckIcon = "fa-check";
+
 export class listNote extends basicNote {
 	get type() {
 		return "list";
@@ -32,6 +34,25 @@ export class listNote extends basicNote {
 	
 	get length() {
 		return this.list.length;
+	}
+	
+	get JournalText() {
+		let vText;
+		
+		vText = "<ul>";
+		
+		for (let vEntry of this.list) {
+			vText = vText + "<li>";
+			vText = vText + vEntry.text;
+			//vText = vText + `<i class"fa-solid ${cCheckIcon}">`;
+			vText = vText + "</li>";
+		}
+		
+		vText = vText + "</ul>";
+		
+		return {
+			content : vText
+		};
 	}
 	
 	renderContent() {
@@ -139,7 +160,7 @@ export class listNote extends basicNote {
 				vCheckBorder.style.textAlign = "center";
 				let vCheck = document.createElement("i");
 				vCheck.style.margin = "auto";
-				vCheck.classList.add("fa-solid", "fa-check");
+				vCheck.classList.add("fa-solid", cCheckIcon);
 				vCheck.style.color = this.primeColor;
 				registerHoverShadow(vCheck);
 				vSetCheckState(vCheck, vList[i].checked ?? false);

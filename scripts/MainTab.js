@@ -39,7 +39,7 @@ Hooks.once("ready", async () => {
 	
 	Hooks.call(cModuleName + ".prepareNotes", {NoteTab : vNoteTab});
 	
-	ui[cModuleName] = new Notes({tab : vNoteTab});
+	ui[cModuleName] = new notesTab({tab : vNoteTab});
 	ui.sidebar.tabs[cModuleName] = ui[cModuleName];
 	
 	vSidebar.appendChild(vNoteTab);
@@ -50,7 +50,7 @@ Hooks.once("ready", async () => {
 const cNoteSortFlag = "notesort";
 export const cNoteToggleFlag = "notetoggle";
 
-class Notes /*extends SidebarTab*/ {
+class notesTab /*extends SidebarTab*/ {
 	constructor(options) {
 		//super(options);
 		
@@ -69,6 +69,28 @@ class Notes /*extends SidebarTab*/ {
 		Hooks.on(cModuleName + ".updateNote", (pNewNoteData, pNoteDataUpdate, pContext) => {this.renderUpdate(pNewNoteData, pNoteDataUpdate, pContext)});
 		
 		Hooks.on("userConnected", () => {this.checkEnabled()});
+		
+		Hooks.on("renderJournalSheet", (pSheet, pHTML, pContext) => {
+			let vElement = pHTML[0];
+
+			if (vElement.classList.contains("app")) {
+				let vPrevDrop = vElement.ondrop;
+				
+				let vJournalID = pSheet?.document?.id;
+
+				vElement.ondrop = (pEvent) => {
+					if (vPrevDrop) {
+						vPrevDrop(pEvent);
+					}
+					
+					let vDropData = pEvent.dataTransfer.getData("text/plain") ? JSON.parse(pEvent.dataTransfer.getData("text/plain")) : undefined;
+					
+					if (vDropData.isNote) {
+						this.onJournaldrop(vJournalID, vDropData.id);
+					}
+				}
+			}
+		});
 	}
 	
 	get defaultNoteOptions() {
@@ -248,6 +270,12 @@ class Notes /*extends SidebarTab*/ {
 			else {
 				this.sortatEnd(vDropData.id);
 			}	
+		}
+	}
+	
+	onJournaldrop(pJournalID, pNoteID) {
+		if (pJournalID && pNoteID) {
+			this.notes[pNoteID]?.onJournaldrop(pJournalID);
 		}
 	}
 	

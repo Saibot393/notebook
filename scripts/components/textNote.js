@@ -28,6 +28,12 @@ export class textNote extends basicNote {
 		this.updateContent({text : pText});
 	}
 	
+	get JournalText() {
+		return {
+			content : this.text
+		};
+	}
+	
 	renderContent() {
 		let vTextDIV = document.createElement("div");
 		vTextDIV.style.display = "flex";

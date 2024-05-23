@@ -16,6 +16,14 @@ export function Translate(pName, pWords = {}){
 	return vContent;
 }
 
+export function AfO(pObject) {
+	return Object.values(pObject)
+}
+
+export function OfA(pArray) {
+	return {...pArray}
+}
+
 export class colorUtils {
 	static rgb(pColor) {
 		if (typeof colorUtils == "string") {

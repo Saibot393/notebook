@@ -1,4 +1,6 @@
-import {cModuleName, colorUtils, Translate} from "../utils/utils.js";
+import {cModuleName, colorUtils, Translate, isActiveElement} from "../utils/utils.js";
+
+import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
 const cResetIcon = "fa-xmark";
 
@@ -16,6 +18,8 @@ export class noteFilter {
 		this.element.style.display = "flex";
 		this.element.style.flexDirection = "column";
 		this.element.style.color = "var(--color-text-light-highlight)";
+		this.element.onmouseenter = () => {vDetailDIV.style.display = "flex"};
+		this.element.onmouseleave = () => {if (!Object.values(this.inputs).find(vInput => isActiveElement(vInput))) vDetailDIV.style.display = "none"};
 		
 		let vMainDIV = document.createElement("div");
 		vMainDIV.style.display = "flex";
@@ -24,6 +28,7 @@ export class noteFilter {
 		let vTitleInput = document.createElement("input");
 		vTitleInput.type = "text";
 		vTitleInput.style.background = "rgba(255, 255, 245, 0.8)";
+		vTitleInput.placeholder = Translate("Titles.searchNote");
 		
 		let vResetButton = document.createElement("i");
 		vResetButton.classList.add("fa-solid", cResetIcon);
@@ -31,17 +36,21 @@ export class noteFilter {
 		vResetButton.style.marginLeft = "5px";
 		vResetButton.style.marginRight = "5px";
 		vResetButton.onclick = () => {this.resetFilter()};
+		registerHoverShadow(vResetButton);
 		
 		vMainDIV.appendChild(vTitleInput);
 		vMainDIV.appendChild(vResetButton);
 		
 		let vDetailDIV = document.createElement("div");
-		vDetailDIV.style.display  = "flex";
+		vDetailDIV.style.display  = "none";
 		vDetailDIV.style.padding = "3px";
 		
 		let vTypeSelect = document.createElement("select");
 		vTypeSelect.style.flexGrow = "1";
+		vTypeSelect.style.maxWidth = "110px";
 		vTypeSelect.style.background = "rgba(255, 255, 245, 0.8)";
+		vTypeSelect.style.margin = "2px";
+		vTypeSelect.style.marginLeft = "0px";
 		for (let vType of ["", ...Object.keys(CONFIG.notebook.noteTypes)]) {
 			let vTypeOption = document.createElement("option");
 			vTypeOption.value = vType;
@@ -51,7 +60,9 @@ export class noteFilter {
 		
 		let vPermissionSelect = document.createElement("select");
 		vPermissionSelect.style.flexGrow = "1";
+		vPermissionSelect.style.maxWidth = "110px";
 		vPermissionSelect.style.background = "rgba(255, 255, 245, 0.8)";
+		vPermissionSelect.style.margin = "2px";
 		for (let vPermission of ["", "owner", "edit", "see"]) {
 			let vPermissionOption = document.createElement("option");
 			vPermissionOption.value = vPermission;
@@ -61,7 +72,9 @@ export class noteFilter {
 		
 		let vOwnerSelect = document.createElement("select");
 		vOwnerSelect.style.flexGrow = "1";
+		vOwnerSelect.style.maxWidth = "110px";
 		vOwnerSelect.style.background = "rgba(255, 255, 245, 0.8)";
+		vOwnerSelect.style.margin = "2px";
 		for (let vOwner of [{id : ""}, ...Array.from(game.users).filter(vUser => !vUser.isSelf)]) {
 			let vOwnerOption = document.createElement("option");
 			vOwnerOption.value = vOwner.id;

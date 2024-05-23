@@ -1,7 +1,7 @@
 import {cModuleName, cTickInterval, Translate} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
-import {cNoteToggleFlag} from "../MainUI.js";
+import {cNoteToggleFlag} from "../MainTab.js";
 
 import {noteWindow} from "../helpers/noteWindow.js";
 
@@ -179,12 +179,32 @@ export class basicNote {
 		}
 	}
 	
+	get JournalText() {
+		return null;
+	}
+	
 	onMouseHoverChange() {
 		
 	}
 	
 	onChangeColor(pColor) {
 		
+	}
+	
+	onJournaldrop(pJournalID) {
+		let vJournalText = this.JournalText;
+		
+		if (vJournalText) {
+			let vJournal = game.journal.get(pJournalID);
+			
+			if (vJournal) {
+				vJournal.createEmbeddedDocuments("JournalEntryPage", [{
+					name : this.title, 
+					flags : {[cModuleName] : {from : {id : this.id, creator : game.user.id}}}, 
+					text : vJournalText
+				}]);
+			}
+		}
 	}
 	
 	get tickinterval() {
