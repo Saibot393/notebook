@@ -31,7 +31,7 @@ Multiple types of notes are available:
   ![imag](https://imgur.com/ZSiCMgD.jpg)
 
 - #### Chat notes:
-  A chat notes allowing all users that can edit the notes to chat with all users that can see the note. The chat colors are based on the user colors.
+  A chat allowing all users that can edit the note to chat with all users that can see the note. The chat colors are based on the user colors.
 
   ![imag](https://imgur.com/buP7bHm.jpg)
 
@@ -40,7 +40,7 @@ Multiple types of notes are available:
 
   ![imag](https://imgur.com/d37MP7u.jpg)
 
-- ### Progress Clock notes:
+- #### Progress Clock notes:
   A progress clock whose segments can be turned on or off by clicking. Scrolling while holding shift increases or decreases the number of filled segments. The number of total segments can be changed in the menu to right which appears when hovering over the bar at right.
 
   ![imag](https://imgur.com/ySwE9fS.jpg)
