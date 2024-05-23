@@ -46,7 +46,7 @@ export class chatNote extends basicNote {
 				vText = vText + "<p>";
 				vText = vText + `<span style="text-decoration: underline;">`
 				vText = vText + "<strong>"
-				vText = vText + game.users.get(vEntry.user)?.name || "???";
+				vText = vText + this.displayName(vEntry.user);
 				vText = vText + "</strong>"
 				vText = vText + "</span>"
 				vText = vText + ":";
@@ -170,7 +170,7 @@ export class chatNote extends basicNote {
 				vUsercap.style.marginTop = "0.2em";
 				vUsercap.style.marginBottom = "0.2em";
 				let vUserundercap = document.createElement("u");
-				vUserundercap.innerHTML = (game.users.get(vtoRender.user)?.name || "???") + ":";
+				vUserundercap.innerHTML = this.displayName(vtoRender.user);
 				vUsercap.appendChild(vUserundercap);
 				vUsercap.style.color = game.users.get(vtoRender.user)?.color || "black";
 				vUsercap.style.textShadow = "-1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000";
@@ -212,6 +212,16 @@ export class chatNote extends basicNote {
 		if (!(isActiveElement(this.contentElements.input) || this.isMouseHover) || (vLastOwner == game.user.id)) {
 			this.scrolltoEnd();
 		}
+	}
+
+	displayName(pUser) {
+		let vUser = game.users.get(pUser);
+		
+		if (vUser) {
+			return (vUser.character ? vUser.character.name : vUser.name) || "???";
+		}
+		
+		return "???";
 	}	
 	
 	scrolltoEnd() {

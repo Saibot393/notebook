@@ -328,7 +328,7 @@ export class basicNote {
 		else {
 			this.mainElement = this.window.body;
 		}
-		this.mainElement.style.background = 'url("http://localhost:30000/ui/parchment.jpg")';
+		this.mainElement.style.background = 'url("../ui/parchment.jpg") repeat';
 		this.mainElement.style.backgroundBlendMode = "multiply";
 		this.mainElement.style.backgroundColor = this.backColor;
 		
