@@ -10,7 +10,7 @@
   "version": "0.0.0",
   "compatibility": {
     "minimum": "10",
-    "verified": "11"
+    "verified": "12"
   },
   "socket": "true",
   "languages": [
@@ -32,11 +32,11 @@
 	"scripts/MainData.js",
 	"scripts/MainTab.js"
   ],
-  "url": "https://github.com/Saibot393/skribble",
-  "download": "https://github.com/Saibot393/skribble/archive/refs/tags/v1.1.1.zip",
-  "manifest": "https://github.com/Saibot393/skribble/releases/latest/download/module.json",
-  "readme": "https://github.com/Saibot393/skribble/blob/main/README.md",
-  "changelog": "https://github.com/Saibot393/skribble/blob/main/CHANGELOG.md",
-  "bugs": "https://github.com/Saibot393/skribble/issues",
+  "url": "https://github.com/Saibot393/notebook",
+  "download": "https://github.com/Saibot393/notebook/archive/refs/tags/v0.0.0.zip",
+  "manifest": "https://github.com/Saibot393/notebook/releases/latest/download/module.json",
+  "readme": "https://github.com/Saibot393/notebook/blob/main/README.md",
+  "changelog": "https://github.com/Saibot393/notebook/blob/main/CHANGELOG.md",
+  "bugs": "https://github.com/Saibot393/notebook/issues",
   "allowBugReporter": true
 }

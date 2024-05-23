@@ -134,8 +134,12 @@ class notesTab /*extends SidebarTab*/ {
 		
 		let vNewNoteIcon = document.createElement("i");
 		vNewNoteIcon.classList.add("fa-solid", cNoteIcon);
+	
+		let vNewNoteLabel = document.createElement("label");
+		vNewNoteLabel.innerHTML = Translate("Titles.createNote");
 		
 		vNewNoteButton.appendChild(vNewNoteIcon);
+		vNewNoteButton.appendChild(vNewNoteLabel);
 		
 		vButtons.appendChild(vNewNoteButton);
 		

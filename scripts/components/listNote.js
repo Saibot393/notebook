@@ -18,7 +18,7 @@ export class listNote extends basicNote {
 	
 	get defaultContent() {
 		return {
-			list : [{checked : false, text : ""}]
+			list : [{checked : false, text : "", indent : 0}]
 		};
 	}
 	
@@ -232,7 +232,7 @@ export class listNote extends basicNote {
 	appendList() {
 		let vList = this.list;
 		
-		vList.push({checked : false, text : ""});
+		vList.push({checked : false, text : "", indent : 0});
 		
 		this.list = vList;
 	}
