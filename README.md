@@ -11,7 +11,7 @@ Please note, that the notes are saved per user. To edit a note you have access t
 Multiple types of notes are available:
 
 - #### Text notes:
-  A simple note that allows you share small texts
+  A simple note that allows you to share small texts
   
   ![imag](https://i.imgur.com/EaVAY9F.jpg)
   
