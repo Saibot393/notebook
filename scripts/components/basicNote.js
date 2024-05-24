@@ -637,7 +637,16 @@ export class basicNote {
 		}
 	}
 	
-	alarm() {
+	alarm(pContext = {}) {
+		this.soundAlarm(pContext);
+		this.visualAlarm(pContext);
+	}
+	
+	soundAlarm(pContext = {}) {
+		
+	}
+	
+	visualAlarm(pContext = {}) {
 		
 	}
 	
@@ -698,7 +707,13 @@ export class basicNote {
 		new noteWindow(this.id, this._noteData, this.windowOptions).render(true);
 	}
 	
+	onclose() {
+		
+	}
+	
 	delete() {
+		this.onclose();
+		
 		NoteManager.deleteNote(this.id);
 	}
 }

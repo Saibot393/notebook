@@ -139,6 +139,8 @@ export class noteWindow extends Application {
 			Hooks.off(vHook.name, vHook.id);
 		}
 		
+		this.note.onclose();
+		
 		super.close();
 	}
 }
