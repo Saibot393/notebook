@@ -183,6 +183,14 @@ export class basicNote {
 		return null;
 	}
 	
+	get hasSoundAlarm() {
+		return false;
+	}
+	
+	get soundAlarmLevel() {
+		return 0;
+	}
+	
 	onMouseHoverChange() {
 		
 	}
@@ -614,6 +622,10 @@ export class basicNote {
 				this.captionElements[vKey].style.display = vTarget[vKey];
 			}
 		}
+	}
+	
+	alarm() {
+		
 	}
 	
 	tickbasic(pTickCount) {

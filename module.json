@@ -7,7 +7,7 @@
     "name": "saibot"
     }
   ],
-  "version": "0.0.0",
+  "version": "1.0.0",
   "compatibility": {
     "minimum": "10",
     "verified": "12"
@@ -33,7 +33,7 @@
 	"scripts/MainTab.js"
   ],
   "url": "https://github.com/Saibot393/notebook",
-  "download": "https://github.com/Saibot393/notebook/archive/refs/tags/v0.0.0.zip",
+  "download": "https://github.com/Saibot393/notebook/archive/refs/tags/v1.0.0.zip",
   "manifest": "https://github.com/Saibot393/notebook/releases/latest/download/module.json",
   "readme": "https://github.com/Saibot393/notebook/blob/main/README.md",
   "changelog": "https://github.com/Saibot393/notebook/blob/main/CHANGELOG.md",

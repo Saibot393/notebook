@@ -22,6 +22,7 @@ Hooks.once("ready", async () => {
 	let vNoteTabButton = document.createElement("a");
 	vNoteTabButton.classList.add("item");
 	vNoteTabButton.setAttribute("data-tab", cModuleName);
+	vNoteTabButton.setAttribute("data-tooltip", Translate("Titles.notebook"));
 	vNoteTabButton.setAttribute("aria-controls", cModuleName);
 	vNoteTabButton.setAttribute("role", "tab");
 	

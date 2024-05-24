@@ -1,27 +1,61 @@
 {
-	"phantomtokens" : {
+	"notebook" : {
+		"notebook" 							: "Notebook",
+		
 		"Titles" : {
-			"togglePhantomVision"			: "Phantom Sicht umschalten",
+			"notebook" 						: "Notizbuch",
+			"note"							: "Notiz",
 			
-			"modes" : {
-				"normal.descrp"				: "Eine normale Figur",
-				"anchor.descrp"				: "Eine unbewegliche Figur",
-				"unclickable.descrp"		: "Eine nicht anklickbare Figur",
-				"phantom.descrp"			: "Eine unsichtbare Figur"
-			}
+			"defaultTitle"					: "Notiz Titel",
+			"newNote"						: "Neue Notiz",
+			"name"							: "Name",
+			"delete"						: "Löschen",
+			
+			"searchNote"					: "Notiz suchen",
+			
+			"userName"						: "Nutzername",
+			"self"							: "selbst",
+			"default"						: "standard",
+			
+			"createNote"					: "Neue Notiz erschaffen",
+			"deleteNoteConfirm"				: "Notiz \"{pTitle}\" löschen?",
+			
+			"owner"							: "Besitzer",
+			"seer"							: "Beobachter",
+			"editor"						: "Editor",
+			
+			"permissions"					: "Berechtigungen",
+			"permissionsTypes" : {
+				"default"					: "standard",
+				"none"						: "nichts",
+				"see"						: "sehen",
+				"edit"						: "editieren",
+				"owner"						: "Besitzer"
+			},
+			
+			"type"							: "Typ",
+			"typeTitle"						: "{pType} Notiz",
+			"notesTypes" : {
+				"text"						: "Text",
+				"counter"					: "Zähler",
+				"list"						: "Liste",
+				"slider"					: "Schieberegler",
+				"chat"						: "Chat",
+				"timer"						: "Timer",
+				"progressclock"				: "Fortschrittsuhr"
+			},
+			
+			"min"							: "Min",
+			"max"							: "Max",
+			"steps"							: "Schritt",
+			"segments"						: "Segmente",
+			"changedirection"				: "Richtung ändern",
+			"reset"							: "zurücksetzen",
+			"days"							: "Tage"
 		},
 		
-		"Keys" : {
-			"TogglePhantomRealm.name"		: "Phantom Sicht umschalten",
-			"IncreaseModeSelected.name"		: "Phantom modus ausgewählter Figuren erhöhen",
-			"DecreaseModeSelected.name"		: "Phantom modus ausgewählter Figuren verringern"
-		},
-		
-		"Settings" : {
-			"anchorpreventteleport" : {
-				"name"						: "Verhindere Teleport von verankerten",
-				"descrp"					: "Hält verankerte Figuren davon ab Teleportiert zu werden (etwa durch stairways)"
-			}
+		"Descrp" : {
+			"removeshiftclick"				: "Entfernen mit shift+click"
 		}
 	}
 }

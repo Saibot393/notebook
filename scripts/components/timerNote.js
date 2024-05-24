@@ -1,4 +1,4 @@
-import {cModuleName, isActiveElement} from "../utils/utils.js";
+import {cModuleName, Translate, isActiveElement} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
@@ -148,9 +148,7 @@ export class timerNote extends basicNote {
 		vDayInput.style.position = "relative";
 		vDayInput.style.textAlign = "left";
 		vDayInput.style.top = "-22px";
-		vDayInput.onchange = () => {
-			this.timeSplit = {d : Number(vDayInput.value)};
-		}
+		vDayInput.setAttribute("data-tooltip", Translate("Titles.days"));
 		
 		let vSpacer1 = document.createElement("div");
 		vSpacer1.style.flexGrow = "1";
@@ -169,9 +167,6 @@ export class timerNote extends basicNote {
 		
 		let vHourInput = document.createElement("input");
 		vStyleInput(vHourInput);
-		vHourInput.onchange = () => {
-			this.timeSplit = {h : Number(vHourInput.value)};
-		}
 		
 		let vHourSeperator = document.createElement("div");
 		vHourSeperator.innerHTML = ":";
@@ -180,9 +175,6 @@ export class timerNote extends basicNote {
 		
 		let vMinuteInput = document.createElement("input");
 		vStyleInput(vMinuteInput);
-		vMinuteInput.onchange = () => {
-			this.timeSplit = {m : Number(vMinuteInput.value)};
-		}
 		
 		let vMinuteSeperator = document.createElement("div");
 		vMinuteSeperator.innerHTML = ":";
@@ -191,9 +183,6 @@ export class timerNote extends basicNote {
 		
 		let vSecondInput = document.createElement("input");
 		vStyleInput(vSecondInput);
-		vSecondInput.onchange = () => {
-			this.timeSplit = {s : Number(vSecondInput.value)};
-		}
 		
 		let vSpacer2 = document.createElement("div");
 		vSpacer2.style.flexGrow = "1";
@@ -224,6 +213,7 @@ export class timerNote extends basicNote {
 			}
 		}
 		vReverse.style.flexGrow = "1";
+		vReverse.setAttribute("data-tooltip", Translate("Titles.changedirection"));
 		registerHoverShadow(vReverse);
 		
 		let vStartStop = document.createElement("i");
@@ -249,6 +239,7 @@ export class timerNote extends basicNote {
 			}
 		}
 		vNowTime.style.flexGrow = "1";
+		vNowTime.setAttribute("data-tooltip", Translate("Titles.reset"));
 		registerHoverShadow(vNowTime);
 		
 		vSettingsDIV.appendChild(vReverse);
@@ -268,8 +259,18 @@ export class timerNote extends basicNote {
 		this.contentElements.mSeperator = vMinuteSeperator;
 		this.contentElements.minus = vMinus;
 		
+		for (let vKey of ["d", "h", "m", "s"]) {
+			this.contentElements[vKey].onchange = () => {
+				this.timeSplit = {[vKey] : Number(this.contentElements[vKey].value)};
+			}
+			this.contentElements[vKey].onblur = () => {
+				this.contentElements[vKey].value = this.timeSplit[vKey];
+			}
+		}
+		
 		this.contentElements.reverse = vReverse;
 		this.contentElements.startstop = vStartStop;
+		this.contentElements.now = vNowTime;
 		
 		this.contentElements.settings = vSettingsDIV;
 		
@@ -411,6 +412,7 @@ export class timerNote extends basicNote {
 		for (let vInput of cTimeInputs) {
 			this.contentElements[vInput].disabled = true;
 		}
+		this.contentElements.minus.removeAttribute("data-tooltip");
 	}
 	
 	enable() {
@@ -420,6 +422,7 @@ export class timerNote extends basicNote {
 		for (let vInput of cTimeInputs) {
 			this.contentElements[vInput].disabled = false;
 		}
+		this.contentElements.minus.setAttribute("data-tooltip", Translate("Descrp.removeshiftclick"));
 	}
 	
 	onMouseHoverChange() {

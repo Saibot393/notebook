@@ -48,7 +48,14 @@
 			"min"							: "Min",
 			"max"							: "Max",
 			"steps"							: "Steps",
-			"segments"						: "Segments"
+			"segments"						: "Segments",
+			"changedirection"				: "change direction",
+			"reset"							: "reset",
+			"days"							: "days"
+		},
+		
+		"Descrp" : {
+			"removeshiftclick"				: "remove with shift+click"
 		}
 	}
 }
