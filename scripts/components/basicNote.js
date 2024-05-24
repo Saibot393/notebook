@@ -27,6 +27,8 @@ const cShowIcon = true;
 
 export class basicNote {
 	constructor(pNoteID, pNoteData, pOptions = {}) {
+		this._hasError = false;
+		
 		this._noteID = pNoteID;
 		
 		this._noteData = pNoteData;
@@ -51,7 +53,11 @@ export class basicNote {
 	}
 	
 	get valid() {
-		return this.type == this.noteData.type;
+		return this.type == this.noteData.type && !this._hasError;
+	}
+	
+	get hasError() {
+		return this._hasError;
 	}
 	
 	get id() {
@@ -179,7 +185,7 @@ export class basicNote {
 		}
 	}
 	
-	get JournalText() {
+	get JournalPage() {
 		return null;
 	}
 	
@@ -200,16 +206,16 @@ export class basicNote {
 	}
 	
 	onJournaldrop(pJournalID) {
-		let vJournalText = this.JournalText;
+		let vJournalPage = this.JournalPage;
 		
-		if (vJournalText) {
+		if (vJournalPage) {
 			let vJournal = game.journal.get(pJournalID);
 			
 			if (vJournal) {
 				vJournal.createEmbeddedDocuments("JournalEntryPage", [{
 					name : this.title, 
 					flags : {[cModuleName] : {from : {id : this.id, creator : game.user.id}}}, 
-					text : vJournalText
+					text : vJournalPage
 				}]);
 			}
 		}
@@ -347,15 +353,22 @@ export class basicNote {
 		
 		this.renderCaption();
 		
-		this.renderContent();
-		
-		this.refreshContent();
-		
-		this.checkEnabled();
-		
-		this.onMouseHoverChange();
-		
-		if (!this.windowed) this.synchToggleState();
+		try {
+			this.renderContent();
+			
+			this.refreshContent();
+			
+			this.checkEnabled();
+			
+			this.onMouseHoverChange();
+			
+			if (!this.windowed) this.synchToggleState();
+		}
+		catch {
+			this._hasError = true;
+			
+			console.warn(`error while rendering content of ${this.type} note ${this.title} [id=${this.id}]`);
+		}
 		
 		return this.element;
 	}

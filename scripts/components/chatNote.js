@@ -30,7 +30,7 @@ export class chatNote extends basicNote {
 		}
 	}
 	
-	get JournalText() {
+	get JournalPage() {
 		let vText;
 		
 		vText = "<ul>";

@@ -28,7 +28,7 @@ export class textNote extends basicNote {
 		this.updateContent({text : pText});
 	}
 	
-	get JournalText() {
+	get JournalPage() {
 		return {
 			content : this.text
 		};

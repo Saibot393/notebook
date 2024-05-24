@@ -36,7 +36,7 @@ export class listNote extends basicNote {
 		return this.list.length;
 	}
 	
-	get JournalText() {
+	get JournalPage() {
 		let vText;
 		
 		vText = "<ul>";
