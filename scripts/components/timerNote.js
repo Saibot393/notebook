@@ -110,6 +110,10 @@ export class timerNote extends basicNote {
 		this.updateContent({direction : Number(pDirection)});
 	}
 	
+	get hasSound() {
+		return true;
+	}
+	
 	renderContent() {
 		let vTimerDIV = document.createElement("div");
 		vTimerDIV.style.display = "flex";

@@ -54,6 +54,10 @@ export class progressclockNote extends basicNote {
 		this.updateContent({max : Math.max(2, Number(pMax))});
 	}
 	
+	get hasSound() {
+		return true;
+	}
+	
 	renderContent() {
 		let vPClockDIV = document.createElement("div");
 		vPClockDIV.style.display = "flex";
@@ -281,6 +285,8 @@ export class progressclockNote extends basicNote {
 		for (let i = 0; i < this.max; i++) {
 			this.contentElements.segments[i].style.display = i < this.value ? "" : "none";
 		}
+		
+		this.soundNotify();
 	}
 	
 	xytoSegment(px, py) {

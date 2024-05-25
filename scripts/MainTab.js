@@ -52,6 +52,7 @@ Hooks.once("ready", async () => {
 
 const cNoteSortFlag = "notesort";
 export const cNoteToggleFlag = "notetoggle";
+export const cNoteVolumeFlag = "notevolume";
 
 class notesTab /*extends SidebarTab*/ {
 	constructor(options) {

@@ -21,7 +21,7 @@ export class templateNote extends basicNote {
 		return null; //get conten for journal pages
 	}
 	
-	get hasSoundAlarm() {
+	get hasSound() {
 		//OPTIONAL
 		return false;
 	}

@@ -55,6 +55,10 @@ export class listNote extends basicNote {
 		};
 	}
 	
+	get hasSound() {
+		return true;
+	}
+	
 	renderContent() {
 		let vListdiv = document.createElement("div");
 		vListdiv.style.display = "flex";
@@ -118,6 +122,8 @@ export class listNote extends basicNote {
 	}
 	
 	renderList() {
+		let vNotify = false;
+		
 		if (!this.contentElements.listElements) {
 			this.contentElements.listElements = [];
 		}
@@ -143,6 +149,8 @@ export class listNote extends basicNote {
 		
 		for (let i = 0; i < vList.length; i++) {
 			if (!this.contentElements.listElements[i]) {
+				vNotify = true;
+				
 				let vPrev = this.contentElements.listElements[i-1]?.div;
 				
 				let vEntry = document.createElement("div");
@@ -167,8 +175,8 @@ export class listNote extends basicNote {
 				vCheckBorder.appendChild(vCheck);
 				vCheckBorder.onclick = () => {
 					if (this.canEdit) {
-						vToggleCheckState(vCheck);
-						this.changeCheck(i, vCheckState(vCheck));
+						//vToggleCheckState(vCheck);
+						this.changeCheck(i, !vCheckState(vCheck));
 					}
 				}
 				
@@ -211,8 +219,10 @@ export class listNote extends basicNote {
 			else {
 				let vElement = this.contentElements.listElements[i];
 				
-				let vChecked = vList[i].checked != undefined ? vList[i].checked : false;
+				let vChecked = vList[i].checked;
 				if (vCheckState(vElement.check) != vChecked) {
+					vNotify = true;
+					
 					vSetCheckState(vElement.check, vChecked);
 				}
 				
@@ -224,8 +234,14 @@ export class listNote extends basicNote {
 		}
 		
 		while (this.contentElements.listElements.length > vList.length) {
+			vNotify = true;
+			
 			this.contentElements.listElements[this.contentElements.listElements.length-1].div?.remove();
 			this.contentElements.listElements.pop();
+		}
+		
+		if (vNotify) {
+			this.soundNotify();
 		}
 	}
 	

@@ -74,6 +74,10 @@ export class chatNote extends basicNote {
 		};
 	}
 	
+	get hasSound() {
+		return true;
+	}
+	
 	addMessage(pText) {
 		let vMessage = {
 			text : pText,
@@ -137,6 +141,10 @@ export class chatNote extends basicNote {
 	}
 	
 	renderChatHistory() {
+		let vNotify = false;
+		
+		let vwasScrollEnd = this.isscrollEnd();
+		
 		if (!this.contentElements.chatHistory) {
 			this.contentElements.chatHistory = [];
 		}
@@ -209,8 +217,16 @@ export class chatNote extends basicNote {
 			this.contentElements.chatHistory.push(vEntry);
 		}
 		
-		if (!(isActiveElement(this.contentElements.input) || this.isMouseHover) || (vLastOwner == game.user.id)) {
+		if (vLastOwner != game.user.id) {
+			vNotify = true;
+		}
+		
+		if (!(isActiveElement(this.contentElements.input) || this.isMouseHover) || (vLastOwner == game.user.id) || vwasScrollEnd) {
 			this.scrolltoEnd();
+		}
+		
+		if (vNotify) {
+			this.soundNotify();
 		}
 	}
 
@@ -226,6 +242,10 @@ export class chatNote extends basicNote {
 	
 	scrolltoEnd() {
 		this.contentElements.history.scrollTo(0, this.contentElements.history.scrollHeight);
+	}
+	
+	isscrollEnd() {
+		return (this.contentElements.history.scrollHeight - this.contentElements.history.clientHeight) == this.contentElements.history.scrollTop;
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {

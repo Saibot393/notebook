@@ -1,7 +1,7 @@
 import {cModuleName, cTickInterval, Translate} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
-import {cNoteToggleFlag} from "../MainTab.js";
+import {cNoteToggleFlag, cNoteVolumeFlag} from "../MainTab.js";
 
 import {noteWindow} from "../helpers/noteWindow.js";
 
@@ -16,14 +16,17 @@ const cPermissionIcon = "fa-book-open-reader";
 const cInfoIcon = "fa-circle-info";
 const cDeleteIcon = "fa-trash-can";
 const cWindowIcon = "fa-arrow-up-from-bracket";
-const cSoundOnIcon = "fa-volume-xmark";
-const cSoundOffIcon = "fa-volume-high";
+const cSoundOffIcon = "fa-volume-xmark";
+const cSoundOnIcon = "fa-volume-low";
+const cSoundHighIcon = "fa-volume-high";
 
-//AudioHelper.play({src: "sounds/notify.wav", volume: 1});
+const cVolumeIcons = [cSoundOffIcon, cSoundOnIcon, cSoundHighIcon];
 
 const cStickyHover = false;
 
 const cShowIcon = true;
+
+const cVolumeHook = "soundVolume";
 
 export class basicNote {
 	constructor(pNoteID, pNoteData, pOptions = {}) {
@@ -49,6 +52,8 @@ export class basicNote {
 		this._mouseHoverCallBack = pOptions.mouseHoverCallBack;
 		
 		this._onTickChange = pOptions.onTickChange;
+		
+		this._soundvolumehookID = Hooks.on(`${cModuleName}.${cVolumeHook}.${this.id}`, () => {this.synchVolumeIcon()});
 
 		//this.render();
 	}
@@ -141,6 +146,18 @@ export class basicNote {
 		return this.noteData.backColor;
 	}
 	
+	set backColor(pColor) {
+		this.updateData({backColor : pColor});
+	}
+	
+	get notifySound() {
+		return this.noteData.notifySound;
+	}
+	
+	set notifySound(pSound) {
+		this.updateData({notifySound : pSound})
+	}
+	
 	get captionColor() {
 		return "#181818";
 	}
@@ -173,10 +190,6 @@ export class basicNote {
 		return "174px";
 	}
 	
-	set backColor(pColor) {
-		this.updateData({backColor : pColor});
-	}
-	
 	get isMouseHover() {
 		return this._isMouseHover || (this.windowed && this.windowedAMH);
 	}
@@ -198,12 +211,31 @@ export class basicNote {
 		return null;
 	}
 	
-	get hasSoundAlarm() {
+	get hasSound() {
 		return false;
 	}
 	
-	get soundAlarmLevel() {
-		return 0;
+	get soundVolume() {
+		return game.user.getFlag(cModuleName, `${cNoteVolumeFlag}.${this.id}`) ?? 0;
+	}
+	
+	set soundVolume(pVolume) {
+		let vVolume = pVolume%cVolumeIcons.length;
+		
+		while(vVolume < 0) {
+			vVolume = vVolume + cVolumeIcons.length;
+		}
+		
+		this._soundwait = game.user.setFlag(cModuleName, `${cNoteVolumeFlag}.${this.id}`, vVolume);
+		
+		let vUpdateCall = async () => {
+			await this._soundwait;
+			
+			this.synchVolumeIcon();
+			Hooks.callAll(`${cModuleName}.${cVolumeHook}.${this.id}`);
+		}
+		
+		vUpdateCall();
 	}
 	
 	onMouseHoverChange() {
@@ -293,6 +325,33 @@ export class basicNote {
 		}
 		
 		this.contentState = vState;
+	}
+	
+	async increaseVolume() {
+		this.soundVolume = this.soundVolume + 1;
+		
+		await this._soundwait;
+	}
+	
+	async decreaseVolume() {
+		this.soundVolume = this.soundVolume - 1;
+		
+		await this._notifysoundwait;
+
+	}
+	
+	synchVolumeIcon() {
+		if (this.captionElements.sound) {
+			let vVolume = this.soundVolume;
+			
+			let vOnIcon = cVolumeIcons[vVolume];
+			let vOffIcons = cVolumeIcons.filter(vIcon => vIcon != vOnIcon);
+			
+			this.captionElements.sound.classList.remove(...vOffIcons);
+			this.captionElements.sound.classList.add(vOnIcon);
+			
+			this.soundNotify();
+		}
 	}
 	
 	render() {
@@ -444,6 +503,28 @@ export class basicNote {
 		vSpacer.style.display = "block";
 		vElements.push(vSpacer);
 		
+		if (this.hasSound) {
+			let vSoundButton = document.createElement("i");
+			vSoundButton.classList.add("fa-solid");
+			vSoundButton.style.margin = "5px";
+			this.captionElements.sound = vSoundButton;
+			vSoundButton.onclick = () => {this.increaseVolume()};
+			vSoundButton.oncontextmenu = (pEvent) => {
+				console.log(1);
+				if (this.canEdit) {
+					pEvent.stopPropagation();
+					console.log(2);
+					let vFilePicker = new FilePicker({
+						type: "audio",
+						current: this.notifySound,
+						callback: (pFile, pFilePicker) => {this.notifySound = pFile}
+					}).render();	
+				}
+			};
+			registerHoverShadow(vSoundButton);
+			vElements.push(vSoundButton);
+		}
+		
 		if (!this.windowed) {
 			let vPopoutButton = document.createElement("i");
 			vPopoutButton.classList.add("fa-solid", cWindowIcon);
@@ -527,6 +608,8 @@ export class basicNote {
 			}
 			this.captionElement.appendChild(vElement);
 		}
+		
+		this.synchVolumeIcon();
 	}
 	
 	renderContent() {
@@ -648,16 +731,18 @@ export class basicNote {
 		}
 	}
 	
-	alarm(pContext = {}) {
-		this.soundAlarm(pContext);
-		this.visualAlarm(pContext);
+	notify(pContext = {}) {
+		this.soundNotify(pContext);
+		this.visualNotify(pContext);
 	}
 	
-	soundAlarm(pContext = {}) {
-		
+	soundNotify(pContext = {}) {
+		if (this.notifySound && !this.windowed && this.ready) {
+			AudioHelper.play({src: this.notifySound, volume: this.soundVolume});
+		}
 	}
 	
-	visualAlarm(pContext = {}) {
+	visualNotify(pContext = {}) {
 		
 	}
 	
@@ -718,12 +803,18 @@ export class basicNote {
 		new noteWindow(this.id, this._noteData, this.windowOptions).render(true);
 	}
 	
+	onClosebasic() {
+		this.onclose();
+		
+		Hooks.off(cVolumeHook, this._soundvolumehookID);
+	}
+	
 	onclose() {
 		
 	}
 	
 	delete() {
-		this.onclose();
+		this.onClosebasic();
 		
 		NoteManager.deleteNote(this.id);
 	}
