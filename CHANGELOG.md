@@ -1,3 +1,6 @@
+## v1.1.1
+- The cursor in text notes should now remain at the correct location when typing fast
+
 ## v1.1.0
 - Added new Note, Round Counter:
   - Allows you to count rounds up or down with an optional limit
