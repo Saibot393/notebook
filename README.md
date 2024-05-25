@@ -45,6 +45,11 @@ Multiple types of notes are available:
 
   ![imag](https://imgur.com/ySwE9fS.jpg)
 
+- #### Round Counter notes:
+  A counter ticking up or down every time a round passes. Both the direction (up, down) and a limit can be set.
+
+  ![imag](https://imgur.com/LqNbmc6.jpg)
+
 ### Languages:
 
 The module contains an English and a Germantranslation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/notebook/issues).
