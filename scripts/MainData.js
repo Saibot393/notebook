@@ -11,6 +11,8 @@ import {timerNote} from "./components/timerNote.js";
 import {progressclockNote} from "./components/progressclockNote.js";
 import {roundcounterNote} from "./components/roundcounterNote.js";
 
+CONFIG.debug.notebook = false;
+
 const cNotesFlag = "notes";
 
 const cDefaultNote = {
@@ -44,8 +46,6 @@ CONFIG[cModuleName] = {
 		roundcounter : roundcounterNote
 	}
 }
-
-CONFIG.debug.notebook = false;
 
 export async function cleanUserData() {
 	//remove empty note flags
@@ -106,7 +106,7 @@ class NoteManager {
 	static async createNewNote(pData) {
 		let vID = randomID();
 		
-		let vData = {...cDefaultNote, ...pData, owner : game.user.id};
+		let vData = {...cDefaultNote, ...pData, owner : game.user.id, moduleversion : game.modules.get(cModuleName)._source.version};
 		
 		if (!vData.title) {
 			vData.title = Translate("Titles.newNote");

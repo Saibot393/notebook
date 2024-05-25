@@ -643,7 +643,7 @@ export class basicNote {
 	}
 	
 	refreshContent() {
-		this.updateRenderContent(this.noteData, this.noteData.content, {content : this.noteData.content});
+		this.updateRenderContent(this.noteData, this.noteData.content, {content : this.noteData.content}, {refresh : true});
 	}
 	
 	reRender() {
@@ -670,7 +670,7 @@ export class basicNote {
 		}
 		
 		if (pUpdate.content) {
-			this.updateRenderContent(pupdatedNote, pUpdate.content, pUpdate, pContext.content);
+			this.updateRenderContent(pupdatedNote, pUpdate.content, pUpdate, pContext);
 		}
 		
 		if (pUpdate.permissions) {
@@ -695,7 +695,7 @@ export class basicNote {
 	}
 	
 	updateData(pData, pContext = {}) {
-		NoteManager.updateNote(this.id, pData, pContext);
+		NoteManager.updateNote(this.id, pData, {...pContext, user : game.user.id});
 	}
 	
 	updateContent(pContent, pContext = {}) {

@@ -72,13 +72,13 @@ export class textNote extends basicNote {
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate, pContext) {
-		if (pContentUpdate.hasOwnProperty("text") && this.contentElements.text.value != this.text) {
+		if (pContentUpdate.hasOwnProperty("text") && this.contentElements.text.value != this.text && pContext.user != game.user.id) {
 			let vPrevPosition = [];
 			let vOffset = 0;
 			if (isActiveElement(this.contentElements.text)) {
 				vPrevPosition = [this.contentElements.text.selectionStart, this.contentElements.text.selectionEnd];
-				if (pContext?.position) {
-					if (pContext?.position[0] < vPrevPosition[0]) {
+				if (pContext?.content?.position) {
+					if (pContext?.content?.position[0] < vPrevPosition[0]) {
 						vOffset = this.text.length - this.contentElements.text.value.length;
 					}
 				}
@@ -87,7 +87,6 @@ export class textNote extends basicNote {
 			this.contentElements.text.value = this.text;
 			
 			if (vPrevPosition.length == 2) {
-				console.log(vPrevPosition);
 				this.contentElements.text.setSelectionRange(vPrevPosition[0] + vOffset, vPrevPosition[1] + vOffset);
 			}
 			
