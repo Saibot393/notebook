@@ -42,7 +42,8 @@
 				"slider"					: "Schieberegler",
 				"chat"						: "Chat",
 				"timer"						: "Timer",
-				"progressclock"				: "Fortschrittsuhr"
+				"progressclock"				: "Fortschrittsuhr",
+				"roundcounter"				: "Rundenzähler"
 			},
 			
 			"min"							: "Min",

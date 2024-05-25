@@ -42,7 +42,8 @@
 				"slider"					: "Slider",
 				"chat"						: "Chat",
 				"timer"						: "Timer",
-				"progressclock"				: "Progress Clock"
+				"progressclock"				: "Progress Clock",
+				"roundcounter"				: "Round Counter"
 			},
 			
 			"min"							: "Min",

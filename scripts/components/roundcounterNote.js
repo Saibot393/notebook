@@ -20,6 +20,26 @@ export class roundcounterNote extends basicNote {
 		return "roundcounter";
 	}
 	
+	get icon() {
+		return ["fa-clock-rotate-left", "fa-flip-horizontal"];
+	}
+	
+	get windowedAMH() {
+		return false;
+	}
+	
+	get windowOptions() {
+		return {
+			...super.windowOptions,
+			resizable: false,
+			height: 64 + 30
+		}
+	}
+	
+	get hasSound() {
+		return true;
+	}
+	
 	get defaultContent() {
 		return {
 			value : 0,
@@ -93,9 +113,12 @@ export class roundcounterNote extends basicNote {
 		vRoundDIV.style.fontSize = "25px";
 		vRoundDIV.style.textAlign = "center";
 		
+		let vSpacer1 = document.createElement("div");
+		vSpacer1.style.flexGrow = 1;
+		
 		let vCount = document.createElement("input");
 		vCount.type = "text";
-		vCount.style.width = "auto";
+		vCount.style.width = "50%";
 		vCount.style.height = "auto";
 		vCount.style.fontSize = "50px";
 		vCount.style.color = this.primeColor;
@@ -141,6 +164,37 @@ export class roundcounterNote extends basicNote {
 			}
 		};
 		
+		let vSpacer2 = document.createElement("div");
+		vSpacer2.style.flexGrow = 1;
+		vSpacer2.style.width = "0px";
+		
+		let vSettingDIV = document.createElement("div");
+		vSettingDIV.style.width = "fit-content";
+		vSettingDIV.style.height = "100%";
+		vSettingDIV.style.padding = "0.1px";
+		vSettingDIV.style.flexDirection = "row";
+		vSettingDIV.style.display = "flex";
+		vSettingDIV.style.justifyContent = "right";
+		vSettingDIV.style.marginLeft = "auto";
+		
+		let vSettingBar = document.createElement("div");
+		vSettingBar.style.backgroundColor = this.primeColor;
+		vSettingBar.style.visibility = "hidden";
+		vSettingBar.style.width = "5px";
+		vSettingBar.style.height = "35px";
+		vSettingBar.style.borderRadius = "5px";
+		vSettingBar.style.margin = "auto";
+		vSettingBar.style.marginLeft = "";
+		vSettingBar.style.marginRight = "3px";
+		
+		let vSettingContentDIV = document.createElement("div");
+		vSettingContentDIV.style.width = "30px";
+		vSettingContentDIV.style.height = "100%";
+		vSettingContentDIV.style.display = "flex";
+		vSettingContentDIV.style.flexDirection = "column";
+		vSettingContentDIV.style.color = this.primeColor;
+		vSettingContentDIV.style.textAlign = "center";
+		
 		let vReverse = document.createElement("i");
 		vReverse.classList.add("fa-solid");
 		vReverse.onclick = () => {
@@ -148,17 +202,38 @@ export class roundcounterNote extends basicNote {
 				this.invertDirection();
 			}
 		}
-		vReverse.style.flexGrow = "1";
 		vReverse.setAttribute("data-tooltip", Translate("Titles.changedirection"));
+		vReverse.style.marginBottom = "auto";
+		vReverse.style.marginTop = "auto";
 		registerHoverShadow(vReverse);
 		
+		vSettingContentDIV.appendChild(vReverse);
+		
+		vSettingDIV.appendChild(vSettingBar);
+		vSettingDIV.appendChild(vSettingContentDIV);
+		
+		vSettingContentDIV.style.display = "none";
+		vSettingDIV.onmouseenter = () => {
+			if (this.canEdit) {
+				vSettingContentDIV.style.display = "flex";
+			}
+		}
+		vSettingDIV.onmouseleave = () => {
+			vSettingContentDIV.style.display = "none";
+		}
+		
+		vSpacer2.appendChild(vSettingDIV);
+		
+		vRoundDIV.appendChild(vSpacer1);
 		vRoundDIV.appendChild(vCount);
-		vRoundDIV.appendChild(vReverse);
+		//vRoundDIV.appendChild(vReverse);
+		vRoundDIV.appendChild(vSpacer2);
 		
 		this.mainElement.appendChild(vRoundDIV);
 		
 		this.contentElements.count = vCount;
 		this.contentElements.reverse = vReverse;
+		this.contentElements.settingbar = vSettingBar;
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
@@ -206,8 +281,14 @@ export class roundcounterNote extends basicNote {
 	}
 	
 	onMouseHoverChange() {
-		//OPTIONAL
-		//used to change note content size when mouse hovers in (check this.isMouseHover)
+		if (this.isMouseHover) {
+			if (this.canEdit) {
+				this.contentElements.settingbar.style.visibility = "visible";
+			}
+		}
+		else {
+			this.contentElements.settingbar.style.visibility = "hidden";
+		}
 	}
 	
 	onCombatRound() {

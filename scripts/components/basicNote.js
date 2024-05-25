@@ -467,7 +467,13 @@ export class basicNote {
 		
 		if (cShowIcon) {
 			let vNoteIcon = document.createElement("i");
-			vNoteIcon.classList.add("fa-solid", this.icon);
+			vNoteIcon.classList.add("fa-solid");
+			if (typeof this.icon) {
+				vNoteIcon.classList.add(this.icon);
+			}
+			if (Array.isArray(this.icon)) {
+				vNoteIcon.classList.add(...this.icon);
+			}
 			vNoteIcon.style.margin = "5px";
 			if (this.windowed) vNoteIcon.style.cursor = "move";
 			vNoteIcon.style.color = this.backColor;
