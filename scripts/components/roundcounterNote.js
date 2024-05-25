@@ -13,7 +13,9 @@ const cPM = "+-";
 
 export class roundcounterNote extends basicNote {
 	onready() {
-		this._oncombatRoundID = Hooks.on("combatRound", () => {this.onCombatRound()})
+		if (!this.windowed && Array.from(game.users).filter(vUser => vUser.active).find(vUser => vUser.isGM)?.isSelf) {
+			this._oncombatRoundID = Hooks.on("combatRound", () => {this.onCombatRound()})
+		}
 	}
 	
 	get type() {
@@ -290,13 +292,12 @@ export class roundcounterNote extends basicNote {
 	}
 	
 	onCombatRound() {
-		if(this.isPrimeEditor) {
-			this.change(this.direction);
-		}
+		//if(this.isPrimeEditor) {
+		this.change(this.direction);
+		//}
 	}	
 	
 	onclose() {
-		console.log("closed");
-		Hooks.off("combatRound", this._oncombatRoundID);
+		if (this._oncombatRoundID) Hooks.off("combatRound", this._oncombatRoundID);
 	}
 }
