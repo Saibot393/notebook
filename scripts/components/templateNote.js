@@ -6,6 +6,10 @@ import {basicNote} from "./basicNote.js";
 import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
 export class templateNote extends basicNote {
+	onready() {
+		//OPTIONAL
+	}
+	
 	get type() {
 		//REQUIRED
 		return "template";
@@ -61,12 +65,6 @@ export class templateNote extends basicNote {
 		//OPTIONAL
 		//tick every 100ms for time dependent stuff
 		//make sure to set _hastick or overwrite hastick()
-	}
-	
-	round() {
-		//OPTIONAL
-		//called when a round ends
-		//!NOT CURRENTLY IMPLEMENTED!
 	}
 	
 	onclose() {

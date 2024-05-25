@@ -57,7 +57,8 @@ export class textNote extends basicNote {
 			this.updateTextHeight();
 			
 			if (this.text != vText.value) {
-				this.text = vText.value;
+				//this.text = vText.value;
+				this.updateContent({text : vText.value}, {position : [vText.selectionStart, vText.selectionEnd]});
 			}
 		};
 		vText.onblur = () => {this.updateTextHeight()};
@@ -70,9 +71,26 @@ export class textNote extends basicNote {
 		this.contentElements.textdiv = vTextDIV;
 	}
 	
-	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
+	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate, pContext) {
 		if (pContentUpdate.hasOwnProperty("text") && this.contentElements.text.value != this.text) {
+			let vPrevPosition = [];
+			let vOffset = 0;
+			if (isActiveElement(this.contentElements.text)) {
+				vPrevPosition = [this.contentElements.text.selectionStart, this.contentElements.text.selectionEnd];
+				if (pContext?.position) {
+					if (pContext?.position[0] < vPrevPosition[0]) {
+						vOffset = this.text.length - this.contentElements.text.value.length;
+					}
+				}
+			}
+			
 			this.contentElements.text.value = this.text;
+			
+			if (vPrevPosition.length == 2) {
+				console.log(vPrevPosition);
+				this.contentElements.text.setSelectionRange(vPrevPosition[0] + vOffset, vPrevPosition[1] + vOffset);
+			}
+			
 			this.updateTextHeight();
 		}
 	}

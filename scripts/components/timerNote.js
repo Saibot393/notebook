@@ -103,7 +103,7 @@ export class timerNote extends basicNote {
 	}
 	
 	get direction() {
-		return Math.sign(this.content.direction);
+		return Math.sign(this.content.direction) || 1;
 	}
 	
 	set direction(pDirection) {
@@ -158,6 +158,8 @@ export class timerNote extends basicNote {
 		vSpacer1.style.flexGrow = "1";
 		vSpacer1.style.width = "0px";
 		
+		vSpacer1.appendChild(vDayInput);
+		
 		let vMinus = document.createElement("div");
 		vMinus.innerHTML = "-";
 		vMinus.style.margin = "auto";
@@ -190,8 +192,6 @@ export class timerNote extends basicNote {
 		
 		let vSpacer2 = document.createElement("div");
 		vSpacer2.style.flexGrow = "1";
-		
-		vSpacer1.appendChild(vDayInput);
 		
 		vTimeDIV.appendChild(vSpacer1);
 		vTimeDIV.appendChild(vMinus);

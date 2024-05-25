@@ -314,11 +314,11 @@ class notesTab /*extends SidebarTab*/ {
 				this.deleteNote(pNewNoteData.id);
 			}
 			else {
-				vNote.updateRender(pNewNoteData, pNoteDataUpdate);
+				vNote.updateRender(pNewNoteData, pNoteDataUpdate, pContext);
 			}
 		}
 		else {
-			if (NoteManager.canSeeSelf(pNewNoteData)) {
+			if (!pContext.deletion && NoteManager.canSeeSelf(pNewNoteData)) {
 				this.addNode(pNewNoteData.id);
 			}
 		}

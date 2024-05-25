@@ -9,6 +9,7 @@ import {sliderNote} from "./components/sliderNote.js";
 import {chatNote} from "./components/chatNote.js";
 import {timerNote} from "./components/timerNote.js";
 import {progressclockNote} from "./components/progressclockNote.js";
+import {roundcounterNote} from "./components/roundcounterNote.js";
 
 const cNotesFlag = "notes";
 
@@ -39,9 +40,12 @@ CONFIG[cModuleName] = {
 		slider : sliderNote,
 		chat : chatNote,
 		timer : timerNote,
-		progressclock : progressclockNote
+		progressclock : progressclockNote,
+		roundcounter : roundcounterNote
 	}
 }
+
+CONFIG.debug.notebook = false;
 
 export async function cleanUserData() {
 	//remove empty note flags
@@ -64,11 +68,11 @@ class NoteManager {
 	
 	static viewableNotes() {} //returns an object with all viewable notes
 	
-	static async updateNote(pID, pUpdate, pExplicitDelete = false) {} //updates pData with pUpdate of note identified iva pID (if access is granted)
+	static async updateNote(pID, pUpdate, pContext = {}) {} //updates pData with pUpdate of note identified iva pID (if access is granted)
 	
-	static requestNoteUpdate(pID, pUpdate) {} //requests the owner of a Note to update
+	static requestNoteUpdate(pID, pUpdate, pContext = {}) {} //requests the owner of a Note to update
 	
-	static async noteUpdateRequest(pID, pUpdate) {} //handels the update request for a Note
+	static async noteUpdateRequest(pData) {} //handels the update request for a Note
 	
 	static deleteNote(pID) {} //deletes notes with id pID
 	
@@ -133,8 +137,8 @@ class NoteManager {
 		return vNotes;
 	}
 	
-	static async updateNote(pID, pUpdate, pExplicitDelete = false) {
-		if (pUpdate || pExplicitDelete) {
+	static async updateNote(pID, pUpdate, pContext = {}) {
+		if (pUpdate || pContext.delete) {
 			for (let vDelete of cLockedProperties) {
 				if (pUpdate?.hasOwnProperty(vDelete)) {
 					delete pUpdate[vDelete];
@@ -143,24 +147,38 @@ class NoteManager {
 			
 			if (NoteManager.canEditSelf(pID)) {
 				if (NoteManager.ownsNote(pID)) {
-					await game.user.setFlag(cModuleName, cNotesFlag + `.${pID}`, pUpdate);
+					//await game.user.setFlag(cModuleName, cNotesFlag + `.${pID}`, pUpdate, pContext);
+					game.user.update({
+						flags : {
+							[cModuleName] : {
+								[cNotesFlag + `.${pID}`] : pUpdate
+							}
+						}
+					}, pContext);
 				}
 				else {
 					if (game.user.isGM) {
 						let vOwner = NoteManager.owner(pID);
 						
-						await vOwner.setFlag(cModuleName, cNotesFlag + `.${pID}`, pUpdate);
+						//await vOwner.setFlag(cModuleName, cNotesFlag + `.${pID}`, pUpdate, pContext);
+						vOwner.update({
+							flags : {
+								[cModuleName] : {
+									[cNotesFlag + `.${pID}`] : pUpdate
+								}
+							}
+						}, pContext);
 					}
 					else {
-						NoteManager.requestNoteUpdate(pID, pUpdate, {userID : game.user.id});
+						NoteManager.requestNoteUpdate(pID, pUpdate, pContext)
 					}
 				}
 			}
 		}
 	}
 	
-	static requestNoteUpdate(pID, pUpdate) {
-		game.socket.emit("module."+cModuleName, {pFunction : "noteUpdateRequest", pData : {pNoteID : pID, pUpdate : pUpdate, pSender : game.user.id}});
+	static requestNoteUpdate(pID, pUpdate, pContext = {}) {
+		game.socket.emit("module."+cModuleName, {pFunction : "noteUpdateRequest", pData : {pNoteID : pID, pUpdate : pUpdate, pContext : pContext, pSender : game.user.id}});
 	}
 	
 	static async noteUpdateRequest(pData) {
@@ -171,14 +189,28 @@ class NoteManager {
 			
 			if (vRequesterhasPermission) {
 				if (vIsUpdater) {
-					await game.user.setFlag(cModuleName, cNotesFlag + `.${pData.pNoteID}`, pData.pUpdate);
+					//await game.user.setFlag(cModuleName, cNotesFlag + `.${pData.pNoteID}`, pData.pUpdate, pData.pContext);
+					game.user.update({
+						flags : {
+							[cModuleName] : {
+								[cNotesFlag + `.${pData.pNoteID}`] : pData.pUpdate
+							}
+						}
+					}, pData.pContext);
 				}
 				else {
 					if (game.user.isGM) {
 						let vOwner = NoteManager.owner(pData.pNoteID);
 						
 						if (!vOwner?.active) {
-							await vOwner.setFlag(cModuleName, cNotesFlag + `.${pID}`, pUpdate);
+							//await vOwner.setFlag(cModuleName, cNotesFlag + `.${pID}`, pData.pUpdate, pData.pContext);
+							vOwner.update({
+								flags : {
+									[cModuleName] : {
+										[cNotesFlag + `.${pData.pNoteID}`] : pData.pUpdate
+									}
+								}
+							}, pData.pContext);
 						}
 					}
 				}
@@ -188,7 +220,7 @@ class NoteManager {
 	
 	static deleteNote(pID) {
 		if (NoteManager.canDeleteSelf(pID)) {
-			NoteManager.updateNote(pID, null, true);
+			NoteManager.updateNote(pID, null, {delete : true});
 		}
 	}
 	
@@ -434,11 +466,11 @@ class NoteManager {
 Hooks.on("updateUser", (pUser, pChanges, pContext) => {
 	if (pChanges.flags && pChanges.flags[cModuleName] && pChanges.flags[cModuleName][cNotesFlag]) {
 		let vNoteUpdates = pChanges.flags[cModuleName][cNotesFlag];
-		
+
 		for (let vKey of Object.keys(vNoteUpdates)) {
 			let vPermission = pUser.flags[cModuleName][cNotesFlag][vKey]?.permissions ? Boolean(pUser.flags[cModuleName][cNotesFlag][vKey].permissions[game.user.id]) : undefined;
 			let vDeletion = !pChanges.flags[cModuleName][cNotesFlag][vKey];
-			
+
 			Hooks.call(cModuleName + ".updateNote", {...pUser.flags[cModuleName][cNotesFlag][vKey], id : vKey}, {...vNoteUpdates[vKey]}, {...pContext, permission : vPermission, deletion : vDeletion});
 		}
 	}

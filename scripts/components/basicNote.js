@@ -58,6 +58,16 @@ export class basicNote {
 		//this.render();
 	}
 	
+	makeready() {
+		this._ready = true;
+		
+		this.onready();
+	}
+	
+	onready() {
+		
+	}
+	
 	get valid() {
 		return this.type == this.noteData.type && !this._hasError;
 	}
@@ -421,26 +431,35 @@ export class basicNote {
 		
 		this.renderCaption();
 		
-		try {
-			this.renderContent();
-			
-			this.refreshContent();
-			
-			this.checkEnabled();
-			
-			this.onMouseHoverChange();
-			
-			if (!this.windowed) this.synchToggleState();
+		if (CONFIG.debug.notebook) {
+			this.prepareContent();
 		}
-		catch {
-			this._hasError = true;
-			
-			console.warn(`error while rendering content of ${this.type} note ${this.title} [id=${this.id}]`);
+		else {
+			try {
+				this.prepareContent();
+			}
+			catch {
+				this._hasError = true;
+				
+				console.warn(`error while rendering content of ${this.type} note ${this.title} [id=${this.id}]`);
+			}
 		}
 		
-		this._ready = true;
+		this.makeready();
 		
 		return this.element;
+	}
+	
+	prepareContent() {
+		this.renderContent();
+		
+		this.refreshContent();
+		
+		this.checkEnabled();
+		
+		this.onMouseHoverChange();
+		
+		if (!this.windowed) this.synchToggleState();
 	}
 	
 	renderCaption() {
@@ -629,7 +648,7 @@ export class basicNote {
 		}
 	}
 	
-	updateRender(pupdatedNote, pUpdate) {
+	updateRender(pupdatedNote, pUpdate, pContext = {}) {
 		this._noteData = pupdatedNote;
 		
 		if (pUpdate.hasOwnProperty("title")) {
@@ -645,7 +664,7 @@ export class basicNote {
 		}
 		
 		if (pUpdate.content) {
-			this.updateRenderContent(pupdatedNote, pUpdate.content, pUpdate);
+			this.updateRenderContent(pupdatedNote, pUpdate.content, pUpdate, pContext.content);
 		}
 		
 		if (pUpdate.permissions) {
@@ -665,16 +684,16 @@ export class basicNote {
 		}
 	}
 	
-	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
+	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate, pContext) {
 		//called when the content updates
 	}
 	
-	updateData(pData) {
-		NoteManager.updateNote(this.id, pData);
+	updateData(pData, pContext = {}) {
+		NoteManager.updateNote(this.id, pData, pContext);
 	}
 	
-	updateContent(pContent) {
-		this.updateData({content : pContent});
+	updateContent(pContent, pContext = {}) {
+		this.updateData({content : pContent}, {content : pContext});
 	}
 	
 	disablebasic() {
