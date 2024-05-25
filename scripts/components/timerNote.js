@@ -333,6 +333,16 @@ export class timerNote extends basicNote {
 		if (vRenderTime) {
 			this.renderTime(vSplit);
 		}
+		
+		if (Math.abs(this.time) < 1000) {
+			if (!this._lastwaszero) {
+				this.soundNotify();
+			}
+			this._lastwaszero = true;
+		}
+		else {
+			this._lastwaszero = false;
+		}
 	}
 	
 	renderTime(pSplit = undefined) {
