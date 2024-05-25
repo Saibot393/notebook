@@ -364,6 +364,7 @@ export class timerNote extends basicNote {
 	
 	start() {
 		if (!this.running) {
+			this.soundNotify();
 			this.updateContent({running : true, basetime : this.now});
 		}
 		this.startTick();
@@ -371,6 +372,7 @@ export class timerNote extends basicNote {
 	
 	stop() {
 		if (this.running) {
+			this.soundNotify();
 			this.updateContent({running : false, offset : this.time});
 		}
 		this.stopTick();

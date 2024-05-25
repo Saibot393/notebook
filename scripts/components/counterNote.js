@@ -30,6 +30,10 @@ export class counterNote extends basicNote {
 		}
 	}
 	
+	get hasSound() {
+		return true;
+	}
+	
 	get defaultContent() {
 		return {
 			value : 0,
@@ -244,6 +248,10 @@ export class counterNote extends basicNote {
 		}
 		else {
 			this.contentElements.count.value = `${this.value}`;
+		}
+		
+		if (this.value == 0 || this.value == this.max) {
+			this.soundNotify();
 		}
 	}
 	
