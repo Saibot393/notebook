@@ -78,6 +78,8 @@ class NoteManager {
 	
 	static ownsNote(pNote) {} //returns if this user owns note (either ID or Note)
 	
+	static isPrimeEditor(pNote) {} //returns if puser is prime editor
+	
 	static permissionLevel(pNote, pUserID) {} //retruns permission level of pUserID for pNote
 	
 	static permissionOverview(pNote) {} //returns overview of permissions
@@ -234,6 +236,20 @@ class NoteManager {
 		if (typeof pNote == "object") {
 			return game.user.id == pNote.owner;
 		}
+	}
+	
+	static isPrimeEditor(pNote) {
+		let vOwner = NoteManager.owner(pNote);
+		
+		if (vOwner.isSelf) {
+			return true;
+		}
+		
+		if (!vOwner.active) {
+			return Array.from(game.users).find(vUser => vUser.isGM)?.isSelf
+		}
+		
+		return false;
 	}
 	
 	static permissionLevel(pNote, pUserID) {
@@ -425,6 +441,12 @@ Hooks.on("updateUser", (pUser, pChanges, pContext) => {
 			
 			Hooks.call(cModuleName + ".updateNote", {...pUser.flags[cModuleName][cNotesFlag][vKey], id : vKey}, {...vNoteUpdates[vKey]}, {...pContext, permission : vPermission, deletion : vDeletion});
 		}
+	}
+});
+
+Hooks.once("init", () => {
+	game.modules.get(cModuleName).api = {
+		NoteManager : NoteManager
 	}
 });
 

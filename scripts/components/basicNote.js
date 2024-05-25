@@ -28,6 +28,7 @@ const cShowIcon = true;
 export class basicNote {
 	constructor(pNoteID, pNoteData, pOptions = {}) {
 		this._hasError = false;
+		this._ready = false;
 		
 		this._noteID = pNoteID;
 		
@@ -58,6 +59,10 @@ export class basicNote {
 	
 	get hasError() {
 		return this._hasError;
+	}
+	
+	get ready() {
+		return this._ready;
 	}
 	
 	get id() {
@@ -110,6 +115,10 @@ export class basicNote {
 	
 	get owner() {
 		return NoteManager.owner(this.noteData);
+	}
+	
+	get isPrimeEditor() {
+		return NoteManager.isPrimeEditor(this.noteData);
 	}
 	
 	get canEdit() {
@@ -214,7 +223,7 @@ export class basicNote {
 			if (vJournal) {
 				vJournal.createEmbeddedDocuments("JournalEntryPage", [{
 					name : this.title, 
-					flags : {[cModuleName] : {from : {id : this.id, creator : game.user.id}}}, 
+					flags : {[cModuleName] : {from : {id : this.id, creator : game.user.id, type : this.type}}}, 
 					text : vJournalPage
 				}]);
 			}
@@ -369,6 +378,8 @@ export class basicNote {
 			
 			console.warn(`error while rendering content of ${this.type} note ${this.title} [id=${this.id}]`);
 		}
+		
+		this._ready = true;
 		
 		return this.element;
 	}

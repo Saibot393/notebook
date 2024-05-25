@@ -6,6 +6,8 @@ import {noteFilter} from "./helpers/noteFilter.js";
 
 const cNoteIcon = "fa-note-sticky";
 
+const cUseUnsort = false;
+
 Hooks.once("init", () => {
 	Hooks.call(cModuleName + ".notesInit", {});
 });
@@ -112,7 +114,21 @@ class notesTab /*extends SidebarTab*/ {
 	}
 	
 	set sortorder(pSort) {
-		game.user.setFlag(cModuleName, cNoteSortFlag, pSort);
+		let vSort = pSort;
+		
+		/*
+		let vOrder = vSort.order.reverse();
+		vOrder.filter((vID, vPos) => vOrder.indexOf(vID) == vPos);
+		vSort.order = vOrder.reverse();
+		*/
+		
+		game.user.setFlag(cModuleName, cNoteSortFlag, vSort);
+	}
+	
+	get unsorted() {
+		let vSorted = Object.values(this.sortorder.order);
+		console.log(vSorted);
+		return Object.keys(this.notes).filter(vID => !this.notes[vID].isOwner && !vSorted.includes(vID));
 	}
 	
 	render() {
@@ -149,12 +165,36 @@ class notesTab /*extends SidebarTab*/ {
 		
 		this.tab.appendChild(vHeader);
 		
+		this.content = document.createElement("div");
+		this.content.style.overflowY = "auto";
+		if (!cUseUnsort) this.content.ondrop = (pEvent) => {this.onEntriesdrop(pEvent)};
+		
 		this.entries = document.createElement("ol");
 		this.entries.style.padding = "1px";
-		this.entries.style.overflowY = "auto";
-		this.entries.ondrop = (pEvent) => {this.ondrop(pEvent)};
+		this.entries.style.minHeight = "300px";
+		this.entries.style.height = "auto";
+		if (cUseUnsort) this.entries.ondrop = (pEvent) => {this.onEntriesdrop(pEvent)};
 		
-		this.tab.appendChild(this.entries);
+		if (cUseUnsort) {
+			this.unsortedMain = document.createElement("details");
+			this.unsortedMain.ondrop = (pEvent) => {this.onUnsortedDrop(pEvent)};
+			let vUnsortedTitle = document.createElement("summary");
+			vUnsortedTitle.innerHTML = "?unsorted?";
+			vUnsortedTitle.style.margin = "5px";
+			
+			this.unsortedMain.appendChild(vUnsortedTitle);
+			this.unsortedCats = {};
+			this.unsortedCatDIVs = {};
+		}
+		
+		this.content.appendChild(this.entries);
+		if (this.unsortedMain) this.content.appendChild(this.unsortedMain);
+		
+		this.tab.appendChild(this.content);
+		
+		if (cUseUnsort) {
+			this.renderUnsorted();
+		}
 		
 		this.renderEntries();
 	}
@@ -186,6 +226,29 @@ class notesTab /*extends SidebarTab*/ {
 		
 		this.sortEntries();
 		this.rebuildTickList();
+	}
+	
+	renderUnsorted() {
+		let vUsers = Array.from(game.users).filter(vUser => !vUser.isSelf);
+		
+		for (let vUser of vUsers) {
+			let vUserCategory = document.createElement("details");
+			let vUserTitle = document.createElement("summary");
+			vUserTitle.style.marginLeft = "15px";
+			vUserTitle.innerHTML = vUser.name;
+			
+			let vUserCatDIV = document.createElement("div");
+			vUserCatDIV.style.height = "auto";
+			vUserCatDIV.style.marginLeft = "15px";
+			
+			vUserCategory.appendChild(vUserTitle);
+			vUserCategory.appendChild(vUserCatDIV);
+			
+			this.unsortedMain.appendChild(vUserCategory);
+			
+			this.unsortedCats[vUser.id] = vUserCategory;
+			this.unsortedCatDIVs[vUser.id] = vUserCatDIV;
+		}
 	}
 	
 	renderPopout() {
@@ -260,10 +323,10 @@ class notesTab /*extends SidebarTab*/ {
 		}
 	}
 	
-	ondrop(pEvent) {
+	onEntriesdrop(pEvent) {
 		let vDropData = pEvent.dataTransfer.getData("text/plain") ? JSON.parse(pEvent.dataTransfer.getData("text/plain")) : undefined;
 		
-		if (vDropData.isNote) {
+		if (vDropData?.isNote) {
 			let vElements = this.entries.childNodes;
 			
 			let i = 0;
@@ -291,6 +354,14 @@ class notesTab /*extends SidebarTab*/ {
 			else {
 				this.sortatEnd(vDropData.id);
 			}	
+		}
+	}
+	
+	onUnsortedDrop(pEvent) {
+		let vDropData = pEvent.dataTransfer.getData("text/plain") ? JSON.parse(pEvent.dataTransfer.getData("text/plain")) : undefined;
+		
+		if (vDropData?.isNote) {
+			
 		}
 	}
 	
@@ -410,6 +481,7 @@ class notesTab /*extends SidebarTab*/ {
 		let vSorted = [];
 		
 		let fPushNote = (pNoteID) => {
+			vNewSort.order = vNewSort.order.filter(vID => vID != pNoteID);
 			vNewSort.order.push(pNoteID);
 			vSorted.push(pNoteID);
 			
@@ -417,6 +489,7 @@ class notesTab /*extends SidebarTab*/ {
 		}
 		
 		let fUnshiftNote = (pNoteID) => {
+			vNewSort.order = vNewSort.order.filter(vID => vID != pNoteID);
 			vNewSort.order.unshift(pNoteID);
 			vSorted.push(pNoteID);
 			
@@ -435,10 +508,35 @@ class notesTab /*extends SidebarTab*/ {
 		//take care of not sorted notes
 		let vUnsorted = Object.keys(this.notes).filter(vID => !vSorted.includes(vID));
 		
+		if (cUseUnsort) {
+			vUnsorted = vUnsorted.filter(vID => this.notes[vID].isOwner);
+		}
+		
 		for (let vNoteID of vUnsorted) {
 			fUnshiftNote(vNoteID);
 		}
 		
 		this.sortorder = vNewSort;
+		
+		if (cUseUnsort) {
+			this.sortUnsorted();
+		}
+	}
+	
+	sortUnsorted() {
+		let vUnsorted = this.unsorted;
+		console.log(vUnsorted);
+		
+		for (let vID of vUnsorted) {
+			let vNote = this.notes[vID];
+			
+			if (vNote) {
+				let vCat = this.unsortedCatDIVs[vNote.ownerID];
+				
+				if (vCat) {
+					vCat.appendChild(vNote.element);
+				}
+			}
+		}
 	}
 }
