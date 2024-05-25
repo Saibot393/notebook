@@ -271,13 +271,11 @@ export class roundcounterNote extends basicNote {
 	}
 	
 	disable() {
-		//REQUIRED
-		//disable all inputs
+		this.contentElements.count.disabled = true;
 	}
 	
 	enable() {
-		//REQUIRED
-		//enable all inputs
+		this.contentElements.count.disabled = false;
 	}
 	
 	onMouseHoverChange() {
