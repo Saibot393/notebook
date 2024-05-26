@@ -438,10 +438,12 @@ export class basicNote {
 			try {
 				this.prepareContent();
 			}
-			catch {
+			catch(vError) {
 				this._hasError = true;
 				
-				console.warn(`error while rendering content of ${this.type} note ${this.title} [id=${this.id}]`);
+				console.error(`error while rendering content of ${this.type} note "${this.title}" [id=${this.id}]:`);
+				console.log(this.noteData);
+				console.error(vError);
 			}
 		}
 		
@@ -727,6 +729,7 @@ export class basicNote {
 			icon : "block",
 			title : "block",
 			color : "none",
+			sound : "none",
 			popout : "none",
 			permissioninfo : "none",
 			delete : "none"
@@ -744,6 +747,7 @@ export class basicNote {
 			icon : "block",
 			title : "block",
 			color : "grid",
+			sound : "",
 			popout : "",
 			permissioninfo : "",
 			delete : ""
