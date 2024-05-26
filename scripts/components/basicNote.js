@@ -112,6 +112,26 @@ export class basicNote {
 		return Boolean(this.window);
 	}
 	
+	set folder(pFolder) {
+		this._folder = pFolder;
+	}
+	
+	get folder() {
+		return this._folder;
+	}
+	
+	get folderID() {
+		return this.folder?.id;
+	}
+	
+	get idpath() {
+		if (this.folder) {
+			return this.folder.idpath + "." + this.id;
+		}
+		
+		return this.id;
+	}
+	
 	get windowedAMH() {
 		return true; //if being windowed should always be treated as always(A) having a mouse(M) hover(H) the note (AMH)
 	}

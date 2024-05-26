@@ -50,7 +50,7 @@ Hooks.once("ready", async () => {
 	Hooks.call(cModuleName + ".notesReady", {NoteTab : vNoteTab, notes : ui.sidebar.tabs[cModuleName]});
 });
 
-const cNoteSortFlag = "notesort";
+export const cNoteSortFlag = "notesort";
 export const cNoteToggleFlag = "notetoggle";
 export const cNoteVolumeFlag = "notevolume";
 

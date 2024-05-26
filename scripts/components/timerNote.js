@@ -487,6 +487,10 @@ function splitTime(pTime) {
 	
 	vSplit.sgn = Math.sign(pTime);
 	
+	if (vSplit.sgn == 0) {
+		vSplit.sgn = 1;
+	}
+	
 	return vSplit;
 }
 
