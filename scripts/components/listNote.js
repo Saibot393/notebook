@@ -7,6 +7,8 @@ import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
 const cCheckIcon = "fa-check";
 
+const cIndent = "25"; //px
+
 export class listNote extends basicNote {
 	get type() {
 		return "list";
@@ -162,7 +164,7 @@ export class listNote extends basicNote {
 				vCheckBorder.style.marginLeft = "3px";
 				vCheckBorder.style.marginRight = "3px";
 				vCheckBorder.style.height = "20px";
-				vCheckBorder.style.width = "22px";
+				vCheckBorder.style.width = "22.8px"; //yes this is strange but somehow this is required for a pixel perfect square
 				vCheckBorder.style.fontSize = "15px"
 				vCheckBorder.style.border = "2px solid maroon";
 				vCheckBorder.style.textAlign = "center";
@@ -187,6 +189,20 @@ export class listNote extends basicNote {
 				vText.style.border = "0px";
 				vText.oninput = () => {
 					this.changeText(i, vText.value);
+				}
+				vText.onkeydown = (pEvent) => {
+					switch (pEvent.key) {
+						case "ArrowUp" :
+							this.contentElements.listElements[(i-1+this.contentElements.listElements.length)%this.contentElements.listElements.length].text.select();
+							break;
+						case "ArrowDown" :
+							this.contentElements.listElements[(i+1)%this.contentElements.listElements.length].text.select();
+							break;
+						case "Tab" :
+							console.log("indentions comming soon");
+							//pEvent.preventDefault();
+							break;
+					}		
 				}
 				
 				let vDelete = document.createElement("i");
