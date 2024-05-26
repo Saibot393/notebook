@@ -17,7 +17,10 @@ export class sliderNote extends basicNote {
 	get windowOptions() {
 		return {
 			...super.windowOptions,
-			resizable: false,
+			resizable: {
+				resizeX : true,
+				resizeY : false
+			},
 			height: 100.19
 		}
 	}

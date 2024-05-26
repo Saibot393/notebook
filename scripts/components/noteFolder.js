@@ -2,16 +2,21 @@ import {cModuleName} from "../utils/utils.js";
 
 import {cNoteSortFlag} from "../MainTab.js";
 
-const cDefaultFolder() {
-	
+const cdefaultSort() {
+	id : "",
+	color : "black",
+	name : Translate("Titles.newFolder"),
+	order : []
 }
 
 export class noteFolder {
 	constructor(pID = "", pOptions = {}) {
+		this.rendered = false;
+		
 		this._folderid = "";
 		
 		if (pID) {
-			this._folderid = pOptions.id;
+			this._folderid = pID;
 		
 			this._parentFolder = pOptions.parentFolder;
 		}
@@ -28,12 +33,19 @@ export class noteFolder {
 			if (this.isRoot) {
 				this._sort = game.user.getFlag(cModuleName, cNoteSortFlag);
 			}
+			else {
+				this._sort = cdefaultSort;
+			}
 		}
 		
-		this.getNotes = pOptions.getNotes;
+		this._getNotes = pOptions.getNotes;
+		this._createNote = pOptions.createNote;
 		
 		if (this.isRoot) {
 			this._folders = {};
+		}
+		else {
+			this.root.registerFolder(this);
 		}
 	}
 	
@@ -75,6 +87,27 @@ export class noteFolder {
 		}
 	}
 	
+	get position() {
+		if (this.parentFolder) {
+			this.parentFolder.positionof(this.id);
+		}
+		
+		return 0;
+	}
+	
+	positionof(pID) {
+		if (pID) {
+			let vOrder = this.oder;
+			for (let vIndex in vOrder) {
+				if (vOrder[vIndex] == pID || vOrder[vIndex].id == pID) {
+					return vIndex;
+				}
+			}
+		}
+		
+		return -1;
+	}
+	
 	get subFolders() {
 		let vSubs = {};
 		
@@ -99,7 +132,35 @@ export class noteFolder {
 	}
 
 	get subNotes() {
-		this.sort
+		let vSubs = {};
+		
+		for (vElement of this.order) {
+			if (typeof vElement == "string") {
+				if (this.notes[vElement]) {
+					vSubs[vElement] = this.notes[vElement];
+				}
+			}
+		}
+		
+		return vSubs;
+	}
+	
+	get allsubNotes() {
+		let vSubs = {};
+		
+		for (vElement of this.order) {
+			if (typeof vElement == "string") {
+				if (this.notes[vElement]) {
+					vSubs[vElement] = this.notes[vElement];
+				}
+			}
+			
+			if (typeof vElement == "object") {
+				vSubs = {...vSubs, ...this.folders[vElement.id].allsubNotes};
+			} 
+		}
+		
+		return vSubs;
 	}
 	
 	get sort() {
@@ -107,7 +168,7 @@ export class noteFolder {
 			return {this._sort, id : this.id, oder : this.order);
 		}
 		
-		return {};
+		return cdefaultSort;
 	}
 	
 	set sort(pSort) {
@@ -144,8 +205,8 @@ export class noteFolder {
 	}
 	
 	get notes() {
-		if (this.getNotes) {
-			return this.notes();
+		if (this._getNotes) {
+			return this._getNotes();
 		}
 		
 		if (this.parentFolder) {
@@ -233,7 +294,17 @@ export class noteFolder {
 	}
 	
 	render() {
+		this.element = document.createElement("div");
 		
+		this.captionElement = document.createElement("div");
+		this.captionElement.ondragstart = (event) => {
+			event.dataTransfer.setData("text/plain", JSON.stringify({
+				id : this.id,
+				isFolder : true
+			}));
+		};
+		
+		this.rendered = true;
 	}
 	
 	updateName() {
@@ -248,19 +319,63 @@ export class noteFolder {
 		
 	}
 	
+	createNote(pAdd = true) {
+		let vID;
+		
+		if (this._createNote) {
+			let vID = this._createNote();
+		}
+		else {
+			this.parentFolder.createNote(false);
+		}
+		
+		if (vID) {
+			if (pAdd) {
+				this.addNote(vID);
+			}
+			
+			return vID;
+		}
+	}
+	
+	createFolder() {
+		let vFolder = new noteFolder(randomID(), {parentFolder : this});
+		
+		if (this.rendered) {
+			vFolder.render();
+		}
+		
+		this.addFolder(vFolder.id, {position : 0, saveNewOrder : true, applyOrder : true});
+	}
+	
+	delete(pShiftContent = true) {
+		if (!this.isRoot) {
+			if (pShiftContent) {
+				this.parentFolder.addEntries(this.order, position : this.position, removeOld : false, saveNewOrder : false, applyOrder : true);
+			}
+			
+			this.parentFolder.removeFolder(this.id, {saveNewOrder : true});
+			
+			this.element.remove();
+		}
+		else {
+			console.warn(`Please do not delete this root folder, otherwise bad things will happen (this is not a threat)`);
+		}
+	}
+	
 	addFolder(pID, pOptions = {}) {
-		let vOptions = {...pOptions, postion : 0, removeOld : true, saveNewOrder : false};
+		let vOptions = {position : 0, removeOld : true, saveNewOrder : true, applyOrder : false, ...pOptions};
 		
 		let vFolder = this.folders[pID];
 		
 		if (vFolder && vFolder.id == pID) {
 			if (vOptions.removeOld && vFolder.parentFolder) {
-				vFolder.parentFolder.removeFolder(vFolder.id);
+				vFolder.parentFolder.removeFolder(vFolder.id, {saveNewOrder : false});
 			}
 			
 			let vOldOrder = this.order;
 			
-			let vPosition = Math.max(0, Math.min(vOldOrder.length, vOptions.postion));
+			let vPosition = Math.max(0, Math.min(vOldOrder.length, vOptions.position));
 			
 			vNewOrder = [...vOldOrder.slice(0, vPosition), vFolder.sort, ...vOldOrder.slice(vPosition, vOldOrder.length)];
 			
@@ -272,25 +387,29 @@ export class noteFolder {
 				this.saveOrder();
 			}
 			
+			if (vOptions.applyOrder) {
+				this.applyOrder();
+			}
+			
 			return vFolder;
 		}
 		
 		return false;
 	}
 	
-	addNote(pID, pOptions = {postion : 0, removeOld : true, saveNewOrder : false}) {
-		let vOptions = {...pOptions, postion : 0, removeOld : true, saveNewOrder : false};
+	addNote(pID, pOptions = {}) {
+		let vOptions = {position : 0, removeOld : true, saveNewOrder : true, applyOrder : false, ...pOptions};
 		
 		let vNote = this.notes[pID];
 		
 		if (vNote && vNote.id == pID) {
 			if (vOptions.removeOld && vNote.folder) {
-				vNote.folder.removeNote(vNote.id);
+				vNote.folder.removeNote(vNote.id, {saveNewOrder : false});
 			}
 			
 			let vOldOrder = this.order;
 			
-			let vPosition = Math.max(0, Math.min(vOldOrder.length, vOptions.postion));
+			let vPosition = Math.max(0, Math.min(vOldOrder.length, vOptions.position));
 			
 			vNewOrder = [...vOldOrder.slice(0, vPosition), vNote.id, ...vOldOrder.slice(vPosition, vOldOrder.length)];
 			
@@ -302,14 +421,50 @@ export class noteFolder {
 				this.saveOrder();
 			}
 			
+			if (vOptions.applyOrder) {
+				this.applyOrder();
+			}
+			
 			return vNote;
 		}
 		
 		return false;
 	}
 	
+	addEntries(pEntries, pOptions) {
+		let vOptions = {position : 0, removeOld : true, saveNewOrder : true, applyOrder : false, ...pOptions};
+		
+		let vAddedElements = [];
+		
+		for (let vEntry of pEntries) {
+			let vAdded;
+			
+			if (typeof vEntry == "string") {
+				vAdded = this.addNote(vEntry, {...vOptions, position : vOptions.position + vAddedElements.length, saveNewOrder : false, applyOrder : false})
+			}
+			
+			if (typeof vEntry == "object") {
+				vAdded = this.addNote(vEntry.id, {...vOptions, position : vOptions.position + vAddedElements.length, saveNewOrder : false, applyOrder : false})
+			}
+			
+			if (vAdded) {
+				vAddedElements.push(vAdded);
+			}
+		}
+		
+		if (vOptions.saveNewOrder) {
+			this.saveOrder();
+		}
+		
+		if (vOptions.applyOrder) {
+			this.applyOrder();
+		}
+		
+		return vAddedElements;
+	}
+	
 	removeFolder(pID, pOptions = {}) {
-		let vOptions = {saveNewOrder : false, ...pOptions};
+		let vOptions = {saveNewOrder : true, ...pOptions};
 		
 		let vSubFolder = this.subFolders[pID];
 		
@@ -327,7 +482,7 @@ export class noteFolder {
 	}
 	
 	removeNote(pID, pOptions = {}) {
-		let vOptions = {saveNewOrder : false, ...pOptions};
+		let vOptions = {saveNewOrder : true, ...pOptions};
 		
 		if (this._sort.order.find(vElement => vElement == pID)) {
 			this._sort.order = this._sort.order.filter(vElement => vElement != pID);
@@ -337,6 +492,37 @@ export class noteFolder {
 			}
 			
 			return this.notes[pID];
+		}
+		
+		return false;
+	}
+	
+	applyOrder(papplySubOrder = false) {
+		if (this.rendered) {
+			if (this.contentElement) {
+				for (let vElement of this.order) {
+					if (typeof vElement == "string") {
+						if (this.notes[vElement]) {
+							this.contentElement.appendChild(this.notes[vElement].element);
+						}
+					}
+					
+					if (typeof vElement == "object") {
+						if (!this.folders[vElement.id]) {
+							let vFolder = new noteFolder(vElement.id, {parentFolder : this, sort : vElement});
+							
+							vFolder.render();
+						}
+						this.contentElement.appendChild(this.folders[vElement.id].element);
+						
+						if (papplySubOrder) {
+							this.folders[vElement.id].papplySubOrder;
+						}
+					}
+				}
+				
+				return true;
+			}
 		}
 		
 		return false;

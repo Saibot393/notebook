@@ -33,7 +33,10 @@ export class roundcounterNote extends basicNote {
 	get windowOptions() {
 		return {
 			...super.windowOptions,
-			resizable: false,
+			resizable: {
+				resizeX : true,
+				resizeY : false
+			},
 			height: 64 + 30
 		}
 	}

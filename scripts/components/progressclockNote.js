@@ -25,7 +25,10 @@ export class progressclockNote extends basicNote {
 	get windowOptions() {
 		return {
 			...super.windowOptions,
-			resizable: false,
+			resizable: {
+				resizeX : true,
+				resizeY : false
+			},
 			height: cClockSize + 30,
 			width: cClockSize + 130
 		}
