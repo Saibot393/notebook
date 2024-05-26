@@ -1,3 +1,6 @@
+## v1.1.4
+- Improved resize for some notes
+
 ## v1.1.3
 - Fixed bug that caused the input for new timer notes to be ignored until they were started at least once
 
