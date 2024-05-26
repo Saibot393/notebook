@@ -169,7 +169,14 @@ export class counterNote extends basicNote {
 			
 			if (cPM.includes(vFirst)) {
 				if (vCount.value.length > 1) {
-					this.change(vCount.value);
+					let vChange = vCount.value.split("/")[0];
+					
+					if (!isNaN(vChange)) {
+						this.change(vChange);
+					}
+					else {
+						this.updateCounter();
+					}
 				}
 				else {
 					this.updateCounter();
