@@ -105,16 +105,25 @@ class NoteManager {
 	static canDeleteSelf(pNote) {} //returns if this user can delete pNote (either ID or Note)
 	
 	//IMPLEMENTATIONS
-	static async createNewNote(pData) {
+	static async createNewNote(pData, pContext = {}) {
 		let vID = randomID();
 		
 		let vData = {...cDefaultNote, ...pData, owner : game.user.id, moduleversion : game.modules.get(cModuleName)._source.version};
+		
+		let vContext = {...pContext};
 		
 		if (!vData.title) {
 			vData.title = Translate("Titles.newNote");
 		}
 		
-		await game.user.setFlag(cModuleName, cNotesFlag + `.${vID}`, vData);
+		//await game.user.setFlag(cModuleName, cNotesFlag + `.${vID}`, vData);
+		await game.user.update({
+			flags : {
+				[cModuleName] : {
+					[cNotesFlag + `.${vID}`] : vData
+				}
+			}
+		}, vContext);
 		
 		return vID;
 	}

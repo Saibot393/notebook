@@ -106,6 +106,7 @@ class notesTab /*extends SidebarTab*/ {
 		}
 	}
 	
+	/*
 	get sortorder() {
 		let vSort = game.user.getFlag(cModuleName, cNoteSortFlag);
 		
@@ -119,11 +120,9 @@ class notesTab /*extends SidebarTab*/ {
 	set sortorder(pSort) {
 		let vSort = pSort;
 		
-		/*
 		let vOrder = vSort.order.reverse();
 		vOrder.filter((vID, vPos) => vOrder.indexOf(vID) == vPos);
 		vSort.order = vOrder.reverse();
-		*/
 		
 		game.user.setFlag(cModuleName, cNoteSortFlag, vSort);
 	}
@@ -133,13 +132,15 @@ class notesTab /*extends SidebarTab*/ {
 		console.log(vSorted);
 		return Object.keys(this.notes).filter(vID => !this.notes[vID].isOwner && !vSorted.includes(vID));
 	}
+	*/
 	
 	render() {
 		let vHeader = document.createElement("header");
 		vHeader.style.flex = "none";
 		
 		let vButtons = document.createElement("div");
-		vButtons.classList.add("header-actions", "action-buttons", "flexrow");
+		vButtons.classList.add("header-actions", "action-buttons");
+		vButtons.style.display = "flex";
 		
 		let vNewNoteButton = document.createElement("button");
 		vNewNoteButton.classList.add("create-document", "create-entry");
@@ -222,7 +223,8 @@ class notesTab /*extends SidebarTab*/ {
 		this.renderEntries();
 		
 		this.mainFolder = new noteFolder("root", {
-			getNotes : () => {return this.notes}
+			getNotes : () => {return this.notes},
+			createNote : (pEvent) => {noteCreation(this.createEntry)}
 		});
 		this.mainFolder.render();
 		
@@ -260,6 +262,7 @@ class notesTab /*extends SidebarTab*/ {
 		this.rebuildTickList();
 	}
 	
+	/*
 	renderUnsorted() {
 		let vUsers = Array.from(game.users).filter(vUser => !vUser.isSelf);
 		
@@ -282,6 +285,7 @@ class notesTab /*extends SidebarTab*/ {
 			this.unsortedCatDIVs[vUser.id] = vUserCatDIV;
 		}
 	}
+	*/
 	
 	renderPopout() {
 		console.log("Please implement me");
@@ -293,15 +297,15 @@ class notesTab /*extends SidebarTab*/ {
 		}
 	}
 	
-	createEntry(pType, pData) {
+	createEntry(pType, pData, pContext = {}) {
 		let vClass = CONFIG[cModuleName].noteTypes[pType];
 		
 		if (vClass) {
-			NoteManager.createNewNote({...pData, type : pType});
+			NoteManager.createNewNote({...pData, type : pType}, pContext);
 		}
 	}
 	
-	addNode(pID) {
+	addNote(pID, pContext = {}) {
 		this.deleteNote(pID);
 		
 		let vNote = NoteManager.getNote(pID);
@@ -315,7 +319,18 @@ class notesTab /*extends SidebarTab*/ {
 				this.notes[pID].render();
 				
 				if (this.notes[pID].valid) {
-					this.mainFolder.addNote(this.notes[pID].id);//appendChild(vElement);
+					this.mainFolder.checkNote(pID);
+					/*
+					let vTargetFolder = this.mainFolder;
+					
+					if (pContext.targetFolderID) {
+						vTargetFolder = this.mainFolder.folder[pContext.targetFolderID] || this.mainFolder;
+					}
+					
+					if (vTargetFolder) {
+						vTargetFolder.addNote(this.notes[pID].id);//appendChild(vElement);
+					}
+					*/
 				}
 				else {
 					delete this.notes[pID];
@@ -350,7 +365,7 @@ class notesTab /*extends SidebarTab*/ {
 		}
 		else {
 			if (!pContext.deletion && NoteManager.canSeeSelf(pNewNoteData)) {
-				this.addNode(pNewNoteData.id);
+				this.addNote(pNewNoteData.id, pContext);
 			}
 		}
 	}

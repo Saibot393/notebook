@@ -13,8 +13,10 @@ const cdefaultSort = {
 
 const cFolderOpenIcon = "fa-folder-open";
 const cPlusIcon = "fa-plus";
-						//w			y			o			r			g			b
-export const cColors = ["#181818", "#f5ea20", "#e8ae1a", "#c73443", "#34c765", "#4287f5"];
+const cDeleteIcon = "fa-trash-can";
+
+						//w			g			o			r			g			b
+export const cColors = ["#181818", "#909090", "#e8ae1a", "#c73443", "#34c765", "#4287f5"];
 
 export class noteFolder {
 	constructor(pID = "", pOptions = {}) {
@@ -187,7 +189,7 @@ export class noteFolder {
 	}
 	
 	folderofNote(pNote) {
-		return this.folders.find(vFolder => vFolder.hasNote(vFolder));
+		return Object.values(this.folders).find(vFolder => vFolder.hasNote(vFolder));
 	}
 	
 	get subEntries() {
@@ -481,6 +483,7 @@ export class noteFolder {
 		if (!this.isRoot) {
 			this.mainElement.style.borderLeftWidth = "3px";
 			this.mainElement.style.borderLeftStyle = "solid";
+			this.mainElement.style.paddingTop = "5px"
 		}
 		else {
 			this.mainElement.style.minHeight = "100%";
@@ -532,14 +535,36 @@ export class noteFolder {
 			pEvent.stopPropagation();
 		}
 		
+		const cColorSize = 10;
+		this.captionElements.color = document.createElement("div");
+		this.captionElements.color.id = "colorchoice";
+		this.captionElements.color.style.gridTemplateColumns = `repeat(3, ${cColorSize}px)`;
+		this.captionElements.color.style.display = "grid";
+		this.captionElements.color.style.margin = "1px";
+		this.captionElements.color.style.paddingTop = "1px";
+		this.captionElements.color.style.border = "1px grey solid";
+		this.captionElements.color.style.marginLeft = "3px";
+		this.captionElements.onclick = (pEvent) => {this.captionElement.onclick(pEvent)};
+		for (let vColor of cColors) {
+			let vColorDiv = document.createElement("div");
+			vColorDiv.style.width = `${cColorSize}px`;
+			vColorDiv.style.height = `${cColorSize}px`;
+			vColorDiv.style.borderRadius = "50%";
+			vColorDiv.style.backgroundColor = vColor;
+			vColorDiv.onclick = (pEvent) => {pEvent.stopPropagation(); this.color = vColor};
+			
+			this.captionElements.color.appendChild(vColorDiv);
+		}
+
 		
 		let vSpacer = document.createElement("div");
 		vSpacer.style.flexGrow = "1";
 		
-		let vNewFolder = document.createElement("a");
-		vNewFolder.style.position = "relative";
-		vNewFolder.style.margin = "auto";
-		vNewFolder.style.marginLeft = "3px";
+		this.captionElements.newfolder = document.createElement("a");
+		this.captionElements.newfolder.style.position = "relative";
+		this.captionElements.newfolder.style.margin = "auto";
+		this.captionElements.newfolder.style.marginLeft = "5px";
+		this.captionElements.newfolder.style.marginRight = "5px";
 		let vNewFolderIcon = document.createElement("i");
 		vNewFolderIcon.classList.add("fa-solid", cFolderIcon);
 		let vNFPlusIcon = document.createElement("i");
@@ -551,13 +576,18 @@ export class noteFolder {
 		vNFPlusIcon.style.background = "black";
 		vNFPlusIcon.style.padding = "1px";
 		vNFPlusIcon.style.borderRadius = "4px";
-		vNewFolder.appendChild(vNewFolderIcon);
-		vNewFolder.appendChild(vNFPlusIcon);
+		this.captionElements.newfolder.appendChild(vNewFolderIcon);
+		this.captionElements.newfolder.appendChild(vNFPlusIcon);
+		this.captionElements.newfolder.onclick = (pEvent) => {
+			pEvent.stopPropagation();
+			this.createFolder();
+		}
 		
-		let vNewNote = document.createElement("a");
-		vNewNote.style.position = "relative";
-		vNewNote.style.margin = "auto";
-		vNewNote.style.marginLeft = "3px";
+		this.captionElements.newnote = document.createElement("a");
+		this.captionElements.newnote.style.position = "relative";
+		this.captionElements.newnote.style.margin = "auto";
+		this.captionElements.newnote.style.marginLeft = "5px";
+		this.captionElements.newnote.style.marginRight = "5px";
 		let vNewNoteIcon = document.createElement("i");
 		vNewNoteIcon.classList.add("fa-solid", cNoteIcon);
 		let vNNPlusIcon = document.createElement("i");
@@ -569,14 +599,34 @@ export class noteFolder {
 		vNNPlusIcon.style.background = "black";
 		vNNPlusIcon.style.padding = "1px";
 		vNNPlusIcon.style.borderRadius = "4px";
-		vNewNote.appendChild(vNewNoteIcon);
-		vNewNote.appendChild(vNNPlusIcon);
+		this.captionElements.newnote.appendChild(vNewNoteIcon);
+		this.captionElements.newnote.appendChild(vNNPlusIcon);
+		this.captionElements.newnote.onclick = (pEvent) => {
+			pEvent.stopPropagation();
+			this.createNote();
+		}
+		
+		let vDelete = document.createElement("a");
+		vDelete.style.position = "relative";
+		vDelete.style.margin = "auto";
+		vDelete.style.marginLeft = "5px";
+		let vDeleteIcon = document.createElement("i");
+		vDeleteIcon.classList.add("fa-solid", cDeleteIcon);
+		vDeleteIcon.onclick = () => {
+			this.delete();
+		}
+		vDelete.appendChild(vDeleteIcon);
 		
 		this.captionElement.appendChild(this.captionElements.icon);
 		this.captionElement.appendChild(this.captionElements.title);
+		this.captionElement.appendChild(this.captionElements.color);
 		this.captionElement.appendChild(vSpacer);
-		this.captionElement.appendChild(vNewFolder);
-		this.captionElement.appendChild(vNewNote);
+		this.captionElement.appendChild(this.captionElements.newfolder);
+		this.captionElement.appendChild(this.captionElements.newnote);
+		this.captionElement.appendChild(vDelete);
+
+		this.captionElements.newfolder.style.visibility = "hidden";
+		this.captionElements.newnote.style.visibility = "hidden";
 	}
 	
 	synchFolder() {
@@ -592,11 +642,15 @@ export class noteFolder {
 			this.mainElement.style.display = "";
 			this.captionElements.icon.classList.remove(cFolderIcon);
 			this.captionElements.icon.classList.add(cFolderOpenIcon);
+			this.captionElements.newfolder.style.visibility = "visible";
+			this.captionElements.newnote.style.visibility = "visible";
 		}
 		else {
 			this.mainElement.style.display = "none";
 			this.captionElements.icon.classList.remove(cFolderOpenIcon);
 			this.captionElements.icon.classList.add(cFolderIcon);
+			this.captionElements.newfolder.style.visibility = "hidden";
+			this.captionElements.newnote.style.visibility = "hidden";
 		}
 	}
 	
@@ -616,14 +670,16 @@ export class noteFolder {
 		}
 	}
 	
-	createNote(pAdd = true) {
+	async createNote(pAdd = true) {
 		let vID;
 		
 		if (this._createNote) {
-			let vID = this._createNote();
+			vID = await this._createNote({});
 		}
 		else {
-			this.parentFolder.createNote(false);
+			if (!this.isRoot) {
+				vID = await this.parentFolder.createNote(false);
+			}
 		}
 		
 		if (vID) {
@@ -751,10 +807,13 @@ export class noteFolder {
 				if (vFolder) {
 					vFolder.applyOrder();
 				}
+				else {
+					this.addNote(pID);
+				}
 			}
 		}
 		else {
-			this.root.insertNote(pID);
+			this.root.checkNote(pID);
 		}
 	}
 	

@@ -532,16 +532,16 @@ export class basicNote {
 		vColorChoices.style.marginLeft = "3px";
 		this.captionElements.color = vColorChoices;
 		vColorChoices.onclick = (pEvent) => {this.captionElement.onclick(pEvent)};
-			for (let vColor of cColors) {
-				let vColorDiv = document.createElement("div");
-				vColorDiv.style.width = `${cColorSize}px`;
-				vColorDiv.style.height = `${cColorSize}px`;
-				vColorDiv.style.borderRadius = "50%";
-				vColorDiv.style.backgroundColor = vColor;
-				vColorDiv.onclick = (pEvent) => {if (!pEvent.shiftKey) {pEvent.stopPropagation(); this.backColor = vColor}};
-				
-				vColorChoices.appendChild(vColorDiv);
-			}
+		for (let vColor of cColors) {
+			let vColorDiv = document.createElement("div");
+			vColorDiv.style.width = `${cColorSize}px`;
+			vColorDiv.style.height = `${cColorSize}px`;
+			vColorDiv.style.borderRadius = "50%";
+			vColorDiv.style.backgroundColor = vColor;
+			vColorDiv.onclick = (pEvent) => {if (!pEvent.shiftKey) {pEvent.stopPropagation(); this.backColor = vColor}};
+			
+			vColorChoices.appendChild(vColorDiv);
+		}
 		vElements.push(vColorChoices);
 		
 		let vSpacer = document.createElement("div");
