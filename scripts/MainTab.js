@@ -1,10 +1,12 @@
 import {cModuleName, cTickInterval, Translate} from "./utils/utils.js";
 import {NoteManager, cleanUserData} from "./MainData.js";
+import {noteFolder} from "./components/noteFolder.js";
 
 import {noteCreation} from "./helpers/noteCreation.js";
 import {noteFilter} from "./helpers/noteFilter.js";
 
-const cNoteIcon = "fa-note-sticky";
+export const cNoteIcon = "fa-note-sticky";
+export const cFolderIcon = "fa-folder";
 
 const cUseUnsort = false;
 
@@ -159,13 +161,32 @@ class notesTab /*extends SidebarTab*/ {
 		vNewNoteButton.appendChild(vNewNoteIcon);
 		vNewNoteButton.appendChild(vNewNoteLabel);
 		
+		let vNewFolderButton = document.createElement("button");
+		vNewFolderButton.classList.add("create-document", "create-entry");
+		vNewFolderButton.onclick = (pEvent) => {
+			if (this.mainFolder) {
+				this.mainFolder.createFolder();
+			}
+		};
+		
+		let vNewFolderIcon = document.createElement("i");
+		vNewFolderIcon.classList.add("fa-solid", cFolderIcon);
+	
+		let vNewFolderLabel = document.createElement("label");
+		vNewFolderLabel.innerHTML = Translate("Titles.createFolder");
+		
+		vNewFolderButton.appendChild(vNewFolderIcon);
+		vNewFolderButton.appendChild(vNewFolderLabel);
+		
 		vButtons.appendChild(vNewNoteButton);
+		vButtons.appendChild(vNewFolderButton);
 		
 		vHeader.appendChild(vButtons);
 		vHeader.appendChild((new noteFilter((pFilter) => {this.filterEntries(pFilter)})).element);
 		
 		this.tab.appendChild(vHeader);
 		
+		/*
 		this.content = document.createElement("div");
 		this.content.style.overflowY = "auto";
 		if (!cUseUnsort) this.content.ondrop = (pEvent) => {this.onEntriesdrop(pEvent)};
@@ -196,8 +217,16 @@ class notesTab /*extends SidebarTab*/ {
 		if (cUseUnsort) {
 			this.renderUnsorted();
 		}
+		*/
 		
 		this.renderEntries();
+		
+		this.mainFolder = new noteFolder("root", {
+			getNotes : () => {return this.notes}
+		});
+		this.mainFolder.render();
+		
+		this.tab.appendChild(this.mainFolder.element);
 	}
 	
 	renderEntries() {
@@ -213,19 +242,21 @@ class notesTab /*extends SidebarTab*/ {
 				
 				let vElement = this.notes[vKey].render();
 				
+				/*
 				if (vElement && this.notes[vKey].valid) {
 					this.entries.appendChild(vElement);
 				}
 				else {
 					delete this.notes[vKey];
 				}
+				*/
 			}
 			else {
 				delete this.notes[vKey];
 			}
 		}
 		
-		this.sortEntries();
+		//this.sortEntries();
 		this.rebuildTickList();
 	}
 	
@@ -281,16 +312,16 @@ class notesTab /*extends SidebarTab*/ {
 			if (vClass && NoteManager.canSeeSelf(vNote)) {
 				this.notes[pID] = new vClass(pID, vNote, this.defaultNoteOptions);
 							
-				let vElement = this.notes[pID].render();
+				this.notes[pID].render();
 				
-				if (vElement && this.notes[pID].valid) {
-					this.entries.appendChild(vElement);
+				if (this.notes[pID].valid) {
+					this.mainFolder.addNote(this.notes[pID].id);//appendChild(vElement);
 				}
 				else {
 					delete this.notes[pID];
 				}
 				
-				this.sortEntries();
+				//this.sortEntries();
 				this.rebuildTickList();
 			}
 		}
@@ -302,7 +333,7 @@ class notesTab /*extends SidebarTab*/ {
 		if (vNote) {
 			delete this.notes[pID];
 			
-			vNote.element.remove();
+			vNote.delete();
 		}
 	}
 	
@@ -324,6 +355,7 @@ class notesTab /*extends SidebarTab*/ {
 		}
 	}
 	
+	/*
 	onEntriesdrop(pEvent) {
 		let vDropData = pEvent.dataTransfer.getData("text/plain") ? JSON.parse(pEvent.dataTransfer.getData("text/plain")) : undefined;
 		
@@ -365,6 +397,7 @@ class notesTab /*extends SidebarTab*/ {
 			
 		}
 	}
+	*/
 	
 	onJournaldrop(pJournalID, pNoteID) {
 		if (pJournalID && pNoteID) {
@@ -417,6 +450,7 @@ class notesTab /*extends SidebarTab*/ {
 		}
 	}
 	
+	/*
 	sortBefore(pInsertID, pBeforeID) {
 		let vSortorder = this.sortorder.order;
 		
@@ -463,6 +497,7 @@ class notesTab /*extends SidebarTab*/ {
 			this.sortorder = {order : vSortorder};
 		}
 	}
+	*/
 	
 	filterEntries(pFilter) {
 		if (pFilter) {
@@ -472,6 +507,7 @@ class notesTab /*extends SidebarTab*/ {
 		}
 	}
 	
+	/*
 	sortEntries(pSort = undefined) {
 		let vSort = pSort;
 		if (!vSort) {
@@ -540,4 +576,5 @@ class notesTab /*extends SidebarTab*/ {
 			}
 		}
 	}
+	*/
 }

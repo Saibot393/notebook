@@ -68,6 +68,8 @@ class NoteManager {
 	
 	static viewableNotes() {} //returns an object with all viewable notes
 	
+	static notesIDlist() {} //returns all note ids in this game
+	
 	static async updateNote(pID, pUpdate, pContext = {}) {} //updates pData with pUpdate of note identified iva pID (if access is granted)
 	
 	static requestNoteUpdate(pID, pUpdate, pContext = {}) {} //requests the owner of a Note to update
@@ -135,6 +137,20 @@ class NoteManager {
 		};
 		
 		return vNotes;
+	}
+	
+	static notesIDlist() {
+		let vIDs = [];
+		
+		for (let vUser of Array.from(game.users)) {
+			let vUserNotes = vUser.getFlag(cModuleName, cNotesFlag);
+			
+			if (vUserNotes) {
+				vIDs.push(...Object.keys(vUserNotes));
+			}
+		}
+		
+		return vIDs;
 	}
 	
 	static async updateNote(pID, pUpdate, pContext = {}) {

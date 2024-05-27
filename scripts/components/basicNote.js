@@ -32,6 +32,7 @@ export class basicNote {
 	constructor(pNoteID, pNoteData, pOptions = {}) {
 		this._hasError = false;
 		this._ready = false;
+		this._deleted = false;
 		
 		this._noteID = pNoteID;
 		
@@ -681,7 +682,7 @@ export class basicNote {
 		
 		if (pUpdate.hasOwnProperty("title")) {
 			if (this.title != this.captionElement.querySelector("#title").value) {
-				this.captionElement.querySelector("#title").value = this.title;
+				this.captionElements.title.value = this.title;
 			}
 		}
 		
@@ -725,8 +726,9 @@ export class basicNote {
 	}
 	
 	disablebasic() {
-		this.captionElement.querySelector("#title").disabled = true;
-		this.captionElement.querySelector("#colorchoice").style.display = "none";
+		this.captionElements.title.style.border = "";
+		this.captionElements.title.disabled = true;
+		this.captionElements.color.style.display = "none";
 		this.disable();
 	}
 	
@@ -735,8 +737,9 @@ export class basicNote {
 	}
 	
 	enablebasic() {
-		this.captionElement.querySelector("#title").disabled = false;
-		this.captionElement.querySelector("#colorchoice").style.display = "grid";
+		this.captionElements.title.style.border = "1px grey solid";
+		this.captionElements.title.disabled = false;
+		this.captionElements.color.style.display = "grid";
 		this.enable();
 	}
 	
@@ -863,8 +866,14 @@ export class basicNote {
 	}
 	
 	delete() {
-		this.onClosebasic();
-		
-		NoteManager.deleteNote(this.id);
+		if (!this._deleted) {
+			this._deleted = true;
+			
+			this.onClosebasic();
+			
+			this.element.remove();
+			
+			NoteManager.deleteNote(this.id);
+		}
 	}
 }

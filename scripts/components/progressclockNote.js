@@ -30,7 +30,7 @@ export class progressclockNote extends basicNote {
 				resizeY : false
 			},
 			height: cClockSize + 30,
-			width: cClockSize + 130
+			width: Math.max(cClockSize + 130, 257)
 		}
 	}
 	
