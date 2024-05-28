@@ -224,7 +224,7 @@ class notesTab /*extends SidebarTab*/ {
 		
 		this.mainFolder = new noteFolder("root", {
 			getNotes : () => {return this.notes},
-			createNote : (pEvent) => {noteCreation(this.createEntry)}
+			createNote : (pContext) => {noteCreation((pType, pData) => this.createEntry(pType, pData, pContext))}
 		});
 		this.mainFolder.render();
 		
@@ -297,11 +297,11 @@ class notesTab /*extends SidebarTab*/ {
 		}
 	}
 	
-	createEntry(pType, pData, pContext = {}) {
+	async createEntry(pType, pData, pContext = {}) {
 		let vClass = CONFIG[cModuleName].noteTypes[pType];
 		
 		if (vClass) {
-			NoteManager.createNewNote({...pData, type : pType}, pContext);
+			return await NoteManager.createNewNote({...pData, type : pType}, pContext);
 		}
 	}
 	
@@ -319,7 +319,7 @@ class notesTab /*extends SidebarTab*/ {
 				this.notes[pID].render();
 				
 				if (this.notes[pID].valid) {
-					this.mainFolder.checkNote(pID);
+					this.mainFolder.checkNote(pID, pContext);
 					/*
 					let vTargetFolder = this.mainFolder;
 					

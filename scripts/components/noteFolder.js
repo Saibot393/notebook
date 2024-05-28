@@ -189,7 +189,7 @@ export class noteFolder {
 	}
 	
 	folderofNote(pNote) {
-		return Object.values(this.folders).find(vFolder => vFolder.hasNote(vFolder));
+		return Object.values(this.folders).find(vFolder => vFolder.hasNote(pNote));
 	}
 	
 	get subEntries() {
@@ -603,7 +603,7 @@ export class noteFolder {
 		this.captionElements.newnote.appendChild(vNNPlusIcon);
 		this.captionElements.newnote.onclick = (pEvent) => {
 			pEvent.stopPropagation();
-			this.createNote();
+			this.createNote(this.id);
 		}
 		
 		let vDelete = document.createElement("a");
@@ -670,24 +670,14 @@ export class noteFolder {
 		}
 	}
 	
-	async createNote(pAdd = true) {
-		let vID;
-		
+	async createNote(pFolderID = "") {
 		if (this._createNote) {
-			vID = await this._createNote({});
+			await this._createNote({targetFolder : pFolderID});
 		}
 		else {
 			if (!this.isRoot) {
-				vID = await this.parentFolder.createNote(false);
+				await this.parentFolder.createNote(pFolderID);
 			}
-		}
-		
-		if (vID) {
-			if (pAdd) {
-				this.addNote(vID);
-			}
-			
-			return vID;
 		}
 	}
 	
@@ -797,7 +787,7 @@ export class noteFolder {
 		return false;
 	}
 	
-	checkNote(pID) {
+	checkNote(pID, pContext = {}) {
 		if (this.isRoot) {
 			let vNote = this.notes[pID];
 			
@@ -808,7 +798,18 @@ export class noteFolder {
 					vFolder.applyOrder();
 				}
 				else {
-					this.addNote(pID);
+					let vTargetFolder;
+					
+					if (pContext.targetFolder) {
+						vTargetFolder = this.folders[pContext.targetFolder];
+					}
+					
+					if (vTargetFolder) {
+						vTargetFolder.addNote(pID);
+					}
+					else {
+						this.addNote(pID);
+					}
 				}
 			}
 		}
