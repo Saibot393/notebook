@@ -6,7 +6,7 @@ import {NoteManager} from "../MainData.js";
 const cdefaultSort = {
 	id : "",
 	color : "#181818",
-	title : "no name",
+	title : "",
 	state : true,
 	order : []
 }
@@ -45,6 +45,10 @@ export class noteFolder {
 			else {
 				this._sort = {...cdefaultSort};
 			}
+		}
+		
+		if (!this._sort.title) {
+			this._sort.title = Translate("Titles.newFolder");
 		}
 		
 		this._getNotes = pOptions.getNotes;
@@ -689,25 +693,6 @@ export class noteFolder {
 		this.addFolder(vFolder.id, {position : 0, saveNewOrder : true, applyOrder : true});
 	}
 	
-	delete(pShiftContent = true) {
-		if (!this.isRoot) {
-			let vRoot = this.root;
-			
-			if (pShiftContent) {
-				this.parentFolder.addEntries(this.order, {position : this.position, removeOld : false, saveNewOrder : false, applyOrder : true});
-			}
-			
-			this.parentFolder.removeFolder(this.id, {saveNewOrder : true});
-			
-			this.element.remove();
-			
-			vRoot.deregisterFolder(this.id);
-		}
-		else {
-			console.warn(`Please do not delete this root folder, otherwise bad things will happen (this is not a threat)`);
-		}
-	}
-	
 	addFolder(pID, pOptions = {}) {
 		if (pID == this.id || this.allParents.includes(pID)) return false;
 		
@@ -992,5 +977,63 @@ export class noteFolder {
 		}
 		
 		return i;
+	}
+	
+	applyFilter(pFilter) {
+		if (this.element) {
+			let vElements = Object.values(this.subEntries);
+			let vSelfMatch = !pFilter?.match || pFilter.match({
+				title : this.title,
+				color : this.color
+			});
+			
+			let vMatch = vSelfMatch;
+			
+			for (let vElement of vElements) {
+				if (vElement instanceof noteFolder) {
+					vMatch = vElement.applyFilter(pFilter) || vMatch;
+				}
+				else {
+					if (vSelfMatch) {
+						//if folder matches all non folder elements match
+						vElement.applyFilter(true);
+					}
+					else {
+						vMatch = vElement.applyFilter(pFilter) || vMatch;
+					}
+				}
+			}
+			
+			if (!this.isRoot) {
+				if (!vMatch) {
+					this.element.style.display = "none";
+					return false;
+				}
+				else {
+					this.element.style.display = "";
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	delete(pShiftContent = true) {
+		if (!this.isRoot) {
+			let vRoot = this.root;
+			
+			if (pShiftContent) {
+				this.parentFolder.addEntries(this.order, {position : this.position, removeOld : false, saveNewOrder : false, applyOrder : true});
+			}
+			
+			this.parentFolder.removeFolder(this.id, {saveNewOrder : true});
+			
+			this.element.remove();
+			
+			vRoot.deregisterFolder(this.id);
+		}
+		else {
+			console.warn(`Please do not delete this root folder, otherwise bad things will happen (this is not a threat)`);
+		}
 	}
 }

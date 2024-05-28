@@ -8,6 +8,7 @@
 			
 			"defaultTitle"					: "Note Title",
 			"newNote"						: "New Note",
+			"newFolder"						: "New Folder",
 			"name"							: "Name",
 			"delete"						: "Delete",
 			
@@ -18,6 +19,7 @@
 			"default"						: "default",
 			
 			"createNote"					: "Create new Note",
+			"createFolder"					: "Create Folder",
 			"deleteNoteConfirm"				: "Delete note \"{pTitle}\" ?",
 			
 			"owner"							: "Owner",

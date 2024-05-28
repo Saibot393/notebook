@@ -515,11 +515,14 @@ class notesTab /*extends SidebarTab*/ {
 	*/
 	
 	filterEntries(pFilter) {
+		/*
 		if (pFilter) {
 			for (let vNote of Object.values(this.notes)) {
 				vNote.applyFilter(pFilter);
 			}
 		}
+		*/
+		this.mainFolder.applyFilter(pFilter);
 	}
 	
 	/*

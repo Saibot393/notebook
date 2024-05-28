@@ -8,6 +8,7 @@
 			
 			"defaultTitle"					: "Notiz Titel",
 			"newNote"						: "Neue Notiz",
+			"newFolder"						: "Neuer Ordner",
 			"name"							: "Name",
 			"delete"						: "Löschen",
 			
@@ -18,6 +19,7 @@
 			"default"						: "standard",
 			
 			"createNote"					: "Neue Notiz erschaffen",
+			"createFolder"					: "Ordner erschaffen",
 			"deleteNoteConfirm"				: "Notiz \"{pTitle}\" löschen?",
 			
 			"owner"							: "Besitzer",

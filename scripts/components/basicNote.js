@@ -829,7 +829,7 @@ export class basicNote {
 	
 	applyFilter(pFilter) {
 		if (this.element) {
-			if (pFilter?.match) {
+			if (pFilter != true && pFilter?.match) {
 				let vMatch = pFilter?.match({
 					title : this.title,
 					type : this.type,
@@ -843,12 +843,15 @@ export class basicNote {
 				}
 				else {
 					this.element.style.display = "none";
+					return false;
 				}
 			}
 			else {
 				this.element.style.display = "";
 			}
 		}
+		
+		return true;
 	}
 	
 	popOut() {
