@@ -6,7 +6,9 @@ Basic notes have a title and can be colored for easier recognition. The GM can a
 
 Certain notes (text, list, chat) can be copied into journals via drag and drop. 
 
-Please note, that the notes are saved per user. To edit a note you have access to, either the owner of the note or a GM has to be online.
+Please note:
+  - The notes are saved per user. To edit a note you have access to, either the owner of the note or a GM has to be online.
+  - The folder structure is per user and are not snyched. Every user can have their own folders for their own purposes
 
 Multiple types of notes are available:
 
