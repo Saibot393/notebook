@@ -421,9 +421,14 @@ export class basicNote {
 				}
 			}
 		};
-		this.captionElement.oncontextmenu = () => {
-			if (!this.windowed) {
-				this.toggleContent();
+		this.captionElement.oncontextmenu = (pEvent) => {
+			if (pEvent.shiftKey) {
+				NoteManager.createNewNote({...this.noteData, permissions : {default : "none"}, title : Translate("Titles.copyfromTitle", {pOriginal : this.title})}, {noteCopy : true, copyFrom : this.id});
+			}
+			else {
+				if (!this.windowed) {
+					this.toggleContent();
+				}
 			}
 		};
 		this.captionElement.draggable = true;
@@ -558,10 +563,8 @@ export class basicNote {
 			this.captionElements.sound = vSoundButton;
 			vSoundButton.onclick = () => {this.increaseVolume()};
 			vSoundButton.oncontextmenu = (pEvent) => {
-				console.log(1);
 				if (this.canEdit) {
 					pEvent.stopPropagation();
-					console.log(2);
 					let vFilePicker = new FilePicker({
 						type: "audio",
 						current: this.notifySound,

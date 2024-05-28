@@ -8,6 +8,7 @@
 			
 			"defaultTitle"					: "Notiz Titel",
 			"newNote"						: "Neue Notiz",
+			"copyfromTitle"					: "{pOriginal} - Kopie",
 			"newFolder"						: "Neuer Ordner",
 			"name"							: "Name",
 			"delete"						: "Löschen",

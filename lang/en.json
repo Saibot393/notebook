@@ -8,6 +8,7 @@
 			
 			"defaultTitle"					: "Note Title",
 			"newNote"						: "New Note",
+			"copyfromTitle"					: "{pOriginal} - copy",
 			"newFolder"						: "New Folder",
 			"name"							: "Name",
 			"delete"						: "Delete",

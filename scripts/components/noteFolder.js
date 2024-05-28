@@ -106,7 +106,7 @@ export class noteFolder {
 	
 	get position() {
 		if (this.parentFolder) {
-			this.parentFolder.positionof(this.id);
+			return this.parentFolder.positionof(this.id);
 		}
 		
 		return 0;
@@ -233,6 +233,21 @@ export class noteFolder {
 		}
 		
 		return vSubs;
+	}
+	
+	indexedElement(pIndex) {
+		let vEntry = this.order[pIndex];
+		
+		if (vEntry) {
+			switch (typeof vEntry) {
+				case "string" :
+					return this.notes[vEntry];
+					break;
+				case "object" :
+					return this.folders[vEntry.id];
+					break;
+			}
+		}
 	}
 	
 	get sort() {
@@ -397,6 +412,19 @@ export class noteFolder {
 		
 		return 0;
 	}
+	
+	get createNote() {
+		if (this._createNote) {
+			return this._createNote;
+		}
+		else {
+			if (!this.isRoot) {
+				return this.parentFolder.createNote;
+			}
+		}
+		
+		return () => {console.warning("No note create function saved")}
+	}
 
 	findsubFolder(pID) {
 		return Object.entries(this.allsubFolders).find(vFolder => vFolder.id == pID);
@@ -442,6 +470,23 @@ export class noteFolder {
 			this.save();
 		}
 	}
+	
+	/*
+	
+	reduceNoteOrder(pSubs = true, pSave = true) {
+		this._sort.order = this._sort.order.filter(vElement => (typeof vElement == "object") || this.notes[vElement]);
+		
+		if (pSubs) {
+			for (let vSub if Object.values(this.subFolders)) {
+				vSub.reduceNoteOrder(true, false);
+			}
+		}	
+		
+		if (pSave) {
+			this.save();
+		}
+	}
+	*/
 	
 	render() {
 		this._element = document.createElement("div");
@@ -607,7 +652,7 @@ export class noteFolder {
 		this.captionElements.newnote.appendChild(vNNPlusIcon);
 		this.captionElements.newnote.onclick = (pEvent) => {
 			pEvent.stopPropagation();
-			this.createNote(this.id);
+			this.createNote(pEvent, {targetFolder : this.id});
 		}
 		
 		let vDelete = document.createElement("a");
@@ -674,17 +719,6 @@ export class noteFolder {
 		}
 	}
 	
-	async createNote(pFolderID = "") {
-		if (this._createNote) {
-			await this._createNote({targetFolder : pFolderID});
-		}
-		else {
-			if (!this.isRoot) {
-				await this.parentFolder.createNote(pFolderID);
-			}
-		}
-	}
-	
 	createFolder(pOptions = {}) {
 		let vFolder = new noteFolder(randomID(), {sort : pOptions, parentFolder : this});
 		
@@ -711,7 +745,7 @@ export class noteFolder {
 			}
 			let vOldOrder = this.updatedOrder;
 			
-			let vPosition = Math.max(0, Math.min(vOldOrder.length, vOptions.position + vOffset));
+			let vPosition = Math.max(0, Math.min(vOldOrder.length, Number(vOptions.position) + vOffset));
 
 			let vNewOrder = [...vOldOrder.slice(0, vPosition), vFolder.sort, ...vOldOrder.slice(vPosition, vOldOrder.length)];
 
@@ -750,8 +784,8 @@ export class noteFolder {
 			
 			let vOldOrder = this.updatedOrder;
 			
-			let vPosition = Math.max(0, Math.min(vOldOrder.length, vOptions.position + vOffset));
-			
+			let vPosition = Math.max(0, Math.min(vOldOrder.length, Number(vOptions.position) + vOffset));
+
 			let vNewOrder = [...vOldOrder.slice(0, vPosition), vNote.id, ...vOldOrder.slice(vPosition, vOldOrder.length)];
 			
 			vNote.folder = this;
@@ -805,18 +839,17 @@ export class noteFolder {
 	
 	addEntries(pEntries, pOptions) {
 		let vOptions = {position : 0, removeOld : true, saveNewOrder : true, applyOrder : false, ...pOptions};
-		
 		let vAddedElements = [];
 		
-		for (let vEntry of pEntries) {
+		for (let vEntry of pEntries.reverse()) {
 			let vAdded;
 			
 			if (typeof vEntry == "string") {
-				vAdded = this.addNote(vEntry, {...vOptions, position : vOptions.position + vAddedElements.length, saveNewOrder : false, applyOrder : false})
+				vAdded = this.addNote(vEntry, {...vOptions, saveNewOrder : false, applyOrder : false})
 			}
 			
 			if (typeof vEntry == "object") {
-				vAdded = this.addFolder(vEntry.id, {...vOptions, position : vOptions.position + vAddedElements.length, saveNewOrder : false, applyOrder : false})
+				vAdded = this.addFolder(vEntry.id, {...vOptions, saveNewOrder : false, applyOrder : false})
 			}
 			
 			if (vAdded) {
@@ -855,7 +888,6 @@ export class noteFolder {
 	
 	removeNote(pID, pOptions = {}) {
 		let vOptions = {saveNewOrder : true, ...pOptions};
-		
 		if (this._sort.order.find(vElement => vElement == pID)) {
 			this._sort.order = this._sort.order.filter(vElement => vElement != pID);
 			
@@ -959,17 +991,21 @@ export class noteFolder {
 	}
 	
 	ytoPosition(pY) {
-		let vEntries = Object.values(this.subEntries);
+		let vOrder = this.order;
 		
 		let i = 0;
 		
 		let vBeforeCenter = false;
 		
-		while (i < vEntries.length && !vBeforeCenter) {
-			let vRectangle =  vEntries[i].element.getBoundingClientRect();
+		while (i < vOrder.length && !vBeforeCenter) {
+			let vElement = this.indexedElement(i);
 			
-			let vMiddle = vRectangle.top + vRectangle.height/2;
-			vBeforeCenter = pY < vMiddle;
+			if (vElement) {
+				let vRectangle =  vElement.element.getBoundingClientRect();
+				
+				let vMiddle = vRectangle.top + vRectangle.height/2;
+				vBeforeCenter = pY < vMiddle;
+			}
 			
 			if (!vBeforeCenter) {
 				i = i+1;
@@ -985,7 +1021,7 @@ export class noteFolder {
 			let vSelfMatch = !pFilter?.match || pFilter.match({
 				title : this.title,
 				color : this.color
-			});
+			}, true);
 			
 			let vMatch = vSelfMatch;
 			

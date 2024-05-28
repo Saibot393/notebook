@@ -100,9 +100,11 @@ export class noteFilter {
 			this.inputs[vKey].oninput = () => {
 				this.updateFilter();
 			}
+			/*
 			this.inputs[vKey].onchange = () => {
 				this.updateFilter();
 			}
+			*/
 		}
 	}
 	
@@ -139,12 +141,11 @@ export class noteFilter {
 		this.startFilter();
 	}
 	
-	match(pData) {
+	match(pData, patLeastOne = false) {
 		if (!isEmpty(this.filterData)) {
-			let vMatch = true;
+			let vMatch = false;
 			for (let vKey of Object.keys(this.filterData)) {
-				vMatch = true;
-				
+				vMatch = !patLeastOne;
 				if (pData.hasOwnProperty(vKey)) {
 					switch (vKey) {
 						case "title" :

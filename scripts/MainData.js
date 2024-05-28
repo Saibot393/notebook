@@ -17,7 +17,7 @@ const cNotesFlag = "notes";
 
 const cDefaultNote = {
 	type : "text",
-	title : "no title",
+	title : "",
 	content : {},
 	owner : "",
 	permissions : {

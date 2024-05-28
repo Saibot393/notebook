@@ -144,12 +144,12 @@ class notesTab /*extends SidebarTab*/ {
 		
 		let vNewNoteButton = document.createElement("button");
 		vNewNoteButton.classList.add("create-document", "create-entry");
-		vNewNoteButton.onclick = (pEvent) => {
+		vNewNoteButton.onclick = (pEvent, pContext = {}) => {
 			if (pEvent.shiftKey) {
-				this.createEntry("text");
+				this.createEntry("text", {}, pContext);
 			}
 			else {
-				noteCreation(this.createEntry);
+				noteCreation((pType, pData) => this.createEntry(pType, pData, pContext));
 			}
 		};
 		
@@ -165,8 +165,8 @@ class notesTab /*extends SidebarTab*/ {
 		let vNewFolderButton = document.createElement("button");
 		vNewFolderButton.classList.add("create-document", "create-entry");
 		vNewFolderButton.onclick = (pEvent) => {
-			if (this.mainFolder) {
-				this.mainFolder.createFolder();
+			if (this.rootFolder) {
+				this.rootFolder.createFolder();
 			}
 		};
 		
@@ -222,13 +222,13 @@ class notesTab /*extends SidebarTab*/ {
 		
 		this.renderEntries();
 		
-		this.mainFolder = new noteFolder("root", {
+		this.rootFolder = new noteFolder("root", {
 			getNotes : () => {return this.notes},
-			createNote : (pContext) => {noteCreation((pType, pData) => this.createEntry(pType, pData, pContext))}
+			createNote : vNewNoteButton.onclick//(pContext) => {noteCreation((pType, pData) => this.createEntry(pType, pData, pContext))}
 		});
-		this.mainFolder.render();
+		this.rootFolder.render();
 		
-		this.tab.appendChild(this.mainFolder.element);
+		this.tab.appendChild(this.rootFolder.element);
 	}
 	
 	renderEntries() {
@@ -319,12 +319,12 @@ class notesTab /*extends SidebarTab*/ {
 				this.notes[pID].render();
 				
 				if (this.notes[pID].valid) {
-					this.mainFolder.checkNote(pID, pContext);
+					this.rootFolder.checkNote(pID, pContext);
 					/*
-					let vTargetFolder = this.mainFolder;
+					let vTargetFolder = this.rootFolder;
 					
 					if (pContext.targetFolderID) {
-						vTargetFolder = this.mainFolder.folder[pContext.targetFolderID] || this.mainFolder;
+						vTargetFolder = this.rootFolder.folder[pContext.targetFolderID] || this.rootFolder;
 					}
 					
 					if (vTargetFolder) {
@@ -522,7 +522,7 @@ class notesTab /*extends SidebarTab*/ {
 			}
 		}
 		*/
-		this.mainFolder.applyFilter(pFilter);
+		this.rootFolder.applyFilter(pFilter);
 	}
 	
 	/*
