@@ -1,3 +1,11 @@
+## v1.2.0
+- Added folders
+- Notes can now be copied using shift+right-click
+- Improved Counter and Round Counter notes input logic
+- Improved list Notes
+  - Items can now be navigated using arow keys
+  - Minimal render improvement
+
 ## v1.1.4
 - Improved resize for some notes
 
