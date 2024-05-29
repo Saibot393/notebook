@@ -63,11 +63,11 @@ export class macroNote extends basicNote {
 	renderContent() {
 		let vListDIV = document.createElement("div");
 		vListDIV.style.overflowY = "auto";
-		vListDIV.style.width = "auto";
-		vListDIV.style.height = "auto";
+		vListDIV.style.width = "100%";
+		vListDIV.style.height = "100%";
 		vListDIV.style.display = "flex";
 		vListDIV.style.flexWrap = "wrap";
-		vListDIV.style.padding = cMacroMargin + "px";
+		vListDIV.style.padding = (cMacroMargin - 2) + "px"; //-2 to prevent scroll bar from appearing prematurely
 		vListDIV.style.justifyContent = "center";
 		vListDIV.ondrop = (pEvent) => {
 			if (this.canEdit) {
@@ -264,6 +264,7 @@ export class macroNote extends basicNote {
 		}
 		else {
 			if (this.contentElements.addelement) this.contentElements.addelement.style.display = "none";
+			
 			if (!this.windowed) {
 				this.contentElements.list.style.maxHeight = this.smallHeightLimit;
 			}

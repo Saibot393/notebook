@@ -1,28 +1,44 @@
+//INTERNAL - for this module
 import {cModuleName, isActiveElement} from "../utils/utils.js";
 
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
 
 import {registerHoverShadow} from "../helpers/visualHelpers.js";
+//INTERNAL
+/*EXTERNAL - for other modules
+Hooks.once("notebook.notesInit", ({NoteManager, basicNote}) => {
+	//NoteManager can be used to gain more information/data about notes and to interact with the note data structure (be careful, and ONLY use the NoteManager to interact with note data)
+	class templateNote extends basicNote {
+		
+	}
+	
+	CONFIG["notebook"].noteTypes.template = templateNote;
+});
+EXTERNAL*/
 
 export class templateNote extends basicNote {
 	onready() {
 		//OPTIONAL
+		//called when the note is rendered and ready for use, e.g. used to on hooks
 	}
 	
 	get type() {
 		//REQUIRED
+		//convention : "moduleid_notetype"
 		return "template";
 	}
 	
 	get defaultContent() {
 		//RECOMMENDED
-		return {}; //return default content
+		//return default content
+		return {}; 
 	}
 	
 	get icon() {
 		//RECOMMENDED
-		return "fa-note-sticky"; //unique icon from fonts awesome for this note type (can also be array)
+		//unique icon from fonts awesome for this note type (can also be array)
+		return "fa-note-sticky";
 	}
 	
 	get JournalPage() {

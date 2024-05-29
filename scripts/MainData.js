@@ -507,6 +507,8 @@ Hooks.once("init", () => {
 	game.modules.get(cModuleName).api = {
 		NoteManager : NoteManager
 	}
+	
+	Hooks.call(cModuleName + ".notesInit", {NoteManager, basicNote});
 });
 
 export {NoteManager};

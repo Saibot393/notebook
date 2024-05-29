@@ -10,10 +10,6 @@ export const cFolderIcon = "fa-folder";
 
 const cUseUnsort = false;
 
-Hooks.once("init", () => {
-	Hooks.call(cModuleName + ".notesInit", {});
-});
-
 Hooks.once("ready", async () => {
 //Hooks.on("renderSidebarTab", async (pDirectory, pElements, pContext) => {
 	await cleanUserData(); //clean before to prevent bugs during delete
