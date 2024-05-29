@@ -62,11 +62,11 @@ export class basicNote {
 	}
 	
 	static get type() {
-		return this.name.substr(0, this.name.indexOf(cNotePostFix));
+		return this.name.substr(0, this.name.indexOf(cNotePostFix)) || this.name;
 	}
 	
 	get type() {
-		return this.constructor.name.substr(0, this.constructor.name.indexOf(cNotePostFix));
+		return this.constructor.name.substr(0, this.constructor.name.indexOf(cNotePostFix)) || this.constructor.name;
 	}
 	
 	static get displayType() {
