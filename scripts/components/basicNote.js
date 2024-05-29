@@ -676,12 +676,11 @@ export class basicNote {
 		let vNote = NoteManager.getNote(this.id, true);
 		
 		if (vNote) {
-			this.updateRender(vNote, vNote);
+			this.updateRender(vNote, vNote, {rerender : true});
 		}
 	}
 	
 	updateRender(pupdatedNote, pUpdate, pContext = {}) {
-		console.log(pupdatedNote);
 		this._noteData = pupdatedNote;
 		
 		if (pUpdate.hasOwnProperty("title")) {
@@ -726,7 +725,6 @@ export class basicNote {
 	}
 	
 	updateContent(pContent, pContext = {}) {
-		console.log(pContent);
 		this.updateData({content : pContent}, {content : pContext});
 	}
 	
@@ -873,13 +871,17 @@ export class basicNote {
 		
 	}
 	
+	close() {
+		this.onClosebasic();
+		
+		if (!this.windowed) this.element.remove();
+	}
+	
 	delete() {
 		if (!this._deleted) {
 			this._deleted = true;
 			
-			this.onClosebasic();
-			
-			this.element.remove();
+			this.close();
 			
 			NoteManager.deleteNote(this.id);
 		}

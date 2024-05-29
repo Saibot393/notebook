@@ -93,7 +93,7 @@ export class noteWindow extends Application {
 				this.close();
 			}
 			else {
-				this.note.updateRender(pNewNoteData, pNoteDataUpdate);
+				this.note.updateRender(pNewNoteData, pNoteDataUpdate, pContext);
 			}
 		}
 	}
@@ -139,7 +139,7 @@ export class noteWindow extends Application {
 			Hooks.off(vHook.name, vHook.id);
 		}
 		
-		this.note.onclose();
+		this.note.close();
 		
 		super.close();
 	}

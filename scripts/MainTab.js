@@ -306,7 +306,7 @@ class notesTab /*extends SidebarTab*/ {
 	}
 	
 	addNote(pID, pContext = {}) {
-		this.deleteNote(pID);
+		this.closeNote(pID);
 		
 		let vNote = NoteManager.getNote(pID);
 		
@@ -342,13 +342,13 @@ class notesTab /*extends SidebarTab*/ {
 		}
 	}
 	
-	deleteNote(pID) {
+	closeNote(pID) {
 		let vNote = this.notes[pID];
 		
 		if (vNote) {
 			delete this.notes[pID];
 			
-			vNote.delete();
+			vNote.close();
 		}
 	}
 	
@@ -357,7 +357,7 @@ class notesTab /*extends SidebarTab*/ {
 		
 		if (vNote) {
 			if (pContext.deletion || !NoteManager.canSeeSelf(pNewNoteData)) {
-				this.deleteNote(pNewNoteData.id);
+				this.closeNote(pNewNoteData.id);
 			}
 			else {
 				vNote.updateRender(pNewNoteData, pNoteDataUpdate, pContext);

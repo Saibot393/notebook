@@ -229,7 +229,7 @@ export class listNote extends basicNote {
 				
 				vList = [...vList.slice(0, vPosition), ...vInsertList, ...vList.slice(vPosition, vList.length)];
 
-				this.updateContent({list : vList}, {position : vPosition, inserts : vInsert});
+				this.updateContent({list : vList}, {position : vPosition, insert : vInsert});
 			}
 		}
 	}
@@ -282,7 +282,29 @@ export class listNote extends basicNote {
 		}
 	}
 	
-	renderList() {
+	renderList(pContext = undefined) {
+		let vSelectTarget;
+		
+		if (pContext?.content?.hasOwnProperty("position") && pContext?.content?.hasOwnProperty("insert")) {
+			let vPosition = pContext.content.position;
+			let vInsert = pContext.content.insert;
+			
+			let vSelectedElement = this.contentElements.listElements.find(vElement => isActiveElement(vElement.text));
+
+			if (vSelectedElement) {
+				let vSelectedIndex = vSelectedElement.index;
+				
+				if (vSelectedIndex >= vInsert[0] && vSelectedIndex <= vInsert[1]) {
+					vSelectTarget = vSelectedIndex - (vInsert[0] - vPosition);
+				}
+				else {
+					if (vSelectedIndex < vInsert[0] && vSelectedIndex >= vPosition) {
+						vSelectTarget = vSelectTarget + (vInsert[1] - vInsert[0]);
+					}
+				}
+			}
+		}
+		
 		let vNotify = false;
 		
 		if (!this.contentElements.listElements) {
@@ -317,7 +339,6 @@ export class listNote extends basicNote {
 				let vEntry = document.createElement("div");
 				vEntry.style.display = "flex";
 				vEntry.style.marginBottom = "3px";
-				vEntry.draggable = true;
 				vEntry.ondragstart = (pEvent) => {
 					pEvent.dataTransfer.setData("text/plain", JSON.stringify({
 						index : i,
@@ -405,7 +426,8 @@ export class listNote extends basicNote {
 					div : vEntry,
 					check : vCheck,
 					text : vText,
-					delete : vDelete
+					delete : vDelete,
+					index : i
 				}
 			}
 
@@ -436,6 +458,14 @@ export class listNote extends basicNote {
 			this.contentElements.listElements.pop();
 		}
 		
+		if (vSelectTarget != undefined) {
+			let vSelect = this.contentElements.listElements[vSelectTarget]?.text;
+			
+			if (vSelect) {
+				vSelect.select();
+			}
+		}
+		
 		if (vNotify) {
 			this.soundNotify();
 		}
@@ -449,9 +479,9 @@ export class listNote extends basicNote {
 		this.list = vList;
 	}
 	
-	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
+	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate, pContext) {
 		if (pContentUpdate.list) {
-			this.renderList();
+			this.renderList(pContext);
 		}
 	}
 	
@@ -459,6 +489,7 @@ export class listNote extends basicNote {
 		for (let i = 0; i < this.contentElements.listElements.length; i++) {
 			this.contentElements.listElements[i].text.disabled = true;
 			this.contentElements.listElements[i].delete.style.display = "none";
+			this.contentElements.listElements[i].div.draggable = false;
 		}
 		
 		this.contentElements.add.style.display = "none";
@@ -468,6 +499,7 @@ export class listNote extends basicNote {
 		for (let i = 0; i < this.contentElements.listElements.length; i++) {
 			this.contentElements.listElements[i].text.disabled = false;
 			this.contentElements.listElements[i].delete.style.display = "";
+			this.contentElements.listElements[i].div.draggable = true;
 		}
 		
 		if (this.isMouseHover) {
