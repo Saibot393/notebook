@@ -681,6 +681,7 @@ export class basicNote {
 	}
 	
 	updateRender(pupdatedNote, pUpdate, pContext = {}) {
+		console.log(pupdatedNote);
 		this._noteData = pupdatedNote;
 		
 		if (pUpdate.hasOwnProperty("title")) {
@@ -725,6 +726,7 @@ export class basicNote {
 	}
 	
 	updateContent(pContent, pContext = {}) {
+		console.log(pContent);
 		this.updateData({content : pContent}, {content : pContext});
 	}
 	

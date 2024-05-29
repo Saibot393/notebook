@@ -140,7 +140,7 @@ export class noteFolder {
 	get allsubFolders() {
 		let vSubs = {};
 		
-		for (let vSub of Object.entries(this.subFolders)) {
+		for (let vSub of Object.values(this.subFolders)) {
 			vSubs[vSub.id] = vSub;
 			vSubs = {...vSubs, ...vSub.allsubFolders};
 		}
@@ -506,8 +506,8 @@ export class noteFolder {
 			this.captionElement.style.padding = "6px";
 			this.captionElement.style.display = "flex";
 			this.captionElement.style.textAlign = "center";
-			this.captionElement.ondragstart = (event) => {
-				event.dataTransfer.setData("text/plain", JSON.stringify({
+			this.captionElement.ondragstart = (pEvent) => {
+				pEvent.dataTransfer.setData("text/plain", JSON.stringify({
 					id : this.id,
 					isFolder : true
 				}));

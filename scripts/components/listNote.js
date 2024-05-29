@@ -27,7 +27,7 @@ export class listNote extends basicNote {
 	}
 	
 	get list() {
-		return this.content.list;
+		return [...this.content.list];
 	}
 	
 	set list(pList) {
@@ -84,6 +84,14 @@ export class listNote extends basicNote {
 		vListdiv.style.flexDirection = "column"
 		vListdiv.style.height = "100%";
 		vListdiv.style.overflowY = "auto";
+		vListdiv.ondrop = (pEvent) => {
+			let vDropData = pEvent.dataTransfer.getData("text/plain") ? JSON.parse(pEvent.dataTransfer.getData("text/plain")) : undefined;
+			
+			if (vDropData?.isListItem) {
+				pEvent.stopPropagation();
+				this.onListItemDrop(pEvent, vDropData);
+			}
+		}
 		
 		let vList = document.createElement("div");
 		vList.style.marginTop = "3px";
@@ -185,9 +193,9 @@ export class listNote extends basicNote {
 	insert(pSource, pPosition) {
 		let vList = this.list;
 		
-		let vPosition = Math.max(0, Math.min(vList.length-1, pPosition));
-		
-		if (pSource != vPosition && pSource < vList.length && pSource > 0) {
+		let vPosition = Math.max(0, Math.min(vList.length, pPosition));
+
+		if (pSource != vPosition && pSource < vList.length && pSource >= 0) {
 			let vInsert = [pSource];
 			
 			let vIndentLimit = vList[pSource].indent;
@@ -201,7 +209,7 @@ export class listNote extends basicNote {
 			vInsert.push(i - 1);
 			
 			let vCopyLength = vInsert[1] - vInsert[0] + 1;
-			
+
 			if ((vPosition < vInsert[0] || vPosition > vInsert[1]) && vCopyLength > 0) {
 				if (vPosition > vInsert[1]) {
 					vPosition = vPosition - (vCopyLength);
@@ -220,7 +228,7 @@ export class listNote extends basicNote {
 				}
 				
 				vList = [...vList.slice(0, vPosition), ...vInsertList, ...vList.slice(vPosition, vList.length)];
-				
+
 				this.updateContent({list : vList}, {position : vPosition, inserts : vInsert});
 			}
 		}
@@ -230,9 +238,47 @@ export class listNote extends basicNote {
 		if (pID < this.list.length) {
 			let vBuffer = this.list;
 			
+			let vIndentLimit = vBuffer[pID].indent;
+			
+			let i = pID + 1;
+			
+			while (i < vBuffer.length && vBuffer[i].indent > vIndentLimit) {
+				vBuffer[i].indent = vBuffer[i].indent - 1;
+				i = i + 1;
+			}
+			
 			vBuffer = vBuffer.slice(0, pID).concat(vBuffer.slice(pID+1, this.list.length));
 			
 			this.list = vBuffer;
+		}
+	}
+	
+	onListItemDrop(pEvent, pDropData = undefined) {
+		let vDropData = pDropData || pEvent.dataTransfer.getData("text/plain") ? JSON.parse(pEvent.dataTransfer.getData("text/plain")) : undefined;
+		
+		if (vDropData?.listNoteID == this.id) {
+			let vYDrop = pEvent.pageY;
+			
+			let i = 0;
+		
+			let vBeforeCenter = false;
+			
+			while (i < this.contentElements.listElements.length && !vBeforeCenter) {
+				let vElement = this.contentElements.listElements[i].div;
+				
+				if (vElement) {
+					let vRectangle =  vElement.getBoundingClientRect();
+					
+					let vMiddle = vRectangle.top + vRectangle.height/2;
+					vBeforeCenter = vYDrop < vMiddle;
+				}
+				
+				if (!vBeforeCenter) {
+					i = i+1;
+				}
+			}
+			
+			this.insert(vDropData.index, i);
 		}
 	}
 	
@@ -272,6 +318,13 @@ export class listNote extends basicNote {
 				vEntry.style.display = "flex";
 				vEntry.style.marginBottom = "3px";
 				vEntry.draggable = true;
+				vEntry.ondragstart = (pEvent) => {
+					pEvent.dataTransfer.setData("text/plain", JSON.stringify({
+						index : i,
+						isListItem : true,
+						listNoteID : this.id
+					}));
+				};
 				
 				let vCheckBorder = document.createElement("div");
 				vCheckBorder.style.margin = "auto";
