@@ -9,24 +9,29 @@ import {registerHoverShadow} from "../helpers/visualHelpers.js";
 /*EXTERNAL - for other modules
 Hooks.once("notebook.notesInit", ({NoteManager, basicNote}) => {
 	//NoteManager can be used to gain more information/data about notes and to interact with the note data structure (be careful, and ONLY use the NoteManager to interact with note data)
+	//convention for class name : "moduleid_notetypeNote"
 	class templateNote extends basicNote {
 		
 	}
 	
-	CONFIG["notebook"].noteTypes.template = templateNote;
+	CONFIG["notebook"].noteTypes[templateNote.type] = templateNote;
 });
 EXTERNAL*/
 
 export class templateNote extends basicNote {
+	static get displayType() {
+		//OPTIONAL (only necessary if type is not added to notebooks translation name space)
+		return Translate("Titles.notesTypes." + this.type);
+	}
+	
+	get displayType() {
+		//OPTIONAL (only necessary if type is not added to notebooks translation name space)
+		return Translate("Titles.notesTypes." + this.type);
+	}
+	
 	onready() {
 		//OPTIONAL
 		//called when the note is rendered and ready for use, e.g. used to on hooks
-	}
-	
-	get type() {
-		//REQUIRED
-		//convention : "moduleid_notetype"
-		return "template";
 	}
 	
 	get defaultContent() {

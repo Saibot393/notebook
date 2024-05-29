@@ -6,10 +6,6 @@ import {basicNote} from "./basicNote.js";
 import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
 export class sliderNote extends basicNote {
-	get type() {
-		return "slider";
-	}
-	
 	get icon() {
 		return "fa-sliders";
 	}

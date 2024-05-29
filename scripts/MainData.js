@@ -12,6 +12,8 @@ import {progressclockNote} from "./components/progressclockNote.js";
 import {roundcounterNote} from "./components/roundcounterNote.js";
 import {macroNote} from "./components/macroNote.js";
 
+const cNoteTypes = [textNote, counterNote, listNote, sliderNote, chatNote, timerNote, progressclockNote, roundcounterNote, macroNote];
+
 CONFIG.debug.notebook = false;
 
 const cNotesFlag = "notes";
@@ -37,15 +39,17 @@ export const cPermissionTypes = ["default", "none", "see", "edit"];
 CONFIG[cModuleName] = {
 	basicNote : basicNote,
 	noteTypes : {
-		text : textNote,
-		counter : counterNote,
-		list : listNote,
-		slider : sliderNote,
-		chat : chatNote,
-		timer : timerNote,
-		progressclock : progressclockNote,
-		roundcounter : roundcounterNote,
-		macro : macroNote
+		/*
+		text : text,
+		counter : counter,
+		list : list,
+		slider : slider,
+		chat : chat,
+		timer : timer,
+		progressclock : progressclock,
+		roundcounter : roundcounter,
+		macro : macro
+		*/
 	}
 }
 
@@ -114,20 +118,25 @@ class NoteManager {
 		
 		let vContext = {...pContext};
 		
-		if (!vData.title) {
-			vData.title = Translate("Titles.newNote");
-		}
-		
-		//await game.user.setFlag(cModuleName, cNotesFlag + `.${vID}`, vData);
-		await game.user.update({
-			flags : {
-				[cModuleName] : {
-					[cNotesFlag + `.${vID}`] : vData
-				}
+		if (CONFIG[cModuleName].noteTypes[vData.type]) {
+			if (!vData.title) {
+				vData.title = Translate("Titles.newNote");
 			}
-		}, vContext);
-		
-		return vID;
+			
+			//await game.user.setFlag(cModuleName, cNotesFlag + `.${vID}`, vData);
+			await game.user.update({
+				flags : {
+					[cModuleName] : {
+						[cNotesFlag + `.${vID}`] : vData
+					}
+				}
+			}, vContext);
+			
+			return vID;
+		}
+		else {
+			console.warn(`Note type "{vData.type}" unknown, tried creating note with data:`, vData)
+		}
 	}
 	
 	static viewableNotes() {
@@ -504,11 +513,17 @@ Hooks.on("updateUser", (pUser, pChanges, pContext) => {
 });
 
 Hooks.once("init", () => {
+	for (let vClass of cNoteTypes) {
+		CONFIG[cModuleName].noteTypes[vClass.type] = vClass;
+	}
+	
 	game.modules.get(cModuleName).api = {
 		NoteManager : NoteManager
 	}
 	
-	Hooks.call(cModuleName + ".notesInit", {NoteManager, basicNote});
+	Hooks.callAll(cModuleName + ".notesInit", {NoteManager, basicNote});
+	
+	Hooks.callAll(cModuleName + ".registerNoteSettings", {NoteManager, basicNote});
 });
 
 export {NoteManager};

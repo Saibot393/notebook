@@ -6,10 +6,6 @@ import {basicNote} from "./basicNote.js";
 import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
 export class chatNote extends basicNote {
-	get type() {
-		return "chat";
-	}
-	
 	get icon() {
 		return "fa-comment";
 	}

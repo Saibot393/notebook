@@ -12,6 +12,7 @@
 			"newFolder"						: "Neuer Ordner",
 			"name"							: "Name",
 			"delete"						: "Löschen",
+			"manually"						: "Manuell",
 			
 			"searchNote"					: "Notiz suchen",
 			
@@ -56,11 +57,40 @@
 			"segments"						: "Segmente",
 			"changedirection"				: "Richtung ändern",
 			"reset"							: "zurücksetzen",
-			"days"							: "Tage"
+			"days"							: "Tage",
+			
+			"none"							: "Nichts"
 		},
 		
 		"Descrp" : {
 			"removeshiftclick"				: "Entfernen mit shift+click"
+		},
+		
+		"Settings" : {
+			"shiftquickcreate" : {
+				"name"						: "Shift schnell Erschaffung",
+				"descrp"					: "Notiztyp für neue Notizen wenn shift gehalten wird während eine neue Notiz erschaffen wird"
+			},
+			
+			"ctrlquickcreate" : {
+				"name"						: "STRG schnell Erschaffung",
+				"descrp"					: "Notiztyp für neue Notizen wenn STRG gehalten wird während eine neue Notiz erschaffen wird"
+			},
+			
+			"altquickcreate" : {
+				"name"						: "ALT schnell Erschaffung",
+				"descrp"					: "Notiztyp für neue Notizen wenn ALT gehalten wird während eine neue Notiz erschaffen wird"
+			},
+			
+			"smallnoteheight" : {
+				"name"						: "Kleine Notiz Höhe",
+				"descrp"					: "Die Höhe auf welche manche Notizen reduziert werden wenn die Maus nicht in der Notiz ist"
+			},	
+			
+			"largenoteheight" : {
+				"name"						: "Große Notiz Höhe",
+				"descrp"					: "Die Höhe auf welche manche Notizen expandiert werden wenn die Maus in der Notiz ist"
+			}
 		}
 	}
 }

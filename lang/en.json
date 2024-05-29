@@ -12,6 +12,7 @@
 			"newFolder"						: "New Folder",
 			"name"							: "Name",
 			"delete"						: "Delete",
+			"manually"						: "Manually",
 			
 			"searchNote"					: "Search Note",
 			
@@ -56,11 +57,40 @@
 			"segments"						: "Segments",
 			"changedirection"				: "change direction",
 			"reset"							: "reset",
-			"days"							: "days"
+			"days"							: "days",
+			
+			"none"							: "None"
 		},
 		
 		"Descrp" : {
 			"removeshiftclick"				: "remove with shift+click"
+		},
+		
+		"Settings" : {
+			"shiftquickcreate" : {
+				"name"						: "Shift quick create",
+				"descrp"					: "Note type created when holding shift while creating a new note"
+			},
+			
+			"ctrlquickcreate" : {
+				"name"						: "CTRL quick create",
+				"descrp"					: "Note type created when holding CTRL while creating a new note"
+			},
+			
+			"altquickcreate" : {
+				"name"						: "ALT quick create",
+				"descrp"					: "Note type created when holding ALT while creating a new note"
+			},
+			
+			"smallnoteheight" : {
+				"name"						: "Small note height",
+				"descrp"					: "The height some notes collapse to when not actively hovered"
+			},	
+			
+			"largenoteheight" : {
+				"name"						: "Large note height",
+				"descrp"					: "The height some notes expand to when actively hovered"
+			}
 		}
 	}
 }

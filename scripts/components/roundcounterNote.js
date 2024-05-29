@@ -18,10 +18,6 @@ export class roundcounterNote extends basicNote {
 		}
 	}
 	
-	get type() {
-		return "roundcounter";
-	}
-	
 	get icon() {
 		return ["fa-clock-rotate-left", "fa-flip-horizontal"];
 	}

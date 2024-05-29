@@ -32,10 +32,6 @@ export class macroNote extends basicNote {
 		})
 	}
 	
-	get type() {
-		return "macro";
-	}
-	
 	get icon() {
 		return "fa-code";
 	}
@@ -117,6 +113,7 @@ export class macroNote extends basicNote {
 				this.contentElements.listElements[i].style.backgroundSize = "contain";
 				this.contentElements.listElements[i].style.display = "flex";
 				this.contentElements.listElements[i].style.flexDirection = "column";
+				this.contentElements.listElements[i].style.borderColor = this.primeColor;
 				
 				this.contentElements.list.appendChild(this.contentElements.listElements[i]);
 			}
@@ -142,7 +139,7 @@ export class macroNote extends basicNote {
 				vElement.style.display = "flex";
 				vElement.style.backgroundImage = `url("${vMacro.img}")`;
 				vElement.style.borderRadius = "5px";
-				vElement.style.borderColor = "#181818";
+				//vElement.style.borderColor = "#181818";
 				vElement.style.borderStyle = "solid";
 				vElement.draggable = true;
 				vElement.oncontextmenu = (pEvent) => {
@@ -191,7 +188,6 @@ export class macroNote extends basicNote {
 			vElement.appendChild(this.contentElements.plus);
 			vElement.style.backgroundImage = ``;
 			vElement.style.borderRadius = "10px";
-			vElement.style.borderColor = this.primeColor;
 			vElement.style.borderStyle = "dashed";
 			vElement.draggable = false;
 			vElement.oncontextmenu = this.contentElements.plus.oncontextmenu;

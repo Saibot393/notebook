@@ -17,7 +17,7 @@ export function noteCreation(pCreationCallback) {
 	for (let vType of vTypes) {
 		vContent +=	`
 					<option value=${vType}>
-						${Translate("Titles.notesTypes." + vType)}
+						${CONFIG[cModuleName].noteTypes[vType].displayType/*Translate("Titles.notesTypes." + vType)*/}
 					</option>
 					`
 	}

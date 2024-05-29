@@ -28,6 +28,8 @@ const cShowIcon = true;
 
 const cVolumeHook = "soundVolume";
 
+const cNotePostFix = "Note";
+
 export class basicNote {
 	constructor(pNoteID, pNoteData, pOptions = {}) {
 		this._hasError = false;
@@ -57,6 +59,22 @@ export class basicNote {
 		this._soundvolumehookID = Hooks.on(`${cModuleName}.${cVolumeHook}.${this.id}`, () => {this.synchVolumeIcon()});
 
 		//this.render();
+	}
+	
+	static get type() {
+		return this.name.substr(0, this.name.indexOf(cNotePostFix));
+	}
+	
+	get type() {
+		return this.constructor.name.substr(0, this.constructor.name.indexOf(cNotePostFix));
+	}
+	
+	static get displayType() {
+		return Translate("Titles.notesTypes." + this.type);
+	}
+	
+	get displayType() {
+		return Translate("Titles.notesTypes." + this.type);
 	}
 	
 	copy() {
@@ -95,10 +113,6 @@ export class basicNote {
 	
 	get id() {
 		return this._noteID;
-	}
-	
-	get type() {
-		return undefined;
 	}
 	
 	get icon() {
@@ -222,7 +236,7 @@ export class basicNote {
 	}
 	
 	get smallHeightLimit() {
-		return "87px";
+		return game.settings.get(cModuleName, "smallnoteheight") + "px";
 	}
 	
 	get largeHeightLimit() {
@@ -230,7 +244,7 @@ export class basicNote {
 			return "100%";
 		}
 		
-		return "174px";
+		return game.settings.get(cModuleName, "largenoteheight") + "px";
 	}
 	
 	get isMouseHover() {
@@ -518,7 +532,7 @@ export class basicNote {
 			if (this.windowed) vNoteIcon.style.cursor = "move";
 			vNoteIcon.style.color = this.backColor;
 			vNoteIcon.onclick = this.captionElement.onclick;
-			vNoteIcon.setAttribute("data-tooltip", Translate("Titles.typeTitle", {pType : Translate("Titles.notesTypes." + this.type)}));
+			vNoteIcon.setAttribute("data-tooltip", Translate("Titles.typeTitle", {pType : this.displayType}));
 			vElements.push(vNoteIcon);
 			this.captionElements.icon = vNoteIcon;
 		}

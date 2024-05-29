@@ -10,10 +10,6 @@ const cLineWidth = 4;
 const cSegmentColor = "indianred";
 
 export class progressclockNote extends basicNote {
-	get type() {
-		return "progressclock";
-	}
-	
 	get icon() {
 		return "fa-chart-pie";
 	}

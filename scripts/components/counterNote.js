@@ -14,10 +14,6 @@ const cFastNumber = {
 }
 
 export class counterNote extends basicNote {
-	get type() {
-		return "counter";
-	}
-	
 	get icon() {
 		return "fa-hashtag";
 	}

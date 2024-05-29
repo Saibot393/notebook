@@ -12,10 +12,6 @@ const cMaxIndent = 5;
 const cIndent = "25"; //px
 
 export class listNote extends basicNote {
-	get type() {
-		return "list";
-	}
-	
 	get icon() {
 		return "fa-list";
 	}

@@ -16,10 +16,6 @@ const cDownIcon = "fa-rotate-left";
 const cNowIcon = "fa-circle-dot";
 
 export class timerNote extends basicNote {
-	get type() {
-		return "timer";
-	}
-	
 	get icon() {
 		return "fa-clock";
 	}

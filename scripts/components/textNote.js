@@ -6,10 +6,6 @@ import {basicNote} from "./basicNote.js";
 let vMaxTextLength = 20000;
 
 export class textNote extends basicNote {
-	get type() {
-		return "text";
-	}
-	
 	get icon() {
 		return "fa-font";
 	}

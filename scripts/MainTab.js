@@ -141,8 +141,19 @@ class notesTab /*extends SidebarTab*/ {
 		let vNewNoteButton = document.createElement("button");
 		vNewNoteButton.classList.add("create-document", "create-entry");
 		vNewNoteButton.onclick = (pEvent, pContext = {}) => {
+			let vQuickType;
 			if (pEvent.shiftKey) {
-				this.createEntry("text", {}, pContext);
+				vQuickType = game.settings.get(cModuleName, "shiftquickcreate");
+			}
+			if (pEvent.ctrlKey) {
+				vQuickType = game.settings.get(cModuleName, "ctrlquickcreate");
+			}
+			if (pEvent.altKey) {
+				vQuickType = game.settings.get(cModuleName, "altquickcreate");
+			}
+			
+			if (vQuickType) {
+				this.createEntry(vQuickType, {}, pContext);
 			}
 			else {
 				noteCreation((pType, pData) => this.createEntry(pType, pData, pContext));
