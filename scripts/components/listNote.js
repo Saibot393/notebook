@@ -346,6 +346,7 @@ export class listNote extends basicNote {
 						listNoteID : this.id
 					}));
 				};
+				vEntry.draggable = this.canEdit;
 				
 				let vCheckBorder = document.createElement("div");
 				vCheckBorder.style.margin = "auto";

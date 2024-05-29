@@ -10,6 +10,7 @@ import {chatNote} from "./components/chatNote.js";
 import {timerNote} from "./components/timerNote.js";
 import {progressclockNote} from "./components/progressclockNote.js";
 import {roundcounterNote} from "./components/roundcounterNote.js";
+import {macroNote} from "./components/macroNote.js";
 
 CONFIG.debug.notebook = false;
 
@@ -43,7 +44,8 @@ CONFIG[cModuleName] = {
 		chat : chatNote,
 		timer : timerNote,
 		progressclock : progressclockNote,
-		roundcounter : roundcounterNote
+		roundcounter : roundcounterNote,
+		macro : macroNote
 	}
 }
 

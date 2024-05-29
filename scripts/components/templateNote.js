@@ -20,6 +20,11 @@ export class templateNote extends basicNote {
 		return {}; //return default content
 	}
 	
+	get icon() {
+		//RECOMMENDED
+		return "fa-note-sticky"; //unique icon from fonts awesome for this note type (can also be array)
+	}
+	
 	get JournalPage() {
 		//OPTIONAL
 		return null; //get conten for journal pages
@@ -33,7 +38,7 @@ export class templateNote extends basicNote {
 	renderContent() {
 		//REQUIRED
 		//specific implementations required
-		//this.content
+		//this.mainElement
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {

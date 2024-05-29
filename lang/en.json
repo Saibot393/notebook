@@ -46,7 +46,8 @@
 				"chat"						: "Chat",
 				"timer"						: "Timer",
 				"progressclock"				: "Progress Clock",
-				"roundcounter"				: "Round Counter"
+				"roundcounter"				: "Round Counter",
+				"macro"						: "Macros"
 			},
 			
 			"min"							: "Min",

@@ -59,6 +59,18 @@ export class basicNote {
 		//this.render();
 	}
 	
+	copy() {
+		NoteManager.createNewNote(
+			{
+				...this.noteData, 
+				permissions : {default : "none"}, 
+				title : Translate("Titles.copyfromTitle", {pOriginal : this.title}), 
+				copyFrom : this.id
+			}, 
+			{noteCopy : true, copyFrom : this.id}
+		);
+	}
+	
 	makeready() {
 		this._ready = true;
 		
@@ -423,7 +435,7 @@ export class basicNote {
 		};
 		this.captionElement.oncontextmenu = (pEvent) => {
 			if (pEvent.shiftKey) {
-				NoteManager.createNewNote({...this.noteData, permissions : {default : "none"}, title : Translate("Titles.copyfromTitle", {pOriginal : this.title})}, {noteCopy : true, copyFrom : this.id});
+				this.copy();
 			}
 			else {
 				if (!this.windowed) {

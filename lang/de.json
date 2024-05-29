@@ -46,7 +46,8 @@
 				"chat"						: "Chat",
 				"timer"						: "Timer",
 				"progressclock"				: "Fortschrittsuhr",
-				"roundcounter"				: "Rundenzähler"
+				"roundcounter"				: "Rundenzähler",
+				"macro"						: "Macros"
 			},
 			
 			"min"							: "Min",
