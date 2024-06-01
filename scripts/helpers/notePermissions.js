@@ -12,6 +12,7 @@ export class notePermissionsWindow extends Application {
 		
 		this.noteID = pNoteID;
 		
+		this.showcheck = {};
 		this.selector = {};
 		
 		if (this.owner != game.user && !game.user.isGM) {
@@ -45,7 +46,7 @@ export class notePermissionsWindow extends Application {
 		let vUsers =  Array.from(game.users).filter(vUser => vUser != this.owner);
 		
 		vUsers.unshift({
-			name :  Translate("Titles.default"),
+			name :  game.user.isGM ? Translate("Titles.alldefault") : Translate("Titles.default"),
 			id : "default"
 		});
 		
@@ -77,10 +78,17 @@ export class notePermissionsWindow extends Application {
 		vNameTitle.innerHTML =  Translate("Titles.userName");
 		vNameTitle.style.width = "70%";
 		
+		let vShowTitle;
+		if (game.user.isGM) {
+			vShowTitle = document.createElement("th");
+			vShowTitle.innerHTML =  Translate("Titles.showtouser");
+		}
+		
 		let vPermissionTitle = document.createElement("th");
 		vPermissionTitle.innerHTML =  Translate("Titles.permissions");
 		
 		vTitle.appendChild(vNameTitle);
+		if(vShowTitle) vTitle.appendChild(vShowTitle);
 		vTitle.appendChild(vPermissionTitle);
 		
 		vPermissionTable.appendChild(vTitle);
@@ -96,6 +104,22 @@ export class notePermissionsWindow extends Application {
 			}
 			
 			vEntry.appendChild(vName);
+			
+			let vShowCheck;
+			if (game.user.isGM) {
+				vShowCheck = document.createElement("input");
+				vShowCheck.type = "checkbox";
+				vShowCheck.onchange = () => {
+					if (vUser.id == "default") {
+						this.synchshowtodefault();
+					}
+					else {
+						this.synchshowdefault();
+					}
+				}
+				this.showcheck[vUser.id] = vShowCheck;
+			}
+			if (vShowCheck) vEntry.appendChild(vShowCheck);
 			
 			let vPermission = document.createElement("td");
 			vPermission.style.textAlign = "center";
@@ -154,7 +178,35 @@ export class notePermissionsWindow extends Application {
 		this._element[0].querySelector(".content").appendChild(vMainDIV);
 	}
 	
-	applyPermissions() {
+	synchshowtodefault() {
+		if (this.showcheck.default) {
+			for (let vKey of Object.keys(this.showcheck)) {
+				if (vKey != "default") {
+					this.showcheck[vKey].checked = this.showcheck.default.checked;
+				}
+			}
+		}
+	}
+	
+	synchshowdefault() {
+		if (this.showcheck.default) {
+			let vChecked = true;
+			
+			for (let vKey of Object.keys(this.showcheck)) {
+				if (vKey != "default") {
+					vChecked = vChecked && this.showcheck[vKey].checked;
+				}
+			}
+			
+  			this.showcheck.default.checked = vChecked;
+		}
+	}
+	
+	getshowIDs() {
+		return Object.keys(this.showcheck).filter(vKey => this.showcheck.default.checked || this.showcheck[vKey].checked);
+	}
+	
+	async applyPermissions() {
 		let vCurrentPermission = {};
 		
 		let vUsers = this.relevantUsers(true);
@@ -163,6 +215,8 @@ export class notePermissionsWindow extends Application {
 			vCurrentPermission[vUserID] = this.selector[vUserID].value;
 		}
 		
-		NoteManager.updateNote(this.noteID, {permissions : vCurrentPermission});
+		await NoteManager.updateNote(this.noteID, {permissions : vCurrentPermission});
+		
+		NoteManager.requestNotePopup(this.noteID, this.getshowIDs());
 	}
 }

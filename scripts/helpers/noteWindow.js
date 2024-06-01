@@ -3,7 +3,7 @@ import {cModuleName, cTickInterval, Translate} from "../utils/utils.js";
 import {cPermissionTypes, NoteManager} from "../MainData.js";
 
 export class noteWindow extends Application {
-	constructor(pNoteID, pNoteData) {
+	constructor(pNoteID, pNoteData, pOptions = {}) {
 		let vClass = CONFIG[cModuleName].noteTypes[pNoteData.type];
 		
 		let vOptions = vClass?.windowOptions || {};
@@ -14,7 +14,9 @@ export class noteWindow extends Application {
 		
 		this.tickCount = 0;
 		
-		if (vClass && NoteManager.canSeeSelf(pNoteData)) {
+		this._ishowpopup = pOptions.ishowpopup;
+		
+		if (vClass) {
 			this.note = new vClass(pNoteID, pNoteData, this.defaultNoteOptions);
 		}
 		else {
@@ -58,6 +60,10 @@ export class noteWindow extends Application {
 		return this.note.hastick;
 	}
 	
+	get ishowpopup() {
+		return this._ishowpopup;
+	}
+	
 	//app stuff
 	static get defaultOptions() {
 		return {
@@ -89,7 +95,7 @@ export class noteWindow extends Application {
 	
 	renderUpdate(pNewNoteData, pNoteDataUpdate, pContext) {
 		if (this.noteID == pNewNoteData.id) {
-			if (pContext.deletion || !NoteManager.canSeeSelf(pNewNoteData)) {
+			if (pContext.deletion || (!this.ishowpopup && !NoteManager.canSeeSelf(pNewNoteData))) {
 				this.close();
 			}
 			else {
@@ -135,11 +141,13 @@ export class noteWindow extends Application {
 	}
 	
 	close() {
-		for (let vHook of this.hooks) {
-			Hooks.off(vHook.name, vHook.id);
+		if (this.hooks) {
+			for (let vHook of this.hooks) {
+				Hooks.off(vHook.name, vHook.id);
+			}
 		}
 		
-		this.note.close();
+		this.note?.close();
 		
 		super.close();
 	}

@@ -86,7 +86,11 @@ class NoteManager {
 	
 	static deleteNote(pID) {} //deletes notes with id pID
 	
-	static popupNote(pID) {} //popups note for this player
+	static requestNotePopup(pNoteID, pUserIDs) {} //request pUserIDs to popup notes
+	
+	static notePopupRequest (pData) {} //ansers a request for a note popup
+	
+	static popupNote(pID, pOptions = {}) {} //popups note for this player
 	
 	static getNote(pID, pTestPermission = false) {} //returns note identified via pID
 	
@@ -264,11 +268,26 @@ class NoteManager {
 		}
 	}
 	
-	static popupNote(pID) {
+	static requestNotePopup(pNoteID, pUserIDs) {
+		game.socket.emit("module."+cModuleName, {pFunction : "notePopupRequest", pData : {pNoteID : pNoteID, pUserIDs : pUserIDs, pSender : game.user.id}});
+	}
+	
+	static notePopupRequest (pData) {
+		if (pData.pUserIDs?.includes(game.user.id)) {
+			let vSender = game.users.get(pData.pSender);
+			let vNoteID = pData.pNoteID;
+			
+			if (vSender?.isGM) {
+				NoteManager.popupNote(vNoteID, {ishowpopup : true});
+			}
+		}
+	}
+	
+	static popupNote(pID, pOptions = {}) {
 		let vNote = NoteManager.getNote(pID);
 		
 		if (vNote) {
-			new noteWindow(pID, vNote, this.windowOptions).render(true);
+			new noteWindow(pID, vNote, pOptions).render(true);
 		}
 	}
 	

@@ -19,6 +19,7 @@
 			"userName"						: "User names",
 			"self"							: "self",
 			"default"						: "default",
+			"alldefault"					: "all/default",
 			
 			"createNote"					: "Create new Note",
 			"createFolder"					: "Create Folder",
@@ -29,6 +30,7 @@
 			"editor"						: "Editors",
 			
 			"permissions"					: "Permissions",
+			"showtouser"					: "Show user",
 			"permissionsTypes" : {
 				"default"					: "default",
 				"none"						: "none",

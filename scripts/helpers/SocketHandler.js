@@ -6,6 +6,9 @@ function organiseSocketEvents({pFunction, pData} = {}) {
 		case "noteUpdateRequest":
 			NoteManager.noteUpdateRequest(pData);
 			break;
+		case "notePopupRequest":
+			NoteManager.notePopupRequest(pData);
+			break;
 	}
 }
 
