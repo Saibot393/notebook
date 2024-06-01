@@ -1,3 +1,6 @@
+## v1.4.0
+- Added option to permission menu for GMs to show a note to players, causing the note to popup for these players
+
 ## v1.3.0
 - Added new Macro note:
   - Allows macros to be added and reordered via drag and drop
