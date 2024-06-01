@@ -23,7 +23,7 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
   ![imag](https://imgur.com/Pml0wUJ.jpg)
 
 - #### List notes:
-  A note to list some items. The items can be checked/unchecked or removed.
+  A note to list some items. The items can be checked/unchecked or removed. The notes can be indented using Tab or shift + Tab and can be reordered using drag and drop. The check state of sub states can be set using right-click.
 
   ![imag](https://imgur.com/OTUGCX5.jpg)
 
@@ -51,6 +51,20 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
   A counter ticking up or down every time a round passes. Both the direction (up, down) and a limit can be set.
 
   ![imag](https://imgur.com/LqNbmc6.jpg)
+
+- #### Macro notes:
+  A list of macros that can be executed with left-click. Macros can be added reordered using drag and drop and removed using shift + right-click. Rigth-click can be used to edit macros.
+
+  ![imag](https://imgur.com/ZBhogBK.jpg)
+
+### Settings:
+
+#### Client:
+  - Shift quick create: Note type created when creating note while holding shift
+  - CTRL quick create: Note type created when creating note while holding CTRL
+  - ALT quick create: Note type created when creating note while holding ALT
+  - Small note height: Height some note types collapse to when the mouse leaves
+  - Large note height: Height some note types expand to when the mouse enters
 
 ### Languages:
 

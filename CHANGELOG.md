@@ -1,3 +1,20 @@
+## v1.3.0
+- Added new Macro note:
+  - Allows macros to be added and reordered via drag and drop
+  - Macros can be executed via right-click
+  - Macros can be edited via left-click
+  - Macro can be removed via shift + right-click
+- Improved list notes:
+  - Can now be indented using tab or shift + tab
+  - Can now be re reordered using drag and drop
+  - Sub entries can be synched to an entry using right-click
+- Added several client settings:
+  - Shift quick create: Note type created when creating note while holding shift
+  - CTRL quick create: Note type created when creating note while holding CTRL
+  - ALT quick create: Note type created when creating note while holding ALT
+  - Small note height: Height some note types collapse to when the mouse leaves
+  - Large note height: Height some note types expand to when the mouse enters
+
 ## v1.2.0
 - Added folders
 - Notes can now be copied using shift+right-click
