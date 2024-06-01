@@ -3,16 +3,16 @@ import {cModuleName, cTickInterval, Translate} from "../utils/utils.js";
 import {cPermissionTypes, NoteManager} from "../MainData.js";
 
 export class noteWindow extends Application {
-	constructor(pNoteID, pNoteData, pOptions) {
-		super(pOptions);
+	constructor(pNoteID, pNoteData) {
+		let vClass = CONFIG[cModuleName].noteTypes[pNoteData.type];
+		
+		let vOptions = vClass?.windowOptions || {};
+		console.log(vOptions);
+		super(vOptions);
 		
 		this._ticking = false;
 		
 		this.tickCount = 0;
-		
-		this.vOptions = pOptions;
-		
-		let vClass = CONFIG[cModuleName].noteTypes[pNoteData.type];
 		
 		if (vClass && NoteManager.canSeeSelf(pNoteData)) {
 			this.note = new vClass(pNoteID, pNoteData, this.defaultNoteOptions);

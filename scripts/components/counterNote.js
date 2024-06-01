@@ -18,7 +18,7 @@ export class counterNote extends basicNote {
 		return "fa-hashtag";
 	}
 	
-	get windowOptions() {
+	static get windowOptions() {
 		return {
 			...super.windowOptions,
 			resizable: {

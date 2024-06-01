@@ -163,7 +163,7 @@ export class basicNote {
 		return true; //if being windowed should always be treated as always(A) having a mouse(M) hover(H) the note (AMH)
 	}
 	
-	get windowOptions() {
+	static get windowOptions() {
 		return {
 			resizable: true,
 			width: 313,
@@ -884,7 +884,7 @@ export class basicNote {
 	}
 	
 	popOut() {
-		new noteWindow(this.id, this._noteData, this.windowOptions).render(true);
+		new noteWindow(this.id, this._noteData).render(true);
 	}
 	
 	onClosebasic() {

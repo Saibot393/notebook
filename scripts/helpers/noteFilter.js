@@ -54,7 +54,7 @@ export class noteFilter {
 		for (let vType of ["", ...Object.keys(CONFIG.notebook.noteTypes)]) {
 			let vTypeOption = document.createElement("option");
 			vTypeOption.value = vType;
-			vTypeOption.innerHTML = vType ? Translate("Titles.notesTypes." + vType) : "";
+			vTypeOption.innerHTML = vType ? CONFIG.notebook.noteTypes[vType].displayType : "";
 			vTypeSelect.appendChild(vTypeOption);
 		}
 		

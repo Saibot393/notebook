@@ -2,6 +2,8 @@ import {cModuleName, Translate} from "./utils/utils.js";
 
 import {basicNote} from "./components/basicNote.js";
 
+import {noteWindow} from "./helpers/noteWindow.js";
+
 import {textNote} from "./components/textNote.js";
 import {counterNote} from "./components/counterNote.js";
 import {listNote} from "./components/listNote.js";
@@ -34,7 +36,7 @@ const cLockedProperties = ["type", "owner"];
 
 export const cPermissionTypes = ["default", "none", "see", "edit"];
 
-//const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roundcounter", "chat", "image", "macros", "freehand"];
+//const cTypes = ["text", "counter", "list", "slider", "battlemap", "timer", "roundcounter", "chat", "image", "macros", "freehand", "calculator(eval)"];
 
 CONFIG[cModuleName] = {
 	basicNote : basicNote,
@@ -84,6 +86,8 @@ class NoteManager {
 	
 	static deleteNote(pID) {} //deletes notes with id pID
 	
+	static popupNote(pID) {} //popups note for this player
+	
 	static getNote(pID, pTestPermission = false) {} //returns note identified via pID
 	
 	static owner(pNote) {} //returns owner of note with pID
@@ -112,7 +116,7 @@ class NoteManager {
 	
 	//IMPLEMENTATIONS
 	static async createNewNote(pData, pContext = {}) {
-		let vID = randomID();
+		let vID = game.release.generation >= 12 ? foundry.utils?.randomID() : randomID();
 		
 		let vData = {...cDefaultNote, ...pData, owner : game.user.id, moduleversion : game.modules.get(cModuleName)._source.version};
 		
@@ -257,6 +261,14 @@ class NoteManager {
 	static deleteNote(pID) {
 		if (NoteManager.canDeleteSelf(pID)) {
 			NoteManager.updateNote(pID, null, {delete : true});
+		}
+	}
+	
+	static popupNote(pID) {
+		let vNote = NoteManager.getNote(pID);
+		
+		if (vNote) {
+			new noteWindow(pID, vNote, this.windowOptions).render(true);
 		}
 	}
 	

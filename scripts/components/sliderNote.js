@@ -10,7 +10,7 @@ export class sliderNote extends basicNote {
 		return "fa-sliders";
 	}
 	
-	get windowOptions() {
+	static get windowOptions() {
 		return {
 			...super.windowOptions,
 			resizable: {

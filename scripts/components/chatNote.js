@@ -105,7 +105,8 @@ export class chatNote extends basicNote {
 		vHistorydiv.style.overflowY = "auto";
 		
 		let vWritediv = document.createElement("div");
-		vWritediv.style.marginRight = "5px";
+		//vWritediv.style.marginRight = "5px";
+		vWritediv.style.display = "flex";
 		
 		let vInput = document.createElement("input");
 		vInput.type = "text";
@@ -121,6 +122,7 @@ export class chatNote extends basicNote {
 		vInput.style.borderRadius = "0";
 		vInput.style.borderColor = this.primeColor;
 		vInput.style.borderWidth = "2px";
+		vInput.style.flexGrow = "1";
 		
 		vWritediv.appendChild(vInput);
 		
@@ -260,7 +262,7 @@ export class chatNote extends basicNote {
 	enable() {
 		this.contentElements.input.disabled = false;
 		if (this.isMouseHover) {
-			this.contentElements.inputdiv.style.display = "";
+			this.contentElements.inputdiv.style.display = "flex";
 			this.contentElements.history.style.borderBottom = "solid maroon 1px";
 		}
 	}
@@ -270,7 +272,7 @@ export class chatNote extends basicNote {
 			this.contentElements.history.style.maxHeight = this.largeHeightLimit;
 			if (this.canEdit) {
 				this.contentElements.history.style.borderBottom = "solid maroon 1px";
-				this.contentElements.inputdiv.style.display = "";
+				this.contentElements.inputdiv.style.display = "flex";
 			}
 		}
 		else {

@@ -26,7 +26,7 @@ export class roundcounterNote extends basicNote {
 		return false;
 	}
 	
-	get windowOptions() {
+	static get windowOptions() {
 		return {
 			...super.windowOptions,
 			resizable: {
