@@ -16,7 +16,7 @@ export class noteWindow extends Application {
 		
 		this._ishowpopup = pOptions.ishowpopup;
 		
-		if (vClass) {
+		if (vClass /*&& (this.ishowpopup || NoteManager.canSeeSelf(pNewNoteData))*/) {
 			this.note = new vClass(pNoteID, pNoteData, this.defaultNoteOptions);
 		}
 		else {

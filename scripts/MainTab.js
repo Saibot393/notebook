@@ -15,8 +15,11 @@ Hooks.once("ready", async () => {
 	await cleanUserData(); //clean before to prevent bugs during delete
 	
 	let vSidebar = ui.sidebar._element[0];
+	
 	if (game.user.isGM) {
-		vSidebar.style.width = "315px"
+		if (!game.modules.get("pf2e-dorako-ux").active) {
+			vSidebar.style.width = "315px";
+		}
 	}
 	
 	let vNoteTabButton = document.createElement("a");
