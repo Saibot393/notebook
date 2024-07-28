@@ -1,3 +1,6 @@
+## v1.4.1
+- Small fix for compatibility with [PF2e Dorako UX](https://foundryvtt.com/packages/pf2e-dorako-ux)
+
 ## v1.4.0
 - Added option to permission menu for GMs to show a note to players, causing the note to popup for these players
 
