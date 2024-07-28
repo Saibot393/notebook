@@ -17,7 +17,7 @@ Hooks.once("ready", async () => {
 	let vSidebar = ui.sidebar._element[0];
 	
 	if (game.user.isGM) {
-		if (!game.modules.get("pf2e-dorako-ux").active) {
+		if (!game.modules.get("pf2e-dorako-ux")?.active) {
 			vSidebar.style.width = "315px";
 		}
 	}
