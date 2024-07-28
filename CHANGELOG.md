@@ -1,3 +1,6 @@
+## v1.4.2
+- Small bug fix
+
 ## v1.4.1
 - Small fix for compatibility with [PF2e Dorako UX](https://foundryvtt.com/packages/pf2e-dorako-ux)
 
