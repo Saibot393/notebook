@@ -1,3 +1,6 @@
+## v1.4.3
+- Improvement for list-note useability
+
 ## v1.4.2
 - Small bug fix
 
