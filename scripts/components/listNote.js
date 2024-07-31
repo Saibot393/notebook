@@ -443,7 +443,7 @@ export class listNote extends basicNote {
 			}
 			
 			let vText = vList[i].text || "";
-			if (vElement.text.value != vText) {
+			if (vElement.text.value != vText && pContext?.user != game.user.id) {
 				vElement.text.value = vText;
 			}
 		}
