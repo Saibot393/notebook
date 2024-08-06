@@ -50,7 +50,8 @@
 				"timer"						: "Timer",
 				"progressclock"				: "Progress Clock",
 				"roundcounter"				: "Round Counter",
-				"macro"						: "Macros"
+				"macro"						: "Macros",
+				"enhancedtext"				: "Enhanced Text"
 			},
 			
 			"min"							: "Min",

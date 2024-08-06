@@ -50,7 +50,8 @@
 				"timer"						: "Timer",
 				"progressclock"				: "Fortschrittsuhr",
 				"roundcounter"				: "Rundenzähler",
-				"macro"						: "Macros"
+				"macro"						: "Macros",
+				"enhancedtext"				: "Verlinkter Text"
 			},
 			
 			"min"							: "Min",

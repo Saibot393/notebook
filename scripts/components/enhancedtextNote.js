@@ -5,6 +5,11 @@ import {basicNote} from "./basicNote.js";
 
 let vMaxTextLength = 20000;
 
+const cFastNumber = {
+	shift : 5,
+	alt : 50
+}
+
 export class enhancedtextNote extends basicNote {
 	constructor(...args) {
 		super(...args);
@@ -17,7 +22,7 @@ export class enhancedtextNote extends basicNote {
 	}
 	
 	get icon() {
-		return "fa-arrow-up-right-from-square";
+		return "fa-file-lines";
 	}
 	
 	get defaultContent() {
@@ -49,6 +54,7 @@ export class enhancedtextNote extends basicNote {
 		vTextDIV.style.display = "flex";
 		vTextDIV.style.height = "100%";
 		vTextDIV.style.padding = "5px";
+		vTextDIV.style.overflowY = "auto"
 		
 		let venhancedText = document.createElement("div");
 		venhancedText.style.width = "100%";
@@ -57,13 +63,17 @@ export class enhancedtextNote extends basicNote {
 		venhancedText.style.borderRadius = "0";
 		venhancedText.style.color = "black";
 		venhancedText.style.minHeight = this.smallHeightLimit;
+		venhancedText.style.maxHeight = this.largeHeightLimit;
 		venhancedText.style.lineHeight = "21px";
+		venhancedText.onclick = (pEvent) => {this.counterClick(pEvent, "left")};
+		venhancedText.oncontextmenu = (pEvent) => {this.counterClick(pEvent, "right")};
 		
 		let vtextInput = document.createElement("textarea");
 		vtextInput.style.width = "100%";
 		vtextInput.style.borderRadius = "0";
 		vtextInput.style.borderColor = this.primeColor;
 		vtextInput.style.resize = "none";
+		vtextInput.style.height = this.largeHeightLimit;
 		vtextInput.ondrop = (pEvent) => {this.onDataDrop(pEvent)};
 		
 		let veditButton = document.createElement("i");
@@ -72,6 +82,7 @@ export class enhancedtextNote extends basicNote {
 		veditButton.style.right = "0px";
 		veditButton.style.marginLeft = "3px";
 		veditButton.style.color = this.primeColor;
+		veditButton.style.cursor = "pointer";
 		veditButton.onclick = () => {
 			this.toggleEditMode();
 		}
@@ -127,13 +138,11 @@ export class enhancedtextNote extends basicNote {
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate, pContext) {
 		if (pContentUpdate.hasOwnProperty("text")) {
 			this.renderEnhancedText();
-			
-			this.updateTextHeight();
 		}
 	}
 	
 	async renderEnhancedText() {
-		this.contentElements.enhancedtext.innerHTML = await TextEditor.enrichHTML(this.text);
+		this.contentElements.enhancedtext.innerHTML = await TextEditor.enrichHTML(enhancedtextNote.enrichCounter(this.text));
 		this.contentElements.textinput.value = this.text;
 	}
 	
@@ -176,21 +185,98 @@ export class enhancedtextNote extends basicNote {
 			this.contentElements.editbutton.style.display = "";
 		}
 		else {
-			this.contentElements.editbutton.style.display = "none";
+			if (!this._editMode) {
+				this.contentElements.editbutton.style.display = "none";
+			}
 		}
 	}
 	
-	updateTextHeight() {
-		if (!this.windowed) {
-			this.contentElements.enhancedtext.style.height = 'auto';
-			this.contentElements.enhancedtext.style.height = `${this.contentElements.enhancedtext.scrollHeight+2}px`;
+	counterClick(pEvent, pClickType) {
+		if (this.canEdit) {
+			let vTarget = pEvent.target;
 			
-			if (isActiveElement(this.contentElements.enhancedtext) || this.isMouseHover) {
-				this.contentElements.enhancedtext.style.maxHeight = this.largeHeightLimit;
-			}
-			else {
-				this.contentElements.enhancedtext.style.maxHeight = this.smallHeightLimit;
+			if (vTarget?.classList?.contains("notebookcounter")) {
+				let vChange = 0;
+				
+				switch (pClickType) {
+					case "left":
+						vChange = 1;
+						break;
+					case "right":
+						vChange = -1;
+						break;
+				}
+				
+				let vFactor = 1;
+				
+				if (pEvent.shiftKey) {
+					vFactor = cFastNumber.shift;
+				}
+				if (pEvent.altKey) {
+					vFactor = cFastNumber.alt;
+				}
+				
+				vChange = vChange * vFactor;
+				
+				if (vChange) {
+					let vValue = Number(vTarget.getAttribute("value"));
+					let vMax = vTarget.getAttribute("max");
+					
+					let vTextPosition = Number(vTarget.getAttribute("textposition"));
+					let vTextLength = Number(vTarget.getAttribute("textlength"));
+					
+					vValue = vValue + vChange;
+					
+					let vInsertText;
+					
+					vValue = Math.max(vValue, 0);
+					
+					if (vMax != null) {
+						vValue = Math.min(vValue, Number(vMax));
+						
+						vInsertText = `[[${vValue}/${vMax}]]`;
+					}
+					else {
+						vInsertText = `[[${vValue}]]`;
+					}
+					
+					let vText = this.text;
+					
+					vText = [vText.slice(0, vTextPosition), vInsertText, vText.slice(vTextPosition + vTextLength)].join('');
+					
+					this.text = vText;
+				}
 			}
 		}
+	}
+	
+	static enrichCounter(pText) {
+		let vText = pText;
+		
+		let cRGX = /\[\[[0-9]+\/[0-9]+\]\]|\[\[[0-9]+\]\]/g;
+		
+		let vMatch = cRGX.exec(vText);
+		while(vMatch) {
+			let vPosition = vMatch.index;
+			let vMatchText = vMatch[0];
+			
+			let vMatchContent = vMatchText.substring(2, vMatchText.length - 2);
+			
+			let vValue = Number(vMatchContent.split("/")[0]);
+			let vMax = Number(vMatchContent.split("/")[1]);
+			
+			let vHTML = `
+				<a class="notebookcounter" value="${vValue}" max="${vMax}" textposition="${vPosition}" textlength="${vMatchText.length}" style="border: 1px solid var(--color-border-dark-tertiary); background:#DDD; padding: 1px 4px; border-radius: 2px">
+					<i class="fas-solid fa-hashtag"> </i>
+					${vMatchContent}
+				</a>
+			`;
+			
+			vText =  [vText.slice(0, vPosition), vHTML, vText.slice(vPosition + vMatchText.length)].join('');
+			
+			vMatch = cRGX.exec(vText);
+		}
+		
+		return vText;
 	}
 }

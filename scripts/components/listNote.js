@@ -405,6 +405,7 @@ export class listNote extends basicNote {
 				vDelete.style.color = this.primeColor;
 				vDelete.style.marginLeft = "3px";
 				vDelete.style.marginRight = "3px";
+				vDelete.style.cursor = "pointer";
 				vDelete.onclick = () => { this.removeEntry(i)};
 				registerHoverShadow(vDelete);
 				
