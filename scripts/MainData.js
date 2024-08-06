@@ -13,8 +13,9 @@ import {timerNote} from "./components/timerNote.js";
 import {progressclockNote} from "./components/progressclockNote.js";
 import {roundcounterNote} from "./components/roundcounterNote.js";
 import {macroNote} from "./components/macroNote.js";
+import {enhancedtextNote} from "./components/enhancedtextNote.js";
 
-const cNoteTypes = [textNote, counterNote, listNote, sliderNote, chatNote, timerNote, progressclockNote, roundcounterNote, macroNote];
+const cNoteTypes = [textNote, counterNote, listNote, sliderNote, chatNote, timerNote, progressclockNote, roundcounterNote, macroNote, enhancedtextNote];
 
 CONFIG.debug.notebook = false;
 
