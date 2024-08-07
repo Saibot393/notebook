@@ -38,7 +38,7 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
   ![imag](https://imgur.com/buP7bHm.jpg)
 
 - #### Timer notes:
-  A timer that counts even while the user is offline or the server is down. The time (seconds, minutes, hours and days(top left)) can be set directly by entering the values. Using the menu to right, that appears when hovering over the note, the direction in which the timer ticks can be chosen (up or down), the timer can be started or paused, and the timer can be reset to 0 (if the timer ticks up) or reset to the last manually set time (if the timer ticks down).
+  A timer that counts even while the user is offline or the server is down. The time (seconds, minutes, hours and days(top left)) can be set directly by entering the values. Using the menu to the right, that appears when hovering over the note, the direction in which the timer ticks can be chosen (up or down), the timer can be started or paused, and the timer can be reset to 0 (if the timer ticks up) or reset to the last manually set time (if the timer ticks down).
 
   ![imag](https://imgur.com/d37MP7u.jpg)
 
@@ -56,6 +56,8 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
   A list of macros that can be executed with left-click. Macros can be added reordered using drag and drop and removed using shift + right-click. Rigth-click can be used to edit macros.
 
   ![imag](https://imgur.com/ZBhogBK.jpg)
+
+- #### 
 
 ### Settings:
 
