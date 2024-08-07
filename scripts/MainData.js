@@ -14,8 +14,9 @@ import {progressclockNote} from "./components/progressclockNote.js";
 import {roundcounterNote} from "./components/roundcounterNote.js";
 import {macroNote} from "./components/macroNote.js";
 import {enhancedtextNote} from "./components/enhancedtextNote.js";
+import {scribbleNote} from "./components/scribbleNote.js";
 
-const cNoteTypes = [textNote, counterNote, listNote, sliderNote, chatNote, timerNote, progressclockNote, roundcounterNote, macroNote, enhancedtextNote];
+const cNoteTypes = [textNote, counterNote, listNote, sliderNote, chatNote, timerNote, progressclockNote, roundcounterNote, macroNote, enhancedtextNote, scribbleNote];
 
 CONFIG.debug.notebook = false;
 
@@ -42,17 +43,6 @@ export const cPermissionTypes = ["default", "none", "see", "edit"];
 CONFIG[cModuleName] = {
 	basicNote : basicNote,
 	noteTypes : {
-		/*
-		text : text,
-		counter : counter,
-		list : list,
-		slider : slider,
-		chat : chat,
-		timer : timer,
-		progressclock : progressclock,
-		roundcounter : roundcounter,
-		macro : macro
-		*/
 	}
 }
 

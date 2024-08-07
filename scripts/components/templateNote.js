@@ -62,7 +62,7 @@ export class templateNote extends basicNote {
 		//this.mainElement
 	}
 	
-	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {
+	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate, pContext) {
 		//REQUIRED
 		//called when the content updates
 	}
