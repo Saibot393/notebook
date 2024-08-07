@@ -1,3 +1,13 @@
+## v1.5.0
+- Added new Enhanced Text note:
+  - Allows for inline rolls and Actor/Item/Journal... links to be added to the text (can be added via drag and drop)
+  - Allows for online images to be added via drag and drop
+  - Allows for counting elements to be added to text using the following syntax `[[number/number]]` or `[[number]]`
+    - Values can be altered using left and right click
+  - Can be edited by clicking the edit icon thet appears at the top right when hovering the note
+- The notebook tab can now be popped out into a seperate window using right click
+- Several small quality of life improvements
+
 ## v1.4.3
 - Improvement for list-note useability
 
