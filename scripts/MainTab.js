@@ -5,6 +5,8 @@ import {noteFolder} from "./components/noteFolder.js";
 import {noteCreation} from "./helpers/noteCreation.js";
 import {noteFilter} from "./helpers/noteFilter.js";
 
+import {tabWindow} from "./helpers/tabWindow.js";
+
 export const cNoteIcon = "fa-note-sticky";
 export const cFolderIcon = "fa-folder";
 
@@ -28,6 +30,7 @@ Hooks.once("ready", async () => {
 	vNoteTabButton.setAttribute("data-tooltip", Translate("Titles.notebook"));
 	vNoteTabButton.setAttribute("aria-controls", cModuleName);
 	vNoteTabButton.setAttribute("role", "tab");
+	vNoteTabButton.oncontextmenu = () => {new tabWindow().render(true)}
 	
 	let vNoteIcon = document.createElement("i");
 	vNoteIcon.classList.add("fa-solid", cNoteIcon);

@@ -7,7 +7,7 @@ export class noteWindow extends Application {
 		let vClass = CONFIG[cModuleName].noteTypes[pNoteData.type];
 		
 		let vOptions = vClass?.windowOptions || {};
-		console.log(vOptions);
+
 		super(vOptions);
 		
 		this._ticking = false;

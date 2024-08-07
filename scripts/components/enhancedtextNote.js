@@ -54,7 +54,8 @@ export class enhancedtextNote extends basicNote {
 		vTextDIV.style.display = "flex";
 		vTextDIV.style.height = "100%";
 		vTextDIV.style.padding = "5px";
-		vTextDIV.style.overflowY = "auto"
+		vTextDIV.style.overflowY = "auto";
+		vTextDIV.style.position = "relative";
 		
 		let venhancedText = document.createElement("div");
 		venhancedText.style.width = "100%";
@@ -78,11 +79,10 @@ export class enhancedtextNote extends basicNote {
 		
 		let veditButton = document.createElement("i");
 		veditButton.classList.add("fa-solid");
-		veditButton.style.top = "0px";
-		veditButton.style.right = "0px";
 		veditButton.style.marginLeft = "3px";
 		veditButton.style.color = this.primeColor;
 		veditButton.style.cursor = "pointer";
+		veditButton.style.position = "absolute";
 		veditButton.onclick = () => {
 			this.toggleEditMode();
 		}
@@ -125,6 +125,9 @@ export class enhancedtextNote extends basicNote {
 			
 			this.contentElements.enhancedtext.style.display = "none";
 			this.contentElements.textinput.style.display = "";
+			
+			this.contentElements.editbutton.style.top = "7px";
+			this.contentElements.editbutton.style.right = "7px";
 		}
 		else {
 			this.contentElements.editbutton.classList.add("fa-pen-to-square");
@@ -132,6 +135,9 @@ export class enhancedtextNote extends basicNote {
 			
 			this.contentElements.enhancedtext.style.display = "";
 			this.contentElements.textinput.style.display = "none";
+			
+			this.contentElements.editbutton.style.top = "3px";
+			this.contentElements.editbutton.style.right = "3px";
 		}
 	}
 	
@@ -232,6 +238,15 @@ export class enhancedtextNote extends basicNote {
 					vValue = Math.max(vValue, 0);
 					
 					if (vMax != null) {
+						if (pEvent.ctrlKey) {
+							if (vChange < 0) {
+								vValue = 0;
+							}
+							if (vChange > 0) {
+								vValue = vMax;
+							}
+						}
+						
 						vValue = Math.min(vValue, Number(vMax));
 						
 						vInsertText = `[[${vValue}/${vMax}]]`;
@@ -253,7 +268,7 @@ export class enhancedtextNote extends basicNote {
 	static enrichCounter(pText) {
 		let vText = pText;
 		
-		let cRGX = /\[\[[0-9]+\/[0-9]+\]\]|\[\[[0-9]+\]\]/g;
+		let cRGX = /\[\[[0-9]+\/[0-9]+\]\]|\[\[[0-9]+\]\]/g; //match [[number/number]] or [[number]]
 		
 		let vMatch = cRGX.exec(vText);
 		while(vMatch) {
@@ -266,7 +281,7 @@ export class enhancedtextNote extends basicNote {
 			let vMax = Number(vMatchContent.split("/")[1]);
 			
 			let vHTML = `
-				<a class="notebookcounter" value="${vValue}" max="${vMax}" textposition="${vPosition}" textlength="${vMatchText.length}" style="border: 1px solid var(--color-border-dark-tertiary); background:#DDD; padding: 1px 4px; border-radius: 2px">
+				<a class="notebookcounter" value="${vValue}" max="${vMax}" textposition="${vPosition}" textlength="${vMatchText.length}" style="border: 1px solid var(--color-border-dark-tertiary); background:#DDD; padding: 1px 4px; border-radius: 2px; white-space: nowrap; word-break: break-all">
 					<i class="fas-solid fa-hashtag"> </i>
 					${vMatchContent}
 				</a>

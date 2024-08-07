@@ -61,6 +61,7 @@ export class basicNote {
 		//this.render();
 	}
 	
+	//this is stupid, but it works
 	static get type() {
 		return this.name.substr(0, this.name.indexOf(cNotePostFix)) || this.name;
 	}
@@ -76,6 +77,7 @@ export class basicNote {
 	get displayType() {
 		return Translate("Titles.notesTypes." + this.type);
 	}
+	//it is still stupid though
 	
 	copy() {
 		NoteManager.createNewNote(
