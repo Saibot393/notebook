@@ -219,11 +219,11 @@ export class chatNote extends basicNote {
 			vNotify = true;
 		}
 		
-		if (!(isActiveElement(this.contentElements.input) || this.isMouseHover) || (vLastOwner == game.user.id) || vwasScrollEnd) {
+		if (!(isActiveElement(this.contentElements.input) || this.isMouseHover) || (vLastOwner == game.user.id) || vwasScrollEnd || !this.ready) {
 			this.scrolltoEnd();
 		}
 		
-		if (vNotify) {
+		if (vNotify && this.ready) {
 			this.soundNotify();
 		}
 	}
@@ -276,9 +276,15 @@ export class chatNote extends basicNote {
 			}
 		}
 		else {
+			let vwasScrollEnd = this.isscrollEnd();
+			
 			this.contentElements.history.style.maxHeight = this.smallHeightLimit;
 			this.contentElements.inputdiv.style.display = "none";
 			this.contentElements.history.style.borderBottom = "";
+			
+			if (vwasScrollEnd) {
+				this.scrolltoEnd();
+			}
 		}
 	}
 }

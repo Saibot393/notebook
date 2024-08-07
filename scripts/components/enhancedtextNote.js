@@ -201,6 +201,8 @@ export class enhancedtextNote extends basicNote {
 	
 	disable() {
 		this.contentElements.textinput.disabled = true;
+		
+		this.synchEditMode();
 	}
 	
 	enable() {
