@@ -57,7 +57,10 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
 
   ![imag](https://imgur.com/ZBhogBK.jpg)
 
-- #### 
+- #### Enhanced Text notes:
+  A text note that can include the normal foundry inline rolls and entity links. In addition counters (`[[number]]` or `[[number/number]]`) and online images (added via drag and drop) can be added. The edit mode of the note can be accessed via the edit button at the top right that appears when hovering the note
+
+  ![imag](https://imgur.com/u4iJNSZ.jpg)
 
 ### Settings:
 
@@ -70,7 +73,7 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
 
 ### Languages:
 
-The module contains an English and a Germantranslation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/notebook/issues).
+The module contains an English and a German translation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/notebook/issues).
 
 ---
 
