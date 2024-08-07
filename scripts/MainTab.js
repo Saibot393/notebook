@@ -30,7 +30,6 @@ Hooks.once("ready", async () => {
 	vNoteTabButton.setAttribute("data-tooltip", Translate("Titles.notebook"));
 	vNoteTabButton.setAttribute("aria-controls", cModuleName);
 	vNoteTabButton.setAttribute("role", "tab");
-	vNoteTabButton.oncontextmenu = () => {new tabWindow().render(true)}
 	
 	let vNoteIcon = document.createElement("i");
 	vNoteIcon.classList.add("fa-solid", cNoteIcon);
@@ -301,7 +300,7 @@ class notesTab /*extends SidebarTab*/ {
 	*/
 	
 	renderPopout() {
-		console.log("Please implement me");
+		new tabWindow().render(true);
 	}
 	
 	checkEnabled() {

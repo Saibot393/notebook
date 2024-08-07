@@ -39,7 +39,7 @@ Hooks.once(cModuleName + ".registerNoteSettings", () => {
 	game.settings.register(cModuleName, "smallnoteheight", {
 		name: Translate("Settings.smallnoteheight.name"),
 		hint: Translate("Settings.smallnoteheight.descrp"),
-		scope: "world",
+		scope: "client",
 		config: true,
 		range: {
 			min: 50,
@@ -53,7 +53,7 @@ Hooks.once(cModuleName + ".registerNoteSettings", () => {
 	game.settings.register(cModuleName, "largenoteheight", {
 		name: Translate("Settings.largenoteheight.name"),
 		hint: Translate("Settings.largenoteheight.descrp"),
-		scope: "world",
+		scope: "client",
 		config: true,
 		range: {
 			min: 100,
@@ -63,4 +63,19 @@ Hooks.once(cModuleName + ".registerNoteSettings", () => {
 		type: Number,
 		default: 190
 	}); 
+	
+	game.settings.register(cModuleName, "backgroundpattern", {
+		name: Translate("Settings.backgroundpattern.name"),
+		hint: Translate("Settings.backgroundpattern.descrp"),
+		scope: "client",
+		config: true,
+		choices: {
+			"../ui/parchment.jpg" : Translate("Settings.backgroundpattern.options.parchment"),
+			"../ui/parchment-white.jpg" : Translate("Settings.backgroundpattern.options.parchment-white"),
+			"../ui/denim065.png" : Translate("Settings.backgroundpattern.options.denim065")
+		},
+		type: String,
+		default: "../ui/parchment.jpg",
+		requiresReload : true
+	});  
 });

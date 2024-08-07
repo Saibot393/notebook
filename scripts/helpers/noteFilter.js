@@ -119,7 +119,7 @@ export class noteFilter {
 		}
 		
 		if (!isEmpty(this.filterData)) {
-			this.filterData.match = (pData) => {return this.match(pData)};
+			this.filterData.match = (pData, patLeastOne = false) => {return this.match(pData, patLeastOne)};
 		}
 		
 		this.startFilter();
@@ -145,8 +145,9 @@ export class noteFilter {
 		if (!isEmpty(this.filterData)) {
 			let vMatch = false;
 			for (let vKey of Object.keys(this.filterData)) {
-				vMatch = !patLeastOne;
-				if (pData.hasOwnProperty(vKey)) {
+				if (pData.hasOwnProperty(vKey) && vKey != "match") {
+					vMatch = !patLeastOne;
+					
 					switch (vKey) {
 						case "title" :
 							vMatch = pData.title.toLowerCase().includes(this.filterData.title.toLowerCase());
@@ -159,6 +160,10 @@ export class noteFilter {
 						default:
 							vMatch = pData[vKey] == this.filterData[vKey];
 							break;
+					}
+					
+					if (pData.title == "Neuer Ordner") {
+						console.log(vMatch);
 					}
 					
 					if (!vMatch) {

@@ -1018,10 +1018,10 @@ export class noteFolder {
 	applyFilter(pFilter) {
 		if (this.element) {
 			let vElements = Object.values(this.subEntries);
-			let vSelfMatch = !pFilter?.match || pFilter.match({
+			let vSelfMatch = !this.isRoot && (!pFilter?.match || pFilter.match({
 				title : this.title,
 				color : this.color
-			}, true);
+			}, true));
 			
 			let vMatch = vSelfMatch;
 			

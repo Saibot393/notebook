@@ -474,7 +474,7 @@ export class basicNote {
 		else {
 			this.mainElement = this.window.body;
 		}
-		this.mainElement.style.background = 'url("../ui/parchment.jpg") repeat';
+		this.mainElement.style.background = `url("${game.settings.get(cModuleName, "backgroundpattern")}") repeat`;
 		this.mainElement.style.backgroundBlendMode = "multiply";
 		this.mainElement.style.backgroundColor = this.backColor;
 		
