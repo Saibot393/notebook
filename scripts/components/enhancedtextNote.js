@@ -154,26 +154,47 @@ export class enhancedtextNote extends basicNote {
 	
 	async onDataDrop(pEvent) {
 		if (this.activeEdit) {
-			let vData = pEvent.dataTransfer.getData("text/plain") ? JSON.parse(pEvent.dataTransfer.getData("text/plain")) : undefined;
+			pEvent.stopPropagation();
 			
-			let vUUID = vData?.uuid;
+			let vTransferTypes = pEvent.dataTransfer.types;
 			
-			if (vUUID) {
-				let vObject = await fromUuid(vUUID);
+			let vInsertTex = "";
+			
+			let vData;
+			
+			if (vTransferTypes.includes("text/html")) {
+				let vData = pEvent.dataTransfer.getData("text/html");
 				
-				if (vObject) {
-					let vTextInsert = `@UUID[${vUUID}]{${vObject.name}}`;
-					
-					let vInsertPosition = this.contentElements.textinput.value.length;
-					
-					if (isActiveElement(this.contentElements.textinput)) {
-						vPrevPosition = this.contentElements.textinput.selectionStart;
+				vInsertTex = vData;
+			}
+			else {
+				if (vTransferTypes.includes("text/plain")) {
+					try {
+						vData = JSON.parse(pEvent.dataTransfer.getData("text/plain"));
+					} catch (pError) {
+						console.log(pError);
+						
+						vData = "";
 					}
+					
+					let vUUID = vData?.uuid;
+					
+					if (vUUID) {
+						let vObject = await fromUuid(vUUID);
+						
+						if (vObject) {
+							vInsertTex = `@UUID[${vUUID}]{${vObject.name}}`;
+						}
+					}
+				}
+			}
+			
+			if (vInsertTex) {
+					let vInsertPosition = this.contentElements.textinput.value.length;
 					
 					let vOldText = this.contentElements.textinput.value;
 					
-					this.contentElements.textinput.value = [vOldText.slice(0, vInsertPosition), vTextInsert, vOldText.slice(vInsertPosition)].join('');
-				}
+					this.contentElements.textinput.value = [vOldText.slice(0, vInsertPosition), vInsertTex, vOldText.slice(vInsertPosition)].join('');
 			}
 		}
 	}
