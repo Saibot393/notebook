@@ -3,6 +3,8 @@ import {cModuleName, isActiveElement} from "../utils/utils.js";
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
 
+import {registerHoverShadow} from "../helpers/visualHelpers.js";
+
 const cDefaultWidth = 1000;
 const cDefaultHeight = 1000;
 const cDistanceThreshold = 20;
@@ -13,6 +15,18 @@ export class scribbleNote extends basicNote {
 		
 		this._drawing = false;
 		this._currentDrawing = undefined;
+	}
+	
+	static get windowOptions() {
+		return {
+			resizable: true,
+			width: 313,
+			height: 343
+		}
+	}
+	
+	get windowedAMH() {
+		return false;
 	}
 	
 	get defaultContent() {
@@ -58,22 +72,32 @@ export class scribbleNote extends basicNote {
 		return game.user.color;
 	}
 	
-	deleteallDrawings() {
+	deleteAllDrawings() {
 		if (this.isOwner) {
-			this.updateContent({"-=drawings" : undefined});
+			let vKeys = Object.keys(this.drawings);
+		
+			let vDeletes = {};
+			
+			for (let vKey of vKeys) {
+				vDeletes["-=" + vKey] = {};
+			}
+			
+			this.drawings = vDeletes;
 		}
 	}
 	
 	deleteOwnDrawings() {
-		let vKeys = Object.keys(this.drawings).filter(vKey => this.drawings[vKey].drawer == game.user.id);
-	
-		let vDeletes = {};
+		if (this.canEdit) {
+			let vKeys = Object.keys(this.drawings).filter(vKey => this.drawings[vKey].drawer == game.user.id);
 		
-		for (let vKey of vKeys) {
-			vDeletes["-=" + vKey] = undefined;
+			let vDeletes = {};
+			
+			for (let vKey of vKeys) {
+				vDeletes["-=" + vKey] = {};
+			}
+			
+			this.drawings = vDeletes;
 		}
-		
-		this.drawings = vDeletes;
 	}
 	
 	startDrawing() {
@@ -96,6 +120,7 @@ export class scribbleNote extends basicNote {
 		vscribbleDIV.style.display = "flex";
 		vscribbleDIV.style.width = "100%";
 		vscribbleDIV.style.height = "100%";
+		vscribbleDIV.style.position = "relative";
 		
 		let vCanvas = document.createElement("canvas");
 		vCanvas.style.width = "100%";
@@ -108,15 +133,34 @@ export class scribbleNote extends basicNote {
 		vCanvas.onmouseup = () => {this.stopDrawing()};
 		vCanvas.onmousemove = (pEvent) => {this.draw(pEvent)};
 		
+		let vclearButton = document.createElement("i");
+		vclearButton.classList.add("fa-solid", "fa-eraser");
+		vclearButton.style.top = "3px";
+		vclearButton.style.right = "3px";
+		vclearButton.style.color = this.primeColor;
+		vclearButton.style.cursor = "pointer";
+		vclearButton.style.position = "absolute";
+		registerHoverShadow(vclearButton);
+		vclearButton.onclick = (pEvent) => {
+			if (pEvent.shiftKey && this.isOwner) {
+				this.deleteAllDrawings();
+			}
+			else {
+				this.deleteOwnDrawings();
+			}
+		}
+		
 		vscribbleDIV.appendChild(vCanvas);
+		vscribbleDIV.appendChild(vclearButton);
 		this.mainElement.appendChild(vscribbleDIV);
 		
 		this.contentElements.scribble = vscribbleDIV;
 		this.contentElements.canvas = vCanvas;
+		this.contentElements.clearbutton = vclearButton;
 	}
 	
 	draw(pEvent) {
-		if (this.isDrawing) {
+		if (this.isDrawing && this.canEdit) {
 			let vKey = this.currentDrawing;
 			
 			let vDrawingPoints = this.drawings[vKey]?.points;
@@ -178,6 +222,23 @@ export class scribbleNote extends basicNote {
 			}
 			
 			vCanvasDraw.stroke();
+		}
+	}
+	
+	disable() {
+		this.contentElements.clearbutton.style.display = "none";
+	}
+	
+	enable() {
+		this.contentElements.clearbutton.style.display = "";
+	}
+	
+	onMouseHoverChange() {
+		if (this.isMouseHover && this.canEdit) {
+			this.contentElements.clearbutton.style.display = "";
+		}
+		else {
+			this.contentElements.clearbutton.style.display = "none";
 		}
 	}
 	

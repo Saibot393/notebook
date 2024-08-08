@@ -3,6 +3,8 @@ import {cModuleName, isActiveElement} from "../utils/utils.js";
 import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
 
+import {registerHoverShadow} from "../helpers/visualHelpers.js";
+
 let vMaxTextLength = 20000;
 
 const cFastNumber = {
@@ -89,6 +91,7 @@ export class enhancedtextNote extends basicNote {
 		veditButton.oncontextmenu = () => {
 			this.toggleEditMode(false);
 		}
+		registerHoverShadow(veditButton);
 		
 		vTextDIV.appendChild(venhancedText);
 		vTextDIV.appendChild(vtextInput);
