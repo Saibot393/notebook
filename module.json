@@ -38,6 +38,5 @@
   "manifest": "https://github.com/Saibot393/notebook/releases/latest/download/module.json",
   "readme": "https://github.com/Saibot393/notebook/blob/main/README.md",
   "changelog": "https://github.com/Saibot393/notebook/blob/main/CHANGELOG.md",
-  "bugs": "https://github.com/Saibot393/notebook/issues",
-  "allowBugReporter": true
+  "bugs": "https://github.com/Saibot393/notebook/issues"
 }
