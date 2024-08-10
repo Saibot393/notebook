@@ -3,6 +3,7 @@
   - Allows user to draw using their user color
   - A user can delete their own drawings using the eraser symbol at the top right
   - The owner can shift + click the eraser symbol to delete all drawings
+- Added setting Note background to change the note background pattern
 - Some small bug fixes and improvements
 
 ## v1.5.0
