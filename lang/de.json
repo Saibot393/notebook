@@ -21,7 +21,7 @@
 			"default"						: "standard",
 			"alldefault"					: "alle/standart",
 			
-			"createNote"					: "Neue Notiz erschaffen",
+			"createNote"					: "Notiz erschaffen",
 			"createFolder"					: "Ordner erschaffen",
 			"deleteNoteConfirm"				: "Notiz \"{pTitle}\" löschen?",
 			
@@ -51,7 +51,8 @@
 				"progressclock"				: "Fortschrittsuhr",
 				"roundcounter"				: "Rundenzähler",
 				"macro"						: "Macros",
-				"enhancedtext"				: "Erweiterter Text"
+				"enhancedtext"				: "Erweiterter Text",
+				"scribble"					: "Skizze"
 			},
 			
 			"min"							: "Min",

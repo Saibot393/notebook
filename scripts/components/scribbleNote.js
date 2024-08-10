@@ -7,7 +7,7 @@ import {registerHoverShadow} from "../helpers/visualHelpers.js";
 
 const cDefaultWidth = 1000;
 const cDefaultHeight = 1000;
-const cDistanceThreshold = 20;
+const cDistanceThreshold = 15;
 
 export class scribbleNote extends basicNote {
 	constructor(...args) {

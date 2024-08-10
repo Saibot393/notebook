@@ -56,7 +56,9 @@ export class basicNote {
 		
 		this._onTickChange = pOptions.onTickChange;
 		
-		this._soundvolumehookID = Hooks.on(`${cModuleName}.${cVolumeHook}.${this.id}`, () => {this.synchVolumeIcon()});
+		if (this.hasSound) {
+			this._soundvolumehookID = Hooks.on(`${cModuleName}.${cVolumeHook}.${this.id}`, () => {this.synchVolumeIcon()});
+		}
 
 		//this.render();
 	}
@@ -892,7 +894,7 @@ export class basicNote {
 	onClosebasic() {
 		this.onclose();
 		
-		Hooks.off(cVolumeHook, this._soundvolumehookID);
+		if (this._soundvolumehookID) Hooks.off(cVolumeHook, this._soundvolumehookID);
 	}
 	
 	onclose() {

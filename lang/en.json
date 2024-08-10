@@ -21,7 +21,7 @@
 			"default"						: "default",
 			"alldefault"					: "all/default",
 			
-			"createNote"					: "Create new Note",
+			"createNote"					: "Create Note",
 			"createFolder"					: "Create Folder",
 			"deleteNoteConfirm"				: "Delete note \"{pTitle}\" ?",
 			
@@ -51,7 +51,8 @@
 				"progressclock"				: "Progress Clock",
 				"roundcounter"				: "Round Counter",
 				"macro"						: "Macros",
-				"enhancedtext"				: "Enhanced Text"
+				"enhancedtext"				: "Enhanced Text",
+				"scribble"					: "Scribble"
 			},
 			
 			"min"							: "Min",

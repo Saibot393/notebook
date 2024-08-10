@@ -29,7 +29,7 @@ export class enhancedtextNote extends basicNote {
 	
 	get defaultContent() {
 		return {
-			text : "Test @UUID[Item.37KBvOIHZa3yyM9n]{New Item}"
+			text : ""
 		};
 	}
 	
