@@ -62,6 +62,11 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
 
   ![imag](https://imgur.com/u4iJNSZ.jpg)
 
+- #### Scribble notes:
+  A note for freehand drawing. The color is determined by the player color. The eraser symbol at the top right can be used to delete own drawing, the owner can use shift + click to delete all drawings
+
+   ![imag](https://imgur.com/7eYSBC7.jpg)
+
 ### Settings:
 
 #### Client:
@@ -70,6 +75,7 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
   - ALT quick create: Note type created when creating note while holding ALT
   - Small note height: Height some note types collapse to when the mouse leaves
   - Large note height: Height some note types expand to when the mouse enters
+  - Note background: Background pattern of notes
 
 ### Languages:
 

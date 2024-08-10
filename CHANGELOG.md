@@ -1,3 +1,11 @@
+## v1.6.0
+- Added bew Scribble note:
+  - Allows user to draw using their user color
+  - A user can delete their own drawings using the eraser symbol at the top right
+  - The owner can shift + click the eraser symbol to delete all drawings
+- Added setting Note background to change the note background pattern
+- Some small bug fixes and improvements
+
 ## v1.5.0
 - Added new Enhanced Text note:
   - Allows for inline rolls and Actor/Item/Journal... links to be added to the text (can be added via drag and drop)
