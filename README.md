@@ -75,6 +75,7 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
   - ALT quick create: Note type created when creating note while holding ALT
   - Small note height: Height some note types collapse to when the mouse leaves
   - Large note height: Height some note types expand to when the mouse enters
+  - Note background: Background pattern of notes
 
 ### Languages:
 
