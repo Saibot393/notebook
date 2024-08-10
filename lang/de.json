@@ -94,6 +94,16 @@
 			"largenoteheight" : {
 				"name"						: "Große Notiz Höhe",
 				"descrp"					: "Die Höhe auf welche manche Notizen expandiert werden wenn die Maus in der Notiz ist"
+			},
+			
+			"backgroundpattern" : {
+				"name"						: "Notiz Hintergrund",
+				"descrp"					: "Hintergrund muster für notizen",
+				"options" : {
+					"parchment"				: "Pergament",
+					"parchment-white"		: "Weißes Pergament",
+					"denim065"				: "Denim"
+				}
 			}
 		}
 	}

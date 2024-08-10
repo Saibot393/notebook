@@ -94,6 +94,16 @@
 			"largenoteheight" : {
 				"name"						: "Large note height",
 				"descrp"					: "The height some notes expand to when actively hovered"
+			},
+			
+			"backgroundpattern" : {
+				"name"						: "Note background",
+				"descrp"					: "Background pattern for notes",
+				"options" : {
+					"parchment"				: "Parchment",
+					"parchment-white"		: "White parchment",
+					"denim065"				: "Denim"
+				}
 			}
 		}
 	}
