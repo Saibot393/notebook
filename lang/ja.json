@@ -4,66 +4,66 @@
 		
 		"Titles" : {
 			"notebook" 						: "Notebook",
-			"note"							: "Note",
+			"note"							: "メモ",
 			
-			"defaultTitle"					: "Note Title",
-			"newNote"						: "New Note",
-			"copyfromTitle"					: "{pOriginal} - copy",
-			"newFolder"						: "New Folder",
-			"name"							: "Name",
-			"delete"						: "Delete",
-			"manually"						: "Manually",
+			"defaultTitle"					: "メモのタイトル",
+			"newNote"						: "新規メモ",
+			"copyfromTitle"					: "{pOriginal} - コピー",
+			"newFolder"						: "新規フォルダ",
+			"name"							: "名前",
+			"delete"						: "削除",
+			"manually"						: "手動",
 			
-			"searchNote"					: "Search Note",
+			"searchNote"					: "メモを検索",
 			
-			"userName"						: "User names",
-			"self"							: "self",
-			"default"						: "default",
-			"alldefault"					: "all/default",
+			"userName"						: "ユーザー名",
+			"self"							: "自分",
+			"default"						: "既定",
+			"alldefault"					: "すべて/規定",
 			
-			"createNote"					: "Create Note",
-			"createFolder"					: "Create Folder",
+			"createNote"					: "メモを作成",
+			"createFolder"					: "フォルダを作成",
 			"deleteNoteConfirm"				: "Delete note \"{pTitle}\" ?",
 			
 			"owner"							: "Owner",
 			"seer"							: "Observers",
 			"editor"						: "Editors",
 			
-			"permissions"					: "Permissions",
-			"showtouser"					: "Show user",
+			"permissions"					: "権限",
+			"showtouser"					: "ユーザーに見せる",
 			"permissionsTypes" : {
-				"default"					: "default",
-				"none"						: "none",
-				"see"						: "see",
-				"edit"						: "edit",
-				"owner"						: "owner"
+				"default"					: "既定",
+				"none"						: "なし",
+				"see"						: "閲覧",
+				"edit"						: "編集",
+				"owner"						: "所有者"
 			},
 			
-			"type"							: "Type",
-			"typeTitle"						: "{pType} Note",
+			"type"							: "タイプ",
+			"typeTitle"						: "{pType} メモ",
 			"notesTypes" : {
-				"text"						: "Text",
-				"counter"					: "Counter",
-				"list"						: "List",
-				"slider"					: "Slider",
-				"chat"						: "Chat",
-				"timer"						: "Timer",
-				"progressclock"				: "Progress Clock",
-				"roundcounter"				: "Round Counter",
-				"macro"						: "Macros",
+				"text"						: "テキスト",
+				"counter"					: "カウンター",
+				"list"						: "リスト",
+				"slider"					: "スライダー",
+				"chat"						: "チャット",
+				"timer"						: "タイマー",
+				"progressclock"				: "進行時計",
+				"roundcounter"				: "円カウンター",
+				"macro"						: "マクロ集",
 				"enhancedtext"				: "Enhanced Text",
-				"scribble"					: "Scribble"
+				"scribble"					: "落書き"
 			},
 			
 			"min"							: "Min",
 			"max"							: "Max",
-			"steps"							: "Steps",
+			"steps"							: "ステップ",
 			"segments"						: "Segments",
 			"changedirection"				: "change direction",
 			"reset"							: "reset",
-			"days"							: "days",
+			"days"							: "日",
 			
-			"none"							: "None"
+			"none"							: "なし"
 		},
 		
 		"Descrp" : {
@@ -97,12 +97,12 @@
 			},
 			
 			"backgroundpattern" : {
-				"name"						: "Note background",
-				"descrp"					: "Background pattern for notes",
+				"name"						: "メモの背景",
+				"descrp"					: "メモの背景となる図柄",
 				"options" : {
-					"parchment"				: "Parchment",
-					"parchment-white"		: "White parchment",
-					"denim065"				: "Denim"
+					"parchment"				: "羊皮紙",
+					"parchment-white"		: "白い羊皮紙",
+					"denim065"				: "デニム"
 				}
 			}
 		}
