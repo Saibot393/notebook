@@ -1,3 +1,6 @@
+## v1.6.1
+- Added japanese translation (thanks to [doumoku](https://github.com/doumoku))
+
 ## v1.6.0
 - Added bew Scribble note:
   - Allows user to draw using their user color
