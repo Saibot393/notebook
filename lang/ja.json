@@ -23,11 +23,11 @@
 			
 			"createNote"					: "メモを作成",
 			"createFolder"					: "フォルダを作成",
-			"deleteNoteConfirm"				: "Delete note \"{pTitle}\" ?",
+			"deleteNoteConfirm"				: "メモ「{pTitle}」を削除しますか？",
 			
-			"owner"							: "Owner",
-			"seer"							: "Observers",
-			"editor"						: "Editors",
+			"owner"							: "所有者",
+			"seer"							: "閲覧者",
+			"editor"						: "編集者",
 			
 			"permissions"					: "権限",
 			"showtouser"					: "ユーザーに見せる",
@@ -51,49 +51,49 @@
 				"progressclock"				: "進行時計",
 				"roundcounter"				: "円カウンター",
 				"macro"						: "マクロ集",
-				"enhancedtext"				: "Enhanced Text",
+				"enhancedtext"				: "拡張テキスト",
 				"scribble"					: "落書き"
 			},
 			
 			"min"							: "Min",
 			"max"							: "Max",
 			"steps"							: "ステップ",
-			"segments"						: "Segments",
-			"changedirection"				: "change direction",
-			"reset"							: "reset",
+			"segments"						: "区分",
+			"changedirection"				: "向きを変更",
+			"reset"							: "リセット",
 			"days"							: "日",
 			
 			"none"							: "なし"
 		},
 		
 		"Descrp" : {
-			"removeshiftclick"				: "remove with shift+click"
+			"removeshiftclick"				: "shift+左クリックで取り除く"
 		},
 		
 		"Settings" : {
 			"shiftquickcreate" : {
-				"name"						: "Shift quick create",
-				"descrp"					: "Note type created when holding shift while creating a new note"
+				"name"						: "Shiftクイック作成",
+				"descrp"					: "shiftを押しながら新規作成されるメモタイプ"
 			},
 			
 			"ctrlquickcreate" : {
-				"name"						: "CTRL quick create",
-				"descrp"					: "Note type created when holding CTRL while creating a new note"
+				"name"						: "CTRLクイック作成",
+				"descrp"					: "CTRLを押しながら新規作成されるメモタイプ"
 			},
 			
 			"altquickcreate" : {
-				"name"						: "ALT quick create",
-				"descrp"					: "Note type created when holding ALT while creating a new note"
+				"name"						: "ALTクイック作成",
+				"descrp"					: "ALTを押しながら新規作成されるメモタイプ"
 			},
 			
 			"smallnoteheight" : {
-				"name"						: "Small note height",
-				"descrp"					: "The height some notes collapse to when not actively hovered"
+				"name"						: "メモの高さ（小）",
+				"descrp"					: "特定のメモが非アクティブ状態になった時に畳まれる高さ"
 			},	
 			
 			"largenoteheight" : {
-				"name"						: "Large note height",
-				"descrp"					: "The height some notes expand to when actively hovered"
+				"name"						: "メモの高さ（大）",
+				"descrp"					: "特定のメモがアクティブ状態になった時に拡がる高さ"
 			},
 			
 			"backgroundpattern" : {
