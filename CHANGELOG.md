@@ -1,3 +1,6 @@
+## v1.6.2
+- Small bug fix for list notes
+
 ## v1.6.1
 - Added japanese translation (thanks to [doumoku](https://github.com/doumoku))
 
