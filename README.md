@@ -79,7 +79,7 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
 
 ### Languages:
 
-The module contains an English and a German translation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/notebook/issues).
+The module contains an English, a German, and a Japanese (thanks to [doumoku](https://github.com/doumoku)) translation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/notebook/issues).
 
 ---
 
