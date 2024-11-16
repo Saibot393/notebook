@@ -225,7 +225,7 @@ export class listNote extends basicNote {
 				
 				vList = [...vList.slice(0, vPosition), ...vInsertList, ...vList.slice(vPosition, vList.length)];
 
-				this.updateContent({list : vList}, {position : vPosition, insert : vInsert});
+				this.updateContent({list : vList}, {position : vPosition, insert : vInsert, completeUpdate : true});
 			}
 		}
 	}
@@ -251,7 +251,6 @@ export class listNote extends basicNote {
 	
 	onListItemDrop(pEvent, pDropData = undefined) {
 		let vDropData = pDropData || pEvent.dataTransfer.getData("text/plain") ? JSON.parse(pEvent.dataTransfer.getData("text/plain")) : undefined;
-		
 		if (vDropData?.listNoteID == this.id) {
 			let vYDrop = pEvent.pageY;
 			
@@ -280,7 +279,6 @@ export class listNote extends basicNote {
 	
 	renderList(pContext = undefined) {
 		let vSelectTarget;
-		
 		if (pContext?.content?.hasOwnProperty("position") && pContext?.content?.hasOwnProperty("insert")) {
 			let vPosition = pContext.content.position;
 			let vInsert = pContext.content.insert;
@@ -398,6 +396,13 @@ export class listNote extends basicNote {
 							break;
 					}		
 				}
+				vText.ondrop = (pEvent) => {
+					let vDropData = pEvent.dataTransfer.getData("text/plain") ? JSON.parse(pEvent.dataTransfer.getData("text/plain")) : undefined;
+					
+					if (vDropData?.isListItem) {
+						pEvent.preventDefault();
+					}
+				}
 				
 				let vDelete = document.createElement("i");
 				vDelete.classList.add("fa-solid", "fa-xmark");
@@ -444,7 +449,8 @@ export class listNote extends basicNote {
 			}
 			
 			let vText = vList[i].text || "";
-			if (vElement.text.value != vText && pContext?.user != game.user.id) {
+
+			if (vElement.text.value != vText && (pContext?.user != game.user.id || pContext?.content?.completeUpdate)) {
 				vElement.text.value = vText;
 			}
 		}
