@@ -1,3 +1,6 @@
+## v1.6.3
+- Small bug fix for Text notes that could cause text notes to become desynched when multiple instances of the same note were opened by the same user
+
 ## v1.6.2
 - Small bug fix for list notes
 
