@@ -68,7 +68,7 @@ export class textNote extends basicNote {
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate, pContext) {
-		if (pContentUpdate.hasOwnProperty("text") && this.contentElements.text.value != this.text && pContext.user != game.user.id) {
+		if (pContentUpdate.hasOwnProperty("text") && this.contentElements.text.value != this.text && (pContext.user != game.user.id || !this.textisFocused())) {
 			let vPrevPosition = [];
 			let vOffset = 0;
 			if (isActiveElement(this.contentElements.text)) {
@@ -100,6 +100,10 @@ export class textNote extends basicNote {
 	
 	onMouseHoverChange() {
 		this.updateTextHeight();
+	}
+	
+	textisFocused() {
+		return this.contentElements.text == document.activeElement;
 	}
 	
 	updateTextHeight() {
