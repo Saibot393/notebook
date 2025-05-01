@@ -7,10 +7,16 @@ const cResetIcon = "fa-xmark";
 const cColorRadius = Math.sqrt(3 * 10**2);
 
 export class noteFilter {
-	constructor(pApplyFilter) {
+	constructor(pApplyFilter, pOptions = {}) {
 		this.applyFilter = pApplyFilter;
 		
+		this._oldUI = pOptions.oldUI;
+		
 		this.render();
+	}
+	
+	get useoldUI() {
+		return this._oldUI;
 	}
 	
 	render() {
@@ -18,6 +24,10 @@ export class noteFilter {
 		this.element.style.display = "flex";
 		this.element.style.flexDirection = "column";
 		this.element.style.color = "var(--color-text-light-highlight)";
+		if (!this.useoldUI) {
+			this.element.style.paddingInline = "8px";
+			this.element.style.gap = "8px";
+		}
 		this.element.onmouseenter = () => {vDetailDIV.style.display = "flex"};
 		this.element.onmouseleave = () => {if (!Object.values(this.inputs).find(vInput => isActiveElement(vInput))) vDetailDIV.style.display = "none"};
 		
@@ -27,7 +37,7 @@ export class noteFilter {
 		
 		let vTitleInput = document.createElement("input");
 		vTitleInput.type = "text";
-		vTitleInput.style.background = "rgba(255, 255, 245, 0.8)";
+		vTitleInput.style.background = this.useoldUI ? "rgba(255, 255, 245, 0.8)" : "transparent";
 		vTitleInput.placeholder = Translate("Titles.searchNote");
 		
 		let vResetButton = document.createElement("i");
@@ -48,7 +58,7 @@ export class noteFilter {
 		let vTypeSelect = document.createElement("select");
 		vTypeSelect.style.flexGrow = "1";
 		vTypeSelect.style.maxWidth = "110px";
-		vTypeSelect.style.background = "rgba(255, 255, 245, 0.8)";
+		vTypeSelect.style.background = this.useoldUI ? "rgba(255, 255, 245, 0.8)" : "transparent";
 		vTypeSelect.style.margin = "2px";
 		vTypeSelect.style.marginLeft = "0px";
 		for (let vType of ["", ...Object.keys(CONFIG.notebook.noteTypes)]) {
@@ -56,30 +66,36 @@ export class noteFilter {
 			vTypeOption.value = vType;
 			vTypeOption.innerHTML = vType ? CONFIG.notebook.noteTypes[vType].displayType : "";
 			vTypeSelect.appendChild(vTypeOption);
+			vTypeSelect.style.background = "var(--sidebar-background, var(--color-cool-5-90))";
+			vTypeSelect.style.color = "var(--color-text-primary)";
 		}
 		
 		let vPermissionSelect = document.createElement("select");
 		vPermissionSelect.style.flexGrow = "1";
 		vPermissionSelect.style.maxWidth = "110px";
-		vPermissionSelect.style.background = "rgba(255, 255, 245, 0.8)";
+		vPermissionSelect.style.background = this.useoldUI ? "rgba(255, 255, 245, 0.8)" : "transparent";
 		vPermissionSelect.style.margin = "2px";
 		for (let vPermission of ["", "owner", "edit", "see"]) {
 			let vPermissionOption = document.createElement("option");
 			vPermissionOption.value = vPermission;
 			vPermissionOption.innerHTML = vPermission ? Translate("Titles.permissionsTypes." + vPermission) : "";
 			vPermissionSelect.appendChild(vPermissionOption);
+			vPermissionSelect.style.background = "var(--sidebar-background, var(--color-cool-5-90))";
+			vPermissionSelect.style.color = "var(--color-text-primary)";
 		}
 		
 		let vOwnerSelect = document.createElement("select");
 		vOwnerSelect.style.flexGrow = "1";
 		vOwnerSelect.style.maxWidth = "110px";
-		vOwnerSelect.style.background = "rgba(255, 255, 245, 0.8)";
+		vOwnerSelect.style.background = this.useoldUI ? "rgba(255, 255, 245, 0.8)" : "transparent";
 		vOwnerSelect.style.margin = "2px";
 		for (let vOwner of [{id : ""}, ...Array.from(game.users).filter(vUser => !vUser.isSelf)]) {
 			let vOwnerOption = document.createElement("option");
 			vOwnerOption.value = vOwner.id;
 			vOwnerOption.innerHTML = vOwner.name ? vOwner.name : "";
 			vOwnerSelect.appendChild(vOwnerOption);
+			vOwnerSelect.style.background = "var(--sidebar-background, var(--color-cool-5-90))";
+			vOwnerSelect.style.color = "var(--color-text-primary)";
 		}
 		
 		vDetailDIV.appendChild(vTypeSelect);

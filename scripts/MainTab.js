@@ -16,41 +16,72 @@ Hooks.once("ready", async () => {
 //Hooks.on("renderSidebarTab", async (pDirectory, pElements, pContext) => {
 	await cleanUserData(); //clean before to prevent bugs during delete
 	
-	let vSidebar = ui.sidebar._element[0];
+	const cVersion = game.data.release.generation;
+	const cOldSideBarUI = cVersion < 13;
+	
+	let vSidebar = cOldSideBarUI ? ui.sidebar._element[0] : ui.sidebar.element;
 	
 	if (game.user.isGM) {
-		if (!game.modules.get("pf2e-dorako-ux")?.active) {
+		if (!game.modules.get("pf2e-dorako-ux")?.active && cOldSideBarUI) {
 			vSidebar.style.width = "315px";
 		}
 	}
-	
-	let vNoteTabButton = document.createElement("a");
-	vNoteTabButton.classList.add("item");
-	vNoteTabButton.setAttribute("data-tab", cModuleName);
-	vNoteTabButton.setAttribute("data-tooltip", Translate("Titles.notebook"));
-	vNoteTabButton.setAttribute("aria-controls", cModuleName);
-	vNoteTabButton.setAttribute("role", "tab");
-	
-	let vNoteIcon = document.createElement("i");
-	vNoteIcon.classList.add("fa-solid", cNoteIcon);
-	
-	vNoteTabButton.appendChild(vNoteIcon);
-	
-	vSidebar.querySelector("nav").querySelector(`[data-tab="journal"]`).after(vNoteTabButton);
 	
 	let vNoteTab = document.createElement("section");
 	vNoteTab.classList.add("tab", "sidebar-tab", "chat-sidebar", "directory", "flexcol");
 	vNoteTab.setAttribute("id", cModuleName);
 	vNoteTab.setAttribute("data-tab", cModuleName);
+	if (!cOldSideBarUI) {
+		vNoteTab.style.background = "var(--sidebar-background, var(--color-cool-5-90))";
+		vNoteTab.style.color = "var(--color-text-primary)";
+	}
 	
 	Hooks.call(cModuleName + ".prepareNotes", {NoteTab : vNoteTab});
 	
-	ui[cModuleName] = new notesTab({tab : vNoteTab});
-	ui.sidebar.tabs[cModuleName] = ui[cModuleName];
+	ui[cModuleName] = new notesTab({tab : vNoteTab, oldUI : cOldSideBarUI});
 	
-	vSidebar.appendChild(vNoteTab);
+	if (cOldSideBarUI) {
+		ui.sidebar.tabs[cModuleName] = ui[cModuleName];
+		
+		let vNoteTabButton = document.createElement("a");
+		vNoteTabButton.classList.add("item");
+		vNoteTabButton.setAttribute("data-tab", cModuleName);
+		vNoteTabButton.setAttribute("data-tooltip", Translate("Titles.notebook"));
+		vNoteTabButton.setAttribute("aria-controls", cModuleName);
+		vNoteTabButton.setAttribute("role", "tab");
+		
+		let vNoteIcon = document.createElement("i");
+		vNoteIcon.classList.add("fa-solid", cNoteIcon);
+		
+		vNoteTabButton.appendChild(vNoteIcon);
+		
+		vSidebar.querySelector("nav").querySelector(`[data-tab="journal"]`).after(vNoteTabButton);
+		vSidebar.appendChild(vNoteTab);
+	}
+	else {
+		ui.sidebar.parts[cModuleName] = ui[cModuleName];
+		let vNoteListItem = document.createElement("li");
+		
+		let vNoteTabButton = document.createElement("button");
+		vNoteTabButton.classList.add("ui-control", "plain", "icon", "fa-solid", cNoteIcon);
+		vNoteTabButton.setAttribute("data-action", "tab");
+		vNoteTabButton.setAttribute("role", "tab");
+		vNoteTabButton.setAttribute("data-tab", cModuleName);
+		vNoteTabButton.setAttribute("data-group", "primary");
+		vNoteTabButton.setAttribute("data-tooltip", Translate("Titles.notebook"));
+		vNoteTabButton.setAttribute("aria-controls", cModuleName);
+		vNoteTabButton.setAttribute("role", "tab");
+		
+		vNoteTab.setAttribute("data-group", "primary");
+		
+		vNoteListItem.appendChild(vNoteTabButton);
+		vSidebar.querySelector("nav").querySelector(`[data-tab="journal"]`).parentNode.after(vNoteListItem);
+		vSidebar.querySelector('[id="sidebar-content"]').appendChild(vNoteTab);
+	}
 	
-	Hooks.call(cModuleName + ".notesReady", {NoteTab : vNoteTab, notes : ui.sidebar.tabs[cModuleName]});
+	
+	
+	Hooks.call(cModuleName + ".notesReady", {NoteTab : vNoteTab, notes : ui[cModuleName]});
 });
 
 export const cNoteSortFlag = "notesort";
@@ -62,6 +93,7 @@ class notesTab /*extends SidebarTab*/ {
 		//super(options);
 		
 		this.tab = options.tab;
+		this._oldUI = options.oldUI;
 		
 		this.notes = NoteManager.viewableNotes();
 		
@@ -98,6 +130,10 @@ class notesTab /*extends SidebarTab*/ {
 				}
 			}
 		});
+	}
+	
+	get useoldUI() {
+		return this._oldUI;
 	}
 	
 	get defaultNoteOptions() {
@@ -138,10 +174,22 @@ class notesTab /*extends SidebarTab*/ {
 	render() {
 		let vHeader = document.createElement("header");
 		vHeader.style.flex = "none";
+		if (!this.useoldUI) {
+			vHeader.style.gap = "8px";
+			vHeader.style.marginBlock = "8px";
+			
+			vHeader.style.gap = "8px"
+			vHeader.style.display = "flex";
+			vHeader.style.flexDirection = "column";
+		}
 		
 		let vButtons = document.createElement("div");
 		vButtons.classList.add("header-actions", "action-buttons");
 		vButtons.style.display = "flex";
+		if (!this.useoldUI) {
+			vButtons.style.paddingInline = "8px";
+			vButtons.style.gap = "8px";
+		}
 		
 		let vNewNoteButton = document.createElement("button");
 		vNewNoteButton.classList.add("create-document", "create-entry");
@@ -191,11 +239,16 @@ class notesTab /*extends SidebarTab*/ {
 		vNewFolderButton.appendChild(vNewFolderIcon);
 		vNewFolderButton.appendChild(vNewFolderLabel);
 		
+		if (!this.useoldUI) {
+			vNewNoteButton.style.flexGrow = "1";
+			vNewFolderButton.style.flexGrow = "1";
+		}
+		
 		vButtons.appendChild(vNewNoteButton);
 		vButtons.appendChild(vNewFolderButton);
 		
 		vHeader.appendChild(vButtons);
-		vHeader.appendChild((new noteFilter((pFilter) => {this.filterEntries(pFilter)})).element);
+		vHeader.appendChild((new noteFilter((pFilter) => {this.filterEntries(pFilter)}, {oldUI : this.useoldUI})).element);
 		
 		this.tab.appendChild(vHeader);
 		

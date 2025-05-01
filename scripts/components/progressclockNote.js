@@ -212,14 +212,14 @@ export class progressclockNote extends basicNote {
 		
 		vDrawer.beginPath();
 		vDrawer.arc(cClockSize/2, cClockSize/2, cClockSize/2 - cLineWidth, 0, 2 * Math.PI);
-		vDrawer.lineWidth = 4;
+		vDrawer.lineWidth = cLineWidth;
 		vDrawer.strokeStyle = this.primeColor;
 		vDrawer.stroke();
 		
 		for (let i = 0; i < this.max; i++) {
 			vDrawer.beginPath();
 			vDrawer.moveTo(cClockSize/2, cClockSize/2);
-			vDrawer.lineWidth = 4;
+			vDrawer.lineWidth = cLineWidth;
 			vDrawer.strokeStyle = this.primeColor;
 			vDrawer.lineTo(cClockSize/2 + (cClockSize/2 - cLineWidth) * Math.sin(i * vSegmentAngle), cClockSize/2 - (cClockSize/2 - cLineWidth) * Math.cos(i * vSegmentAngle));
 			vDrawer.stroke();
@@ -242,7 +242,7 @@ export class progressclockNote extends basicNote {
 			vDrawer = this.contentElements.segments[i].getContext("2d");
 			vDrawer.clearRect(0, 0, cClockSize, cClockSize);
 			vDrawer.beginPath();
-			vDrawer.lineWidth = 4;
+			vDrawer.lineWidth = cLineWidth;
 			vDrawer.fillStyle = cSegmentColor;
 			vDrawer.arc(cClockSize/2, cClockSize/2, cClockSize/2 - cLineWidth, i * vSegmentAngle - Math.PI/2, (i+1) * vSegmentAngle - Math.PI/2);
 			vDrawer.fill();

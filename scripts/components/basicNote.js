@@ -227,6 +227,10 @@ export class basicNote {
 		return "maroon";
 	}
 	
+	get secondColor() {
+		return "indianred";
+	}
+	
 	get ownerColor() {
 		return this.owner?.color;
 	}

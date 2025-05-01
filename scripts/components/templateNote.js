@@ -5,11 +5,11 @@ import {NoteManager} from "../MainData.js";
 import {basicNote} from "./basicNote.js";
 
 import {registerHoverShadow} from "../helpers/visualHelpers.js";
-//INTERNAL
 /*EXTERNAL - for other modules
 Hooks.once("notebook.notesInit", ({NoteManager, basicNote}) => {
 	//NoteManager can be used to gain more information/data about notes and to interact with the note data structure (be careful, and ONLY use the NoteManager to interact with note data)
 	//convention for class name : "moduleid_notetypeNote"
+	
 	class templateNote extends basicNote {
 		
 	}
@@ -17,6 +17,7 @@ Hooks.once("notebook.notesInit", ({NoteManager, basicNote}) => {
 	CONFIG["notebook"].noteTypes[templateNote.type] = templateNote;
 });
 EXTERNAL*/
+//INTERNAL
 
 export class templateNote extends basicNote {
 	static get displayType() {
