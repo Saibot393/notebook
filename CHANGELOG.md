@@ -1,3 +1,7 @@
+## v2.0.0
+- v13 Compatibility
+- Adjusted Tab design to match new ui
+
 ## v1.6.3
 - Small bug fix for Text notes that could cause text notes to become desynched when multiple instances of the same note were opened by the same user
 
