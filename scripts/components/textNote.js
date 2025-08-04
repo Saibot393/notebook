@@ -43,6 +43,7 @@ export class textNote extends basicNote {
 		vText.style.borderRadius = "0";
 		vText.style.background = "transparent";
 		vText.style.fontFamily = "Arial";
+		vText.style.color = "black";
 		//vText.style.height = "auto";
 		//vText.value = this.text;
 		vText.oninput = () => {
