@@ -1,3 +1,6 @@
+## v2.0.1
+- Small UI fix for text notes
+
 ## v2.0.0
 - v13 Compatibility
 - Adjusted Tab design to match new ui
