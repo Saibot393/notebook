@@ -6,6 +6,7 @@ import {noteCreation} from "./helpers/noteCreation.js";
 import {noteFilter} from "./helpers/noteFilter.js";
 
 import {tabWindow} from "./helpers/tabWindow.js";
+import {tabWindowv2} from "./helpers/tabWindowv2.js";
 
 export const cNoteIcon = "fa-note-sticky";
 export const cFolderIcon = "fa-folder";
@@ -78,7 +79,6 @@ Hooks.once("ready", async () => {
 		vSidebar.querySelector("nav").querySelector(`[data-tab="journal"]`).parentNode.after(vNoteListItem);
 		vSidebar.querySelector('[id="sidebar-content"]').appendChild(vNoteTab);
 	}
-	
 	
 	
 	Hooks.call(cModuleName + ".notesReady", {NoteTab : vNoteTab, notes : ui[cModuleName]});
@@ -294,6 +294,10 @@ class notesTab /*extends SidebarTab*/ {
 		this.rootFolder.render();
 		
 		this.tab.appendChild(this.rootFolder.element);
+		
+		if (!this.useoldUI) {
+			this.rootFolder.element.style.flex = "1 1 100%";
+		}
 	}
 	
 	renderEntries() {
@@ -353,7 +357,7 @@ class notesTab /*extends SidebarTab*/ {
 	*/
 	
 	renderPopout() {
-		new tabWindow().render(true);
+		game.data.release.generation < 13 ? new tabWindow().render(true) : new tabWindowv2().render(true);
 	}
 	
 	checkEnabled() {
