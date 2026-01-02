@@ -17,7 +17,7 @@ import {enhancedtextNote} from "./components/enhancedtextNote.js";
 import {scribbleNote} from "./components/scribbleNote.js";
 import {hourglasNote} from "./components/hourglasNote.js";
 
-const cNoteTypes = [textNote, counterNote, listNote, sliderNote, chatNote, timerNote, progressclockNote, roundcounterNote, macroNote, enhancedtextNote, scribbleNote, hourglasNote];
+const cNoteTypes = [textNote, counterNote, listNote, sliderNote, chatNote, timerNote, progressclockNote, roundcounterNote, macroNote, enhancedtextNote, scribbleNote/*, hourglasNote*/];
 
 CONFIG.debug.notebook = false;
 
