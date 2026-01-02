@@ -1,3 +1,6 @@
+## v2.0.3
+- Small fix
+
 ## v2.0.2
 - UI fix for popout tab
 
