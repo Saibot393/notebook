@@ -1,3 +1,6 @@
+## v2.0.2
+- UI fix for popout tab
+
 ## v2.0.1
 - Small UI fix for text notes
 
