@@ -175,7 +175,7 @@ export class progressclockNote extends basicNote {
 		vPClockDIV.appendChild(vSpacer2);
 		vPClockDIV.appendChild(vSettingDIV);
 		
-		this.mainElement.appendChild(vPClockDIV);
+		this.contentElement.appendChild(vPClockDIV);
 		
 		this.contentElements.progress = vProgressDIV;
 		this.contentElements.pattern = vPattern;

@@ -60,7 +60,7 @@ export class templateNote extends basicNote {
 	renderContent() {
 		//REQUIRED
 		//specific implementations required
-		//this.mainElement
+		//this.contentElement
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate, pContext) {

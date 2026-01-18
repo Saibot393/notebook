@@ -62,7 +62,7 @@ export class textNote extends basicNote {
 		vText.onfocus = () => {this.updateTextHeight()};
 		
 		vTextDIV.appendChild(vText);
-		this.mainElement.appendChild(vTextDIV);
+		this.contentElement.appendChild(vTextDIV);
 		
 		this.contentElements.text = vText;
 		this.contentElements.textdiv = vTextDIV;

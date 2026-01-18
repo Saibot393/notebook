@@ -93,6 +93,126 @@ export class basicNote {
 		);
 	}
 	
+	exportDataToFile(pOptions) {
+		let vData = {
+			noteData : this.noteData,
+			type : this.type,
+			_stats : {
+				exportSource : {
+					worldId: game.world.id,
+					id: this.id,
+					coreVersion: game.version,
+					systemId: game.system.id,
+					systemVersion: game.system.version,
+					moduleId : cModuleName,
+					moduleVersion : game.modules.get(cModuleName)._source.version
+				}
+			}
+		};
+		
+      const cFileName = ["fvtt", this.title, this.title?.slugify(), this.id].filterJoin("-");
+      foundry.utils.saveDataToFile(JSON.stringify(vData, null, 2), "text/json", `${cFileName}.json`);
+	}
+	
+	importData(pData) {
+		if (pData.type == this.type) {
+			this.updateData(pData.noteData)
+		}
+		else {
+			ui.notifications.error(Translate("Titles.Warnings", {pGotType : Translate("Titles.notesTypes." + pData.type), pExpectedType : Translate("Titles.notesTypes." + this.type)}), {console : true});
+		}
+	}
+	
+	importFromJSON(pJSON) {
+		this.importData(JSON.parse(pJSON));
+	}
+	
+    async importFromJSONDialog() { //directly copied from foundry.mjs
+      await foundry.applications.api.DialogV2.wait({
+        window: {title: `${game.i18n.localize("DOCUMENT.ImportData")}: ${this.name}`}, // FIXME: double localization
+        position: {width: 400},
+        content: await foundry.applications.handlebars.renderTemplate("templates/apps/import-data.hbs", {
+          hint1: game.i18n.format("DOCUMENT.ImportDataHint1", {document: this.documentName}),
+          hint2: game.i18n.format("DOCUMENT.ImportDataHint2", {name: this.name})
+        }),
+        buttons: [{
+          action: "import",
+          label: "Import",
+          icon: "fa-solid fa-file-import",
+          callback: (event, button) => {
+            const form = button.form;
+            if ( !form.data.files.length ) {
+              return ui.notifications.error("DOCUMENT.ImportDataError", {localize: true});
+            }
+            foundry.utils.readTextFromFile(form.data.files[0]).then(json => this.importFromJSON(json));
+          },
+          default: true
+        }, {
+          action: "no",
+          label: "Cancel",
+          icon: "fa-solid fa-xmark"
+        }]
+      });
+    }
+	
+	_createContextMenu() {
+		const cMenuItems = this.contextMenuItems();
+		
+		return new ContextMenu.implementation(this.captionElement, ".note_icon", cMenuItems, {eventName : "contextmenu", jQuery: false, fixed: true});
+	}
+	
+	contextMenuItems() {
+		return [
+			{
+				name: Translate("Titles.context.ownership"),
+				icon: '<i class="fa-solid fa-lock fa-fw"></i>',
+				condition: li => NoteManager.ownsNote(this.noteData),
+				callback: li => {
+					new notePermissionsWindow(this.id, this.noteData, {}).render(true)
+				}
+			},
+			{
+				name: Translate("Titles.context.exportdata"),
+				icon: '<i class="fa-solid fa-file-export fa-fw"></i>',
+				condition: li => true,
+				callback: li => {
+					this.exportDataToFile();
+				}
+			},
+			{
+				name: Translate("Titles.context.importdata"),
+				icon: '<i class="fa-solid fa-file-import fa-fw"></i>',
+				condition: li => this.canEdit,
+				callback: li => {
+					this.importFromJSONDialog()
+				}
+			},
+			{
+				name: Translate("Titles.context.delete"),
+				icon: '<i class="fa-solid fa-trash fa-fw"></i>',
+				condition: li => NoteManager.canDeleteSelf(this.id),
+				callback: li => {
+					Dialog.confirm({
+						title: Translate("Titles.delete"),
+						content: Translate("Titles.deleteNoteConfirm", {pTitle : this.title}),
+						yes: () => {this.delete()},
+						no: () => {},
+						defaultYes: false
+					});
+				}
+			},
+			{
+				name: Translate("Titles.context.copy"),
+				icon: '<i class="fa-regular fa-copy fa-fw"></i>',
+				condition: li => true,
+				callback: li => {
+					this.copy();
+				}
+			}
+		];
+	}
+				
+	
 	makeready() {
 		this._ready = true;
 		
@@ -357,7 +477,7 @@ export class basicNote {
 	}
 	
 	get contentState() {
-		return this.mainElement.style.display != "none";
+		return this.contentElement.style.display != "none";
 	}
 	
 	set contentState(pState) {
@@ -368,10 +488,10 @@ export class basicNote {
 	
 	toggleContent() {
 		if (this.contentState) {
-			this.mainElement.style.display = "none";
+			this.contentElement.style.display = "none";
 		}
 		else {
-			this.mainElement.style.display = "";
+			this.contentElement.style.display = "";
 		}
 		
 		game.user.setFlag(cModuleName, cNoteToggleFlag, {[this.id] : this.contentState});
@@ -422,6 +542,7 @@ export class basicNote {
 	render() {
 		if (!this.windowed) {
 			this._element = document.createElement("div");
+			this._element.classList.add("note");
 			this._element.id = this.id;
 			this._element.flexDirection = "column";
 			this._element.style.border = this.captionColor;
@@ -440,6 +561,7 @@ export class basicNote {
 		else {
 			this.captionElement = this.window.header;
 		}
+		this.captionElement.classList.add("note_caption");
 		this.captionElement.style.backgroundColor = this.captionColor;
 		this.captionElement.style.color = "white";
 		this.captionElement.style.flexDirection = "row";
@@ -456,12 +578,14 @@ export class basicNote {
 			}
 		};
 		this.captionElement.oncontextmenu = (pEvent) => {
-			if (pEvent.shiftKey) {
-				this.copy();
-			}
-			else {
-				if (!this.windowed) {
-					this.toggleContent();
+			if (!pEvent.target.classList.contains("note_icon")) {
+				if (pEvent.shiftKey) {
+					this.copy();
+				}
+				else {
+					if (!this.windowed) {
+						this.toggleContent();
+					}
 				}
 			}
 		};
@@ -474,19 +598,20 @@ export class basicNote {
 		};
 		
 		if (!this.windowed) {
-			this.mainElement = document.createElement("div");
-			this.mainElement.style.height = "auto";
+			this.contentElement = document.createElement("div");
+			this.contentElement.style.height = "auto";
 		}
 		else {
-			this.mainElement = this.window.body;
+			this.contentElement = this.window.body;
 		}
-		this.mainElement.style.background = `url("${game.settings.get(cModuleName, "backgroundpattern")}") repeat`;
-		this.mainElement.style.backgroundBlendMode = "multiply";
-		this.mainElement.style.backgroundColor = this.backColor;
+		this.contentElement.classList.add("note_main");
+		this.contentElement.style.background = `url("${game.settings.get(cModuleName, "backgroundpattern")}") repeat`;
+		this.contentElement.style.backgroundBlendMode = "multiply";
+		this.contentElement.style.backgroundColor = this.backColor;
 		
 		if (!this.windowed) {
 			this._element.appendChild(this.captionElement);
-			this._element.appendChild(this.mainElement);
+			this._element.appendChild(this.contentElement);
 		}
 		
 		this.renderCaption();
@@ -506,6 +631,8 @@ export class basicNote {
 				console.error(vError);
 			}
 		}
+		
+		this._createContextMenu();
 		
 		this.makeready();
 		
@@ -529,7 +656,7 @@ export class basicNote {
 		
 		if (cShowIcon) {
 			let vNoteIcon = document.createElement("i");
-			vNoteIcon.classList.add("fa-solid");
+			vNoteIcon.classList.add("note_icon", "fa-solid");
 			if (typeof this.icon) {
 				vNoteIcon.classList.add(this.icon);
 			}
@@ -552,6 +679,7 @@ export class basicNote {
 		vTitle.style.color = "white";
 		vTitle.type = "text";
 		vTitle.value = this.title;
+		vTitle.setAttribute("data-tooltip", this.title);
 		vTitle.oninput = () => {this.updateData({title : vTitle.value})};
 		vTitle.style.minWidth = "25%";
 		vTitle.style.width = "0px";
@@ -720,11 +848,12 @@ export class basicNote {
 		if (pUpdate.hasOwnProperty("title")) {
 			if (this.title != this.captionElement.querySelector("#title").value) {
 				this.captionElements.title.value = this.title;
+				this.captionElements.title.setAttribute("data-tooltip", this.title);
 			}
 		}
 		
 		if (pUpdate.backColor) {
-			this.mainElement.style.backgroundColor = this.backColor;
+			this.contentElement.style.backgroundColor = this.backColor;
 			if (this.captionElements.icon) this.captionElements.icon.style.color = this.backColor;
 			this.onChangeColor(pUpdate.backColor);
 		}

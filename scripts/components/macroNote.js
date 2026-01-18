@@ -91,7 +91,7 @@ export class macroNote extends basicNote {
 		
 		this.renderList();
 		
-		this.mainElement.appendChild(vListDIV);
+		this.contentElement.appendChild(vListDIV);
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {

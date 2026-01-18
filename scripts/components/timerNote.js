@@ -249,7 +249,7 @@ export class timerNote extends basicNote {
 		vTimerDIV.appendChild(vTimeDIV);
 		vTimerDIV.appendChild(vSettingsDIV);
 		
-		this.mainElement.appendChild(vTimerDIV);
+		this.contentElement.appendChild(vTimerDIV);
 		
 		this.contentElements.d = vDayInput;
 		this.contentElements.h = vHourInput;
@@ -341,7 +341,7 @@ export class timerNote extends basicNote {
 		}
 	}
 	
-	renderTime(pSplit = undefined) {
+	renderTime(pSplit = undefined) { //this makes sure, only the used inputs (h/m/s) are shown when not in edit mode
 		let vSplit = pSplit;
 		
 		if (!vSplit) {

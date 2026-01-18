@@ -52,7 +52,8 @@
 				"roundcounter"				: "Rundenzähler",
 				"macro"						: "Macros",
 				"enhancedtext"				: "Erweiterter Text",
-				"scribble"					: "Skizze"
+				"scribble"					: "Skizze",
+				"hourglass"					: "Sanduhr"
 			},
 			
 			"min"							: "Min",
@@ -60,10 +61,24 @@
 			"steps"							: "Schritt",
 			"segments"						: "Segmente",
 			"changedirection"				: "Richtung ändern",
-			"reset"							: "zurücksetzen",
+			"reset"							: "Zurücksetzen",
 			"days"							: "Tage",
+			"maxtime"						: "Max Zeit",
+			"currenttime"					: "Momentane Zeit",
 			
-			"none"							: "Nichts"
+			"none"							: "Nichts",
+			
+			"context" : {
+				"ownership"					: "Berechtigungen",
+				"exportdata"				: "Daten exportieren",
+				"importdata"				: "Daten importieren",
+				"delete"					: "Löschen",
+				"copy"						: "Verdoppeln"
+			}
+		},
+		
+		"Warnings" : {
+			"importError"					: "Ex wurde versucht eine {pGotType} Notiz zu importieren, es wurde eine {pExpectedType} Notiz erwartet"
 		},
 		
 		"Descrp" : {

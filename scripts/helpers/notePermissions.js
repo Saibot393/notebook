@@ -47,7 +47,8 @@ export class notePermissionsWindow extends Application {
 		
 		vUsers.unshift({
 			name :  game.user.isGM ? Translate("Titles.alldefault") : Translate("Titles.default"),
-			id : "default"
+			id : "default",
+			isDefault : true
 		});
 		
 		vUsers = vUsers.filter(vUser => !vUser.isGM);
@@ -98,6 +99,9 @@ export class notePermissionsWindow extends Application {
 			
 			let vName = document.createElement("td");
 			vName.innerHTML = vUser.name;
+			if (vUser.isDefault) {
+				vName.style.fontWeight = "bold";
+			}
 			
 			if (vUser.isGM) {
 				vName.innerHTML = vName.innerHTML + "[GM]";

@@ -109,7 +109,7 @@ export class listNote extends basicNote {
 		vListdiv.appendChild(vList);
 		vListdiv.appendChild(vAdddiv);
 		
-		this.mainElement.appendChild(vListdiv);
+		this.contentElement.appendChild(vListdiv);
 		
 		this.contentElements.list = vList;
 		this.contentElements.listdiv = vListdiv;

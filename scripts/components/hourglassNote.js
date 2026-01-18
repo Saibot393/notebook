@@ -19,15 +19,23 @@ const cSeperator = ":";
 
 const cGlassWidth = 120;
 const cGlassHeight = cGlassWidth*1.5;
-const cGlasResolution = 15; //number of draw points
+const cGlasResolution = 300; //number of draw points
 const cLineWidth = 4;
 
 const cyMax = Math.tan(1);
-let vCurve = (py) => {return Math.atan(py/cGlasResolution * cyMax)}
+let fCurve = (py) => {return Math.atan(py/cGlasResolution * cyMax)}
 
-export class hourglasNote extends basicNote {
+export class hourglassNote extends basicNote {
 	get icon() {
 		return "fa-hourglass";
+	}
+	
+	static get windowOptions() {
+		return {
+			...super.windowOptions,
+			resizable: false,
+			height: 180 + 30
+		}
 	}
 	
 	get defaultContent() {
@@ -35,7 +43,7 @@ export class hourglasNote extends basicNote {
 			running : false,
 			offset : 0,
 			basetime : undefined,
-			maxtime : 0,
+			maxtime : 300,
 			lastsplit : cZeroSplit
 		}; 
 	}
@@ -95,13 +103,21 @@ export class hourglasNote extends basicNote {
 		}
 	}
 	
-		
-	get fillStand() {
-		return Math.min(1, Math.max(0, this.time/this.maxtime));
-	}
-	
 	set time(pTime) {
 		this.updateContent({basetime : this.now, offset : Number(pTime)});
+	}
+	
+	
+	get timeS() {
+		return this.time/1000;
+	}
+	
+	set timeS(pTime) {
+		this.time = pTime*1000
+	}
+	
+	get fillLevel() {
+		return Math.min(1, Math.max(0, this.time/this.maxtime/1000));
 	}
 	
 	get timeSplit() {
@@ -121,6 +137,15 @@ export class hourglasNote extends basicNote {
 	
 	get hasSound() {
 		return true;
+	}
+	
+	resetTime() {
+		if (this.running) {
+			this.stop(true);
+		}
+		else {
+			this.time = 0;
+		}
 	}
 	
 	renderContent() {
@@ -189,33 +214,38 @@ export class hourglasNote extends basicNote {
 		
 		let vMaxTimeInput = document.createElement("input");
 		vMaxTimeInput.type = "text";
+		vMaxTimeInput.style.width = "auto"
+		vMaxTimeInput.style.textAlign = "center"
 		vMaxTimeInput.style.color = this.primeColor;
 		vMaxTimeInput.style.backgroundColor = "rgba(255,255,255,0)";
-		vMaxTimeInput.style.flexGrowth = "1";
 		vMaxTimeInput.style.border = "2px";
 		vMaxTimeInput.style.borderStyle = "solid"
 		vMaxTimeInput.style.borderRadius = "0";
 		vMaxTimeInput.style.margin = "3px";
-		vMaxTimeInput.oninput = () => {
+		vMaxTimeInput.onblur = () => {
 			this.maxtime = Number(vMaxTimeInput.value);
 		}
 		
 		let vTimeLabel  = document.createElement("label");
-		vTimeLabel.innerHTML = Translate("Titles.time") + ":";
+		vTimeLabel.innerHTML = Translate("Titles.currenttime") + ":";
 		vTimeLabel.style.margin = "3px";
 		vTimeLabel.style.marginBottom = "0px";
 		
 		let vTimeInput = document.createElement("input");
 		vTimeInput.type = "text";
+		vTimeInput.style.width = "auto"
+		vTimeInput.style.textAlign = "center"
 		vTimeInput.style.color = this.primeColor;
 		vTimeInput.style.backgroundColor = "rgba(255,255,255,0)";
-		vTimeInput.style.flexGrowth = "1";
 		vTimeInput.style.border = "2px";
 		vTimeInput.style.borderStyle = "solid"
 		vTimeInput.style.borderRadius = "0";
 		vTimeInput.style.margin = "3px";
 		vTimeInput.oninput = () => {
-			this.maxtime = Number(vTimeInput.value);
+			this.timeS = Number(vTimeInput.value);
+		}
+		vTimeInput.onblur = () => {
+			this.updateTime();
 		}
 		
 		let vIconDIV = document.createElement("div");
@@ -240,6 +270,10 @@ export class hourglasNote extends basicNote {
 		vReset.classList.add("fa-solid", cResetIcon);
 		vReset.style.margin = "3px";
 		vReset.style.flexGrow = "1";
+		vReset.onclick = () => {
+			this.resetTime();
+		}
+		vReset.setAttribute("data-tooltip", Translate("Titles.reset"));
 		registerHoverShadow(vReset);
 		
 		vIconDIV.appendChild(vStartStop);
@@ -268,13 +302,15 @@ export class hourglasNote extends basicNote {
 		vHGDIV.appendChild(vSpacer2);
 		vHGDIV.appendChild(vSettingDIV);
 		
-		this.mainElement.appendChild(vHGDIV);
+		this.contentElement.appendChild(vHGDIV);
 		
 		this.contentElements.HG = vHGDIV;
 		this.contentElements.Progress = vProgressDIV;
 		this.contentElements.Sand = vSand;
 		this.contentElements.Glass = vGlass;
 		this.contentElements.settings = vSettingDIV;
+		this.contentElements.maxInput = vMaxTimeInput;
+		this.contentElements.timeInput = vTimeInput;
 		this.contentElements.settingbar = vSettingBar;
 		this.contentElements.startstop = vStartStop;
 		this.contentElements.reset = vReset;
@@ -284,6 +320,14 @@ export class hourglasNote extends basicNote {
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate, pContext) {
+		if (pContentUpdate.hasOwnProperty("maxtime")) {
+			this.contentElements.maxInput.value = this.maxtime;
+		}
+		
+		if (pContentUpdate.hasOwnProperty("basetime") || pContentUpdate.hasOwnProperty("offset")) {
+			this.updateTime();
+		}		
+		
 		if (pContentUpdate.hasOwnProperty("running")) {
 			if (this.running) {
 				this.contentElements.startstop.classList.remove(cPlayIcon);
@@ -296,7 +340,18 @@ export class hourglasNote extends basicNote {
 				this.stop();
 			}
 		}
+		
 		this.renderSand();
+	}
+	
+	updateTime() {
+		if (this.canEdit) {
+			if (this.contentElements.settings.display != "none") {
+				if (!isActiveElement(this.contentElements.timeInput)) {
+					this.contentElements.timeInput.value = Math.round(this.timeS);
+				}
+			}
+		}
 	}
 	
 	renderGlas() {
@@ -317,7 +372,7 @@ export class hourglasNote extends basicNote {
 			vDrawer.beginPath();
 			
 			for (let i = -cGlasResolution; i<=cGlasResolution; i++) {
-				let vx = vCurve(i) * (cGlassWidth/2 - cLineWidth);
+				let vx = fCurve(i) * (cGlassWidth/2 - cLineWidth);
 				
 				let vy = i/cGlasResolution * (cGlassHeight/2 - cLineWidth);
 				
@@ -343,18 +398,18 @@ export class hourglasNote extends basicNote {
 			let vPolygon = [];
 			
 			switch (vLine) {
-				case 0:
-					for (let i = cGlasResolution * (1-this.fillStand); i<=cGlasResolution + 1; i++) {
-						let vx = vCurve(i) * (cGlassWidth/2 - cLineWidth);
+				case 0: //bottom sand
+					for (let i = Math.round(cGlasResolution * (1-this.fillLevel)); i<=cGlasResolution; i++) {
+						let vx = fCurve(i) * (cGlassWidth/2 - cLineWidth);
 						
 						let vy = i/cGlasResolution * (cGlassHeight/2 - cLineWidth);
 						
 						vPolygon.push({x : vx, y : vy});
 					}
 					break;
-				case 1:
-					for (let i = 0; i<=cGlasResolution * (1 - this.fillStand); i++) {
-						let vx = vCurve(i) * (cGlassWidth/2 - cLineWidth);
+				case 1: //top sand
+					for (let i = 0; i<=cGlasResolution * (1 - this.fillLevel); i++) {
+						let vx = fCurve(i) * (cGlassWidth/2 - cLineWidth);
 						
 						let vy = -i/cGlasResolution * (cGlassHeight/2 - cLineWidth);
 						
@@ -374,19 +429,23 @@ export class hourglasNote extends basicNote {
 	}
 	
 	start() {
-		if (!this.running) {
-			this.soundNotify();
-			this.updateContent({running : true, basetime : this.now});
+		if (this.fillLevel < 1) {
+			if (!this.running) {
+				this.soundNotify();
+				this.updateContent({running : true, basetime : this.now});
+			}
+			
+			this.startTick();
 		}
-		this.startTick();
 	}
 	
-	stop() {
+	stop(pResetTime = false) {
+		this.stopTick();
+				
 		if (this.running) {
 			this.soundNotify();
-			this.updateContent({running : false, offset : this.time});
+			this.updateContent({running : false, offset : pResetTime ? 0 : this.time});
 		}
-		this.stopTick();
 	}
 	
 	toggleRunning() {
@@ -399,13 +458,15 @@ export class hourglasNote extends basicNote {
 	}
 	
 	disable() {
-		//REQUIRED
-		//disable all inputs
+		this.contentElements.settings.style.display = "none";
+		this.contentElements.maxInput.disabled = true;
+		this.contentElements.timeInput.disabled = true;
 	}
 	
 	enable() {
-		//REQUIRED
-		//enable all inputs
+		this.contentElements.settings.style.display = "flex";
+		this.contentElements.maxInput.disabled = false;
+		this.contentElements.timeInput.disabled = false;
 	}
 	
 	onMouseHoverChange() {
@@ -426,6 +487,13 @@ export class hourglasNote extends basicNote {
 	
 	tick(pTickCount) {
 		this.renderSand();
+		this.updateTime();
+		
+		if (this.canEdit) {
+			if (this.fillLevel == 1) {
+				this.stop();
+			}
+		}
 	}
 }
 

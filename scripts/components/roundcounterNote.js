@@ -122,6 +122,7 @@ export class roundcounterNote extends basicNote {
 		vCount.style.width = "50%";
 		vCount.style.height = "auto";
 		vCount.style.fontSize = "50px";
+		vCount.style.textAlign = "center";
 		vCount.style.color = this.primeColor;
 		vCount.style.backgroundColor = "rgba(255,255,255,0)";
 		vCount.style.border = "0px";
@@ -237,7 +238,7 @@ export class roundcounterNote extends basicNote {
 		//vRoundDIV.appendChild(vReverse);
 		vRoundDIV.appendChild(vSpacer2);
 		
-		this.mainElement.appendChild(vRoundDIV);
+		this.contentElement.appendChild(vRoundDIV);
 		
 		this.contentElements.count = vCount;
 		this.contentElements.reverse = vReverse;

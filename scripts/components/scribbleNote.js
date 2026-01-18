@@ -79,7 +79,7 @@ export class scribbleNote extends basicNote {
 			let vDeletes = {};
 			
 			for (let vKey of vKeys) {
-				vDeletes["-=" + vKey] = {};
+				vDeletes["-=" + vKey] = null;
 			}
 			
 			this.drawings = vDeletes;
@@ -93,7 +93,7 @@ export class scribbleNote extends basicNote {
 			let vDeletes = {};
 			
 			for (let vKey of vKeys) {
-				vDeletes["-=" + vKey] = {};
+				vDeletes["-=" + vKey] = null;
 			}
 			
 			this.drawings = vDeletes;
@@ -152,7 +152,7 @@ export class scribbleNote extends basicNote {
 		
 		vscribbleDIV.appendChild(vCanvas);
 		vscribbleDIV.appendChild(vclearButton);
-		this.mainElement.appendChild(vscribbleDIV);
+		this.contentElement.appendChild(vscribbleDIV);
 		
 		this.contentElements.scribble = vscribbleDIV;
 		this.contentElements.canvas = vCanvas;

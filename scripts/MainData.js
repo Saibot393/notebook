@@ -15,9 +15,9 @@ import {roundcounterNote} from "./components/roundcounterNote.js";
 import {macroNote} from "./components/macroNote.js";
 import {enhancedtextNote} from "./components/enhancedtextNote.js";
 import {scribbleNote} from "./components/scribbleNote.js";
-import {hourglasNote} from "./components/hourglasNote.js";
+import {hourglassNote} from "./components/hourglassNote.js";
 
-const cNoteTypes = [textNote, counterNote, listNote, sliderNote, chatNote, timerNote, progressclockNote, roundcounterNote, macroNote, enhancedtextNote, scribbleNote/*, hourglasNote*/];
+const cNoteTypes = [textNote, counterNote, listNote, sliderNote, chatNote, timerNote, progressclockNote, roundcounterNote, macroNote, enhancedtextNote, scribbleNote, hourglassNote];
 
 CONFIG.debug.notebook = false;
 
@@ -70,7 +70,7 @@ class NoteManager {
 	
 	static notesIDlist() {} //returns all note ids in this game
 	
-	static async updateNote(pID, pUpdate, pContext = {}) {} //updates pData with pUpdate of note identified iva pID (if access is granted)
+	static async updateNote(pID, pUpdate, pContext = {}) {} //updates pData with pUpdate of note identified via pID (if access is granted)
 	
 	static requestNoteUpdate(pID, pUpdate, pContext = {}) {} //requests the owner of a Note to update
 	
@@ -80,7 +80,7 @@ class NoteManager {
 	
 	static requestNotePopup(pNoteID, pUserIDs) {} //request pUserIDs to popup notes
 	
-	static notePopupRequest (pData) {} //ansers a request for a note popup
+	static notePopupRequest(pData) {} //ansers a request for a note popup
 	
 	static popupNote(pID, pOptions = {}) {} //popups note for this player
 	

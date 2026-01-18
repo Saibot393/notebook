@@ -135,9 +135,10 @@ export class counterNote extends basicNote {
 		
 		let vCount = document.createElement("input");
 		vCount.type = "text";
-		vCount.style.width = "auto";
 		vCount.style.height = "auto";
 		vCount.style.fontSize = "50px";
+		vCount.style.textAlign = "center";
+		vCount.style.flexGrow = "1";
 		vCount.style.color = this.primeColor;
 		vCount.style.backgroundColor = "rgba(255,255,255,0)";
 		vCount.style.border = "0px";
@@ -234,7 +235,7 @@ export class counterNote extends basicNote {
 		vCountDIV.appendChild(vCount);
 		vCountDIV.appendChild(vPlus);
 		
-		this.mainElement.appendChild(vCountDIV);
+		this.contentElement.appendChild(vCountDIV);
 		
 		this.contentElements.count = vCount;
 		this.contentElements.minus = vMinus;

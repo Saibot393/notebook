@@ -129,7 +129,7 @@ export class chatNote extends basicNote {
 		vChatdiv.appendChild(vHistorydiv);
 		vChatdiv.appendChild(vWritediv);
 		
-		this.mainElement.appendChild(vChatdiv);
+		this.contentElement.appendChild(vChatdiv);
 		
 		this.contentElements.history = vHistorydiv;
 		this.contentElements.inputdiv = vWritediv;

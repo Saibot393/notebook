@@ -216,8 +216,8 @@ export class sliderNote extends basicNote {
 		
 		this.contentElements.settings = vSettingDIV;
 		
-		this.mainElement.appendChild(vSliderDIV);
-		this.mainElement.appendChild(vSettingDIV);
+		this.contentElement.appendChild(vSliderDIV);
+		this.contentElement.appendChild(vSettingDIV);
 	}
 	
 	updateRenderContent(pupdatedNote, pContentUpdate, pUpdate) {

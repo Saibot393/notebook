@@ -96,7 +96,7 @@ export class enhancedtextNote extends basicNote {
 		vTextDIV.appendChild(venhancedText);
 		vTextDIV.appendChild(vtextInput);
 		vTextDIV.appendChild(veditButton);
-		this.mainElement.appendChild(vTextDIV);
+		this.contentElement.appendChild(vTextDIV);
 		
 		this.contentElements.enhancedtext = venhancedText;
 		this.contentElements.textinput = vtextInput;
