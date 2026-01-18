@@ -70,7 +70,7 @@ Options such as importing/exporting the notes as files are available in the cont
    ![imag](https://imgur.com/7eYSBC7.jpg)
 
 - #### Hourglass
-  A note that slowly ticks down from a set time maximum, displaying the time left via an hourglass. Great if your want your players to be on edge.
+  A note that slowly ticks down from a set time maximum, displaying the time left via an hourglass. Great if you want your players to be on edge.
 
 ### Settings:
 
