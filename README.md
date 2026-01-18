@@ -67,6 +67,9 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
 
    ![imag](https://imgur.com/7eYSBC7.jpg)
 
+- #### Hourglass
+  A note that slowly ticks down from a set time maximum, displaying the time left via an hourglass
+
 ### Settings:
 
 #### Client:
