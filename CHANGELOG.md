@@ -1,3 +1,10 @@
+## v2.1.0
+- Added new note type "Hourglass"
+- Added context menu (right click menu icon on the top left)
+- Added date import/export function via context menu
+- Fixed a few ui issues
+- Fixed a few data bugs
+
 ## v2.0.3
 - Small fix
 
