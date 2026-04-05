@@ -6,6 +6,8 @@ Basic notes have a title and can be colored for easier recognition. The GM can a
 
 Certain notes (text, list, chat) can be copied into journals via drag and drop. 
 
+Options such as importing/exporting the notes as files are available in the context menu (right click on top left note icon)
+
 ##### Please note:
   - The notes are saved per user. To edit a note you have access to, either the owner of the note or a GM has to be online.
   - The folder structure is per user and is not snyched. Every user can have their own folders for their own purposes
@@ -66,6 +68,9 @@ Certain notes (text, list, chat) can be copied into journals via drag and drop.
   A note for freehand drawing. The color is determined by the player color. The eraser symbol at the top right can be used to delete own drawing, the owner can use shift + click to delete all drawings
 
    ![imag](https://imgur.com/7eYSBC7.jpg)
+
+- #### Hourglass
+  A note that slowly ticks down from a set time maximum, displaying the time left via an hourglass. Great if you want your players to be on edge.
 
 ### Settings:
 
