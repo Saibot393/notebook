@@ -956,7 +956,7 @@ export class basicNote {
 	
 	soundNotify(pContext = {}) {
 		if (this.notifySound && !this.windowed && this.ready) {
-			AudioHelper.play({src: this.notifySound, volume: this.soundVolume});
+			(foundry?.audio?.AudioHelper || AudioHelper).play({src: this.notifySound, volume: this.soundVolume});
 		}
 	}
 	

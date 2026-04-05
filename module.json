@@ -7,10 +7,10 @@
     "name": "saibot"
     }
   ],
-  "version": "2.1.0",
+  "version": "3.0.0",
   "compatibility": {
     "minimum": "10",
-    "verified": "13"
+    "verified": "14"
   },
   "socket": "true",
   "languages": [
@@ -40,7 +40,7 @@
 	"scripts/settings.js"
   ],
   "url": "https://github.com/Saibot393/notebook",
-  "download": "https://github.com/Saibot393/notebook/archive/refs/tags/v2.1.0.zip",
+  "download": "https://github.com/Saibot393/notebook/archive/refs/tags/v3.0.0.zip",
   "manifest": "https://github.com/Saibot393/notebook/releases/latest/download/module.json",
   "readme": "https://github.com/Saibot393/notebook/blob/main/README.md",
   "changelog": "https://github.com/Saibot393/notebook/blob/main/CHANGELOG.md",

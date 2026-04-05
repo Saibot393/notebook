@@ -30,7 +30,7 @@ export class notePermissionsWindow extends Application {
 	
 	//app stuff
 	static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return {...super.defaultOptions,
 			classes: ["notePermissionsWindow"],
 			popOut: true,
 			width: 400,
@@ -39,7 +39,7 @@ export class notePermissionsWindow extends Application {
 			jQuery: true,
 			title: Translate("Titles.permissions"),
 			resizable: true
-		});
+		};
 	}
 	
 	relevantUsers(pWithDefault = false) {
