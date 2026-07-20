@@ -1,3 +1,7 @@
+## v3.0.1
+- Fixed backwards compatibility
+- Fixed search filters in newer versions
+
 ## v3.0.0
 - v14 compatibility
 
