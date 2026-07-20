@@ -1,3 +1,6 @@
+## v3.0.0
+- v14 compatibility
+
 ## v2.1.0
 - Added new note type "Hourglass"
 - Added context menu (right click menu icon on the top left)
