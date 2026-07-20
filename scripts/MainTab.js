@@ -124,7 +124,7 @@ class notesTab /*extends SidebarTab*/ {
 					
 					let vDropData = pEvent.dataTransfer.getData("text/plain") ? JSON.parse(pEvent.dataTransfer.getData("text/plain")) : undefined;
 					
-					if (vDropData.isNote) {
+					if (vDropData?.isNote) {
 						this.onJournaldrop(vJournalID, vDropData.id);
 					}
 				}

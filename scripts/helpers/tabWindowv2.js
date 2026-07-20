@@ -1,6 +1,8 @@
 import {cModuleName, Translate} from "../utils/utils.js";
 
-export class tabWindowv2 extends foundry.applications.api.ApplicationV2 {
+const cBaseClass = foundry.applications?.api?.ApplicationV2 || class {}; //fix for old versions
+
+export class tabWindowv2 extends cBaseClass {
 	constructor(pOptions = {}) {
 		super(pOptions);
 		

@@ -158,7 +158,7 @@ export class basicNote {
 	_createContextMenu() {
 		const cMenuItems = this.contextMenuItems();
 		
-		return new ContextMenu.implementation(this.captionElement, ".note_icon", cMenuItems, {eventName : "contextmenu", jQuery: false, fixed: true});
+		return new (ContextMenu.implementation || ContextMenu)(this.captionElement, ".note_icon", cMenuItems, {eventName : "contextmenu", jQuery: false, fixed: true});
 	}
 	
 	contextMenuItems() {

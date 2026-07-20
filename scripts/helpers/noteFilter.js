@@ -134,7 +134,7 @@ export class noteFilter {
 			}
 		}
 		
-		if (!isEmpty(this.filterData)) {
+		if (!(foundry.utils?.isEmpty || isEmpty)(this.filterData)) {
 			this.filterData.match = (pData, patLeastOne = false) => {return this.match(pData, patLeastOne)};
 		}
 		
@@ -158,7 +158,7 @@ export class noteFilter {
 	}
 	
 	match(pData, patLeastOne = false) {
-		if (!isEmpty(this.filterData)) {
+		if (!(foundry.utils?.isEmpty || isEmpty)(this.filterData)) {
 			let vMatch = false;
 			for (let vKey of Object.keys(this.filterData)) {
 				if (pData.hasOwnProperty(vKey) && vKey != "match") {
